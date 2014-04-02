@@ -1,2 +1,2 @@
 allreduce   pbdinline   Example allreduce.
-prcomp      pbdinline   Principal components.
+dmat        pbdinline   Simple pbdDMAT example.
