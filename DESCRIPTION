@@ -1,0 +1,13 @@
+Package: pbdinline
+Type: Package
+Title: pbdR Inline
+Version: 1.0
+Description: A utility like the inline package, but for pbdR
+  scripts.
+License: BSD 2-clause License + file LICENSE
+Depends: R (>= 2.14.0)
+SystemRequirements: pbdMPI
+Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
+NeedsCompilation: no
+Author: Drew Schmidt
+Maintainer: Drew Schmidt <wrathematics@gmail.com>
