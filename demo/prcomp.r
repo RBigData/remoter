@@ -1,3 +1,5 @@
+library(pbdinline)
+
 body <- '
   library(pbdDMAT, quietly=TRUE)
   init.grid()
@@ -13,4 +15,4 @@ body <- '
   finalize()
 '
 
-pbdfunction(body=body, cores=2)
+pbdRscript(body=body, cores=2, auto=FALSE)
