@@ -6,7 +6,6 @@ body <- "
   comm.print(x)
 "
 
-pbdRscript(body=body, cores=2)
-
-pbdRscript(body=body, cores=2, intern=TRUE)
+pid <- pbdRscript(body=body, cores=2)
+pid
 

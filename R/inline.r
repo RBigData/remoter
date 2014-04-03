@@ -1,4 +1,4 @@
-pbdRscript <- function(body, cores=1, intern=FALSE, auto=TRUE, auto.dmat=FALSE)
+pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE)
 {
   ### Input checks
   if (!is.character(body))
@@ -13,8 +13,8 @@ pbdRscript <- function(body, cores=1, intern=FALSE, auto=TRUE, auto.dmat=FALSE)
   
   if (!is.int(cores))
     stop("argument 'cores' must be an integer")
-  if (!is.logical(intern))
-    stop("argument 'intern' must be logical")
+#  if (!is.logical(intern))
+#    stop("argument 'intern' must be logical")
   if (!is.logical(auto))
     stop("argument 'auto' must be logical")
   if (!is.logical(auto.dmat))
@@ -22,8 +22,6 @@ pbdRscript <- function(body, cores=1, intern=FALSE, auto=TRUE, auto.dmat=FALSE)
     
   
   ### Dump body to temp file, execute
-  script <- tempfile()
-  
   if (auto.dmat)
     auto <- TRUE
   
@@ -38,34 +36,41 @@ pbdRscript <- function(body, cores=1, intern=FALSE, auto=TRUE, auto.dmat=FALSE)
     body <- paste(auto.header, body, auto.footer, collapse="\n")
   }
   
-  conn <- file(script)
+  script <- tempfile()
+  conn <- file(script, open="wt")
   writeLines(body, conn)
   close(conn)
   
   
-  ### manage return
-#  ret <- system(paste("mpirun -np", cores, "Rscript", script, " &\necho $!"), intern=TRUE)
-#  
-#  if (intern)
-#    return( ret )
-#  else
-#  {
-#    pid <- ret[1L]
-#    ret <- ret[-1L]
-#    cat(paste(ret, "\n"))
-#    return(ret[1L])
-#  }
-  
   if (same.str(get.os(), "windows"))
     stop("doesn't work :[")
   else
-    ret <- system(paste("mpirun -np", cores, "Rscript", script), intern=intern)
+  {
+    if (pid)
+      ret <- system(paste("mpirun -np", cores, "Rscript", script, ' &\necho "PID=$!\n"'), intern=FALSE)
+    else
+      ret <- system(paste("mpirun -np", cores, "Rscript", script), intern=FALSE)
+  }
   
-  
-  if (intern)
-    return( ret )
-  else
-    invisible()
+  ### manage return
+#  if (pid)
+#  {
+#    if (intern)
+#      return( ret )
+#    else
+#    {
+#      pid <- ret[1L]
+#      ret <- ret[-1L]
+#      cat(paste(ret, "\n"))
+#      return( as.numeric(pid) )
+#    }
+#  }
+#  else
+#  {
+#    if (intern)
+#      return( ret )
+#    else
+      invisible()
+#  }
 }
-
 
