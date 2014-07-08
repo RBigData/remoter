@@ -53,24 +53,9 @@ pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE)
   }
   
   ### manage return
-#  if (pid)
-#  {
-#    if (intern)
-#      return( ret )
-#    else
-#    {
-#      pid <- ret[1L]
-#      ret <- ret[-1L]
-#      cat(paste(ret, "\n"))
-#      return( as.numeric(pid) )
-#    }
-#  }
-#  else
-#  {
-#    if (intern)
-#      return( ret )
-#    else
-      invisible()
-#  }
+#  ret <- mcparallel(system(paste("mpirun -np", cores, "Rscript", script), intern=intern))
+  
+  
+  invisible()
 }
 
