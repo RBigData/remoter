@@ -1,3 +1,7 @@
+.MACHINE <- bigmachine.new("fixme", NA)
+
+
+
 ### UT/NICS
 utnics.beacon <- bigmachine.new("nodes", 16)
 utnics.darter <- bigmachine.new("size", 16)
