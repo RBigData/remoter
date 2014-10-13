@@ -1,1 +1,4 @@
-export("pbdRscript", "kill")
+#export("pbdRscript", "kill")
+
+exportPattern("^[[:alpha:]]+")
+
