@@ -1,9 +1,0 @@
-A very simple R package to emulate features of the inline package for
-Rcpp, but for pbdR.  
-
-This assumes you have MPI and the pbdR utilities installed, but wish
-to control batch execution of pbdR scripts from R instead of the 
-command line.  The primary purpose of this package is to aid attendees
-of tutorials.
-
-See the demos section for example usage.
