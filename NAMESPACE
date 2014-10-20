@@ -1,5 +1,5 @@
 #export("pbdRscript", "kill")
 
 exportPattern("^[[:alpha:]]+")
-exportPattern("^\\.[[:alpha:]]+")
+#exportPattern("^\\.[[:alpha:]]+")
 

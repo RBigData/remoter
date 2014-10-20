@@ -10,6 +10,6 @@ Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
 LazyLoad: yes
 LazyData: yes
 NeedsCompilation: no
-Author: Drew Schmidt
+ByteCompile: yes
+Author: Drew Schmidt and Wei-Chen Chen
 Maintainer: Drew Schmidt <schmidt@math.utk.com>
-Packaged: 2014-10-19 23:42:13 UTC; snoweye
