@@ -1,14 +1,12 @@
-Package: pbdinline
+Package: pbdCS
 Type: Package
-Title: pbdR Inline
+Title: pbdR Client/Server Utilities
 Version: 0.1-0
-Description: A utility like the inline package, but for pbdR scripts.
+Description: A set of utilities for interactivly using pbdR.
 License: BSD 2-clause License + file LICENSE
-Depends: R (>= 2.14.0), parallel
+Depends: R (>= 2.14.0), parallel, rzmq
 SystemRequirements: pbdMPI
 Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
-LazyLoad: yes
-LazyData: yes
 NeedsCompilation: no
 ByteCompile: yes
 Author: Drew Schmidt and Wei-Chen Chen
