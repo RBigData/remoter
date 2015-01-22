@@ -9,18 +9,34 @@ library(rzmq)
 ### Global data
 pbdenv <- new.env()
 
+# options
 pbdenv$prompt <- "pbdR"
-pbdenv$pbd_prompt_active <- FALSE
-pbdenv$should_exit <- FALSE
-pbdenv$continuation <- FALSE
-
 pbdenv$port <- 5555
+
+# internals
 pbdenv$socket <- NULL
 
-pbdenv$lasterror <- NULL
-pbdenv$num_warnings <- 0
-pbdenv$warnings <- NULL
+pbdenv$status <- list(
+  lasterror         = NULL,
+  num_warnings      = 0,
+  warnings          = NULL,
+  pbd_prompt_active = FALSE,
+  should_exit       = FALSE,
+  continuation      = FALSE
+)
 
+### just a pinch of sugar
+get.status <- function(var)
+{
+  name <- as.character(substitute(name))
+  pbdenv$status[[name]]
+}
+
+set.status <- function(var, val)
+{
+  name <- as.character(substitute(name))
+  pbdenv$status[[name]] <- val
+}
 
 
 
@@ -84,10 +100,10 @@ pbd_repl_printer <- function(ret)
     if (ret$visible)
       print(ret$value)
     
-    if (pbdenv$num_warnings > 0)
+    if (pbdenv$status$num_warnings > 0)
     {
-      if (pbdenv$num_warnings > 10)
-        cat(paste("There were", pbdenv$num_warnings, "warnings (use warnings() to see them)\n"))
+      if (pbdenv$status$num_warnings > 10)
+        cat(paste("There were", pbdenv$status$num_warnings, "warnings (use warnings() to see them)\n"))
       else
         print(warnings())
     }
@@ -100,7 +116,7 @@ pbd_repl_printer <- function(ret)
 
 pbd_interrupt <- function(x)
 {
-  pbdenv$pbd_prompt_active <- FALSE
+  pbdenv$status$pbd_prompt_active <- FALSE
   cat("interrupt\n")
   print(x)
 }
@@ -109,9 +125,9 @@ pbd_interrupt <- function(x)
 
 pbd_warning <- function(warn)
 {
-  pbdenv$num_warnings <- pbdenv$num_warnings + 1
+  pbdenv$status$num_warnings <- pbdenv$status$num_warnings + 1
   
-  append(pbdenv$warnings, conditionMessage(warn))
+  append(pbdenv$status$warnings, conditionMessage(warn))
   invokeRestart("muffleWarning")
   print(warn)
 }
@@ -121,15 +137,13 @@ pbd_warning <- function(warn)
 pbd_error <- function(err)
 {
   msg <- err$message
-  pbdenv$continuation <- grepl(msg, pattern="unexpected end of input")
+  pbdenv$status$continuation <- grepl(msg, pattern="unexpected end of input")
   
-  if (!pbdenv$continuation)
+  if (!pbdenv$status$continuation)
   {
     msg <- sub(x=msg, pattern=" in eval\\(expr, envir, enclos\\) ", replacement="")
-    pbdenv$lasterror <- paste0("Error: ", msg, "\n")
+    pbdenv$status$lasterror <- paste0("Error: ", msg, "\n")
   }
-  else
-    pbdenv$lasterror <- NULL
   
   return(invisible())
 }
@@ -138,16 +152,17 @@ pbd_error <- function(err)
 
 pbd_eval <- function(input, whoami, env)
 {
-  pbdenv$continuation <- FALSE
+  pbdenv$status$continuation <- FALSE
+  pbdenv$status$lasterror <- NULL
   
   if (whoami == "local")
   {
     send.socket(pbdenv$socket, data=input)
     
     ret <- receive.socket(pbdenv$socket)
-    pbdenv$continuation <- receive.socket(pbdenv$socket)
-    pbdenv$lasterror <- receive.socket(pbdenv$socket)
-    if (!is.null(pbdenv$lasterror)) cat(pbdenv$lasterror)
+    pbdenv$status <- receive.socket(pbdenv$socket)
+    
+    if (!is.null(pbdenv$status$lasterror)) cat(pbdenv$status$lasterror)
   }
   else if (whoami == "remote")
   {
@@ -166,8 +181,7 @@ pbd_eval <- function(input, whoami, env)
       ret <- NULL
     
     send.socket(pbdenv$socket, ret, send.more=TRUE)
-    send.socket(pbdenv$socket, pbdenv$continuation, send.more=TRUE)
-    send.socket(pbdenv$socket, pbdenv$lasterror)
+    send.socket(pbdenv$socket, pbdenv$status)
   }
   else
     stop("bad 'whoami'")
@@ -179,7 +193,7 @@ pbd_eval <- function(input, whoami, env)
 
 pbd_exit <- function()
 {
-  pbdenv$should_exit <- TRUE
+  pbdenv$status$should_exit <- TRUE
   
   return(invisible())
 }
@@ -188,8 +202,8 @@ pbd_exit <- function()
 
 pbd_repl_init <- function()
 {
-  if (!pbdenv$pbd_prompt_active)
-    pbdenv$pbd_prompt_active <- TRUE
+  if (!pbdenv$status$pbd_prompt_active)
+    pbdenv$status$pbd_prompt_active <- TRUE
   else
   {
     cat("The pbd repl is already running!\n")
@@ -252,9 +266,9 @@ pbd_repl <- function(env=sys.parent())
       pbd_repl_printer(ret)
       
       ### Should go after all other evals and handlers
-      if (pbdenv$should_exit)
+      if (pbdenv$status$should_exit)
       {
-        pbdenv$pbd_prompt_active <- pbdenv$should_exit <- FALSE
+        pbdenv$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
         return(invisible())
       }
       
@@ -262,7 +276,7 @@ pbd_repl <- function(env=sys.parent())
     }
   }
   
-  pbdenv$pbd_prompt_active <- pbdenv$should_exit <- FALSE
+  pbdenv$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
   return(invisible())
 }
 
