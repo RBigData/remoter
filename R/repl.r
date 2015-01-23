@@ -203,8 +203,17 @@ pbd_eval <- function(input, whoami, env)
   if (whoami == "local")
   {
     send.socket(pbdenv$socket, data=input)
+    
+    ### Special cases
     if (grepl(x=input, pattern="^pbd_localize\\(", perl=TRUE))
       eval(parse(text=input))
+    else if (grepl(x=input, pattern="^ls.local\\(", perl=TRUE))
+      eval(parse(text=input))
+    else if (grepl(x=input, pattern="^rm.local\\(", perl=TRUE))
+      eval(parse(text=input))
+    else if (grepl(x=input, pattern="^eval.local\\(", perl=TRUE))
+      eval(parse(text=input))
+    
     
     pbdenv$status <- receive.socket(pbdenv$socket)
     
@@ -371,4 +380,48 @@ pbd_localize <- function(object, newname)
   
   return(invisible(ret))
 }
+
+
+
+ls.local <- function(envir, all.names=FALSE, pattern)
+{
+  if (missing(envir))
+    envir <- .GlobalEnv
+  
+  if (pbdenv$whoami == "local")
+    print(ls(envir=envir, all.names=all.names, pattern=pattern))
+  
+  return(invisible())
+}
+
+
+
+### TODO error checking
+rm.local <- function(..., list=character(), envir)
+{
+  if (pbdenv$whoami == "local")
+  {
+    if (missing(envir))
+      envir <- .GlobalEnv
+    
+    ### FIXME this is disgusting
+    objs <- match.call(expand.dots=TRUE)
+    objs[[1]] <- NULL
+    
+    rm(list=as.character(objs), envir=envir)
+  }
+  
+  return(invisible())
+}
+
+
+### TODO basically everything
+eval.local <- function(expr)
+{
+  if (pbdenv$whoami == "local")
+    print(eval(expr=expr))
+  
+  return(invisible)
+}
+
 
