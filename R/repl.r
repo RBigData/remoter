@@ -173,11 +173,11 @@ pbd_show_warnings <- function()
     }
     else if (nwarnings < 11)
     {
-      cat("Warning message:\n")
+      cat("Warning messages:\n")
       for (i in 1:nwarnings)
       {
         w <- pbdenv$status$warnings[i]
-        cat(paste0(i, ": ", w))
+        cat(paste0(i, ": ", w, "\n"))
       }
     }
     else
@@ -289,6 +289,9 @@ pbd_repl <- function(env=sys.parent())
   {
     stop("You should only use this interactively")
   }
+  
+  if (pbdenv$whoami == "remote")
+    cat("Hello! This is the server; please don't type things here!\n\n")
   
   
   init <- pbd_repl_init()
