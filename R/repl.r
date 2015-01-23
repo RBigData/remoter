@@ -17,6 +17,8 @@ pbdenv$port <- 5555
 pbdenv$socket <- NULL
 
 pbdenv$status <- list(
+  ret               = invisible(),
+  visible           = FALSE,
   lasterror         = NULL,
   num_warnings      = 0,
   warnings          = NULL,
@@ -40,7 +42,7 @@ set.status <- function(var, val)
 
 
 
-###
+### ------------------------------------------------
 pbd_readline <- function(input, continuation)
 {
   if (continuation)
@@ -68,8 +70,10 @@ pbd_sanitize <- function(inputs)
   for (i in 1:length(inputs))
   {
     input <- inputs[i]
-    if (grepl(x=input, pattern="(^q\\(|^quit\\()", perl=TRUE)) 
+    if (grepl(x=input, pattern="^(q\\(|quit\\()", perl=TRUE)) 
       inputs[i] <- "pbd_exit()"
+    else if (grepl(x=input, pattern="^(\\?|\\?\\?|help\\()", perl=TRUE))
+      stop("not supported") # FIXME make this an internal stop error
   }
   
   return(inputs)
@@ -87,7 +91,7 @@ is.error <- function(obj)
 
 
 
-pbd_repl_printer <- function(ret)
+pbd_repl_printer <- function()
 {
   if (pbdenv$whoami == "remote") return(invisible())
   
@@ -95,18 +99,15 @@ pbd_repl_printer <- function(ret)
 #  print(ret)
 #  cat("----------------------------\n")
   
-  if (!is.null(ret))
+  if (pbdenv$status$visible)
+    cat(paste(pbdenv$status$ret, collapse="\n"), "\n")
+  
+  if (pbdenv$status$num_warnings > 0)
   {
-    if (ret$visible)
-      print(ret$value)
-    
-    if (pbdenv$status$num_warnings > 0)
-    {
-      if (pbdenv$status$num_warnings > 10)
-        cat(paste("There were", pbdenv$status$num_warnings, "warnings (use warnings() to see them)\n"))
-      else
-        print(warnings())
-    }
+    if (pbdenv$status$num_warnings > 10)
+      cat(paste("There were", pbdenv$status$num_warnings, "warnings (use warnings() to see them)\n"))
+    else
+      print(warnings())
   }
   
   return(invisible())
@@ -116,7 +117,7 @@ pbd_repl_printer <- function(ret)
 
 pbd_interrupt <- function(x)
 {
-  pbdenv$status$pbd_prompt_active <- FALSE
+#  pbdenv$status$pbd_prompt_active <- TRUE
   cat("interrupt\n")
   print(x)
 }
@@ -127,7 +128,7 @@ pbd_warning <- function(warn)
 {
   pbdenv$status$num_warnings <- pbdenv$status$num_warnings + 1
   
-  append(pbdenv$status$warnings, conditionMessage(warn))
+  pbdenv$status$warnings <- append(pbdenv$status$warnings, conditionMessage(warn))
   invokeRestart("muffleWarning")
   print(warn)
 }
@@ -150,6 +151,47 @@ pbd_error <- function(err)
 
 
 
+pbd_show_errors <- function()
+{
+  if (!is.null(pbdenv$status$lasterror)) cat(pbdenv$status$lasterror)
+  
+  invisible()
+}
+
+
+
+pbd_show_warnings <- function()
+{
+  nwarnings <- length(pbdenv$status$warnings)
+  
+  if (!is.null(pbdenv$status$warnings)) 
+  {
+    if (nwarnings == 1)
+    {
+      cat("Warning message:\n")
+      cat(pbdenv$status$warnings)
+    }
+    else if (nwarnings < 11)
+    {
+      cat("Warning message:\n")
+      for (i in 1:nwarnings)
+      {
+        w <- pbdenv$status$warnings[i]
+        cat(paste0(i, ": ", w))
+      }
+    }
+    else
+    {
+      cat(paste("There were", nwarnings, "warnings (use warnings() to see them)"))
+    }
+    cat("\n")
+  }
+  
+  invisible()
+}
+
+
+
 pbd_eval <- function(input, whoami, env)
 {
   pbdenv$status$continuation <- FALSE
@@ -159,10 +201,10 @@ pbd_eval <- function(input, whoami, env)
   {
     send.socket(pbdenv$socket, data=input)
     
-    ret <- receive.socket(pbdenv$socket)
     pbdenv$status <- receive.socket(pbdenv$socket)
     
-    if (!is.null(pbdenv$status$lasterror)) cat(pbdenv$status$lasterror)
+    pbd_show_errors()
+    pbd_show_warnings()
   }
   else if (whoami == "remote")
   {
@@ -170,23 +212,28 @@ pbd_eval <- function(input, whoami, env)
     msg <- receive.socket(pbdenv$socket)
     cat(msg, "\n")
     
-    ret <- withCallingHandlers(
+    ret <- 
+    withCallingHandlers(
       tryCatch({
           pbdenv$visible <- withVisible(eval(parse(text=msg), envir=env))
         }, interrupt=pbd_interrupt, error=pbd_error
       ), warning=pbd_warning
     )
     
-    if (!is.null(ret) && !ret$visible)
-      ret <- NULL
+    if (!is.null(ret))
+    {
+      pbdenv$status$visible <- ret$visible
+      
+      if (!ret$visible)
+      pbdenv$status$ret <- NULL
+    else
+      pbdenv$status$ret <- capture.output(ret$value)
+    }
     
-    send.socket(pbdenv$socket, ret, send.more=TRUE)
     send.socket(pbdenv$socket, pbdenv$status)
   }
   else
     stop("bad 'whoami'")
-  
-  return(ret)
 }
 
 
@@ -252,18 +299,18 @@ pbd_repl <- function(env=sys.parent())
   while (TRUE)
   {
     input <- character(0)
-    pbdenv$continuation <- FALSE
+    pbdenv$status$continuation <- FALSE
     
     while (TRUE)
     {
       pbdenv$visible <- withVisible(invisible())
       input <- pbd_readline(input=input, continuation=pbdenv$status$continuation)
       
-      ret <- pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
+      pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
       
       if (pbdenv$status$continuation) next
       
-      pbd_repl_printer(ret)
+      pbd_repl_printer()
       
       ### Should go after all other evals and handlers
       if (pbdenv$status$should_exit)
