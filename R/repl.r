@@ -203,6 +203,8 @@ pbd_eval <- function(input, whoami, env)
   if (whoami == "local")
   {
     send.socket(pbdenv$socket, data=input)
+    if (grepl(x=input, pattern="^pbd_localize\\(", perl=TRUE))
+      eval(parse(text=input))
     
     pbdenv$status <- receive.socket(pbdenv$socket)
     
@@ -335,4 +337,24 @@ pbd_repl <- function(env=sys.parent())
   return(invisible())
 }
 
+
+
+### TODO error handling, etc
+pbd_localize <- function(object)
+{
+  if (pbdenv$whoami == "local")
+  {
+    value <- receive.socket(pbdenv$socket)
+    print(value)
+    assign(x=as.character(substitute(object)), value=value, envir=.GlobalEnv)
+    
+    ret <- TRUE
+  }
+  else if (pbdenv$whoami == "remote")
+  {
+    ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
+  }
+  
+  return(ret)
+}
 
