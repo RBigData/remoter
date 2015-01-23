@@ -339,22 +339,36 @@ pbd_repl <- function(env=sys.parent())
 
 
 
-### TODO error handling, etc
-pbd_localize <- function(object)
+pbd_localize <- function(object, newname)
 {
+  err <- ".__pbd_localize_failure"
+  
   if (pbdenv$whoami == "local")
   {
     value <- receive.socket(pbdenv$socket)
-    print(value)
-    assign(x=as.character(substitute(object)), value=value, envir=.GlobalEnv)
+    name <- as.character(substitute(object))
+    
+    if (value == err)
+    {
+      cat(paste0("Error: object '", name, "' not found\n"))
+      return(invisible(FALSE))
+    }
+    
+    if (!missing(newname))
+      name <- newname
+    
+    assign(x=name, value=value, envir=.GlobalEnv)
     
     ret <- TRUE
   }
   else if (pbdenv$whoami == "remote")
   {
-    ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
+    if (!exists(deparse(substitute(object))))
+      ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
+    else
+      ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
   }
   
-  return(ret)
+  return(invisible(ret))
 }
 
