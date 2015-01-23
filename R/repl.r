@@ -318,7 +318,7 @@ pbd_repl <- function(env=sys.parent())
       ### Should go after all other evals and handlers
       if (pbdenv$status$should_exit)
       {
-        pbdenv$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
+        pbdenv$status$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
         return(invisible())
       }
       
@@ -326,7 +326,7 @@ pbd_repl <- function(env=sys.parent())
     }
   }
   
-  pbdenv$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
+  pbdenv$status$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
   return(invisible())
 }
 
