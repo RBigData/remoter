@@ -30,14 +30,15 @@ pbdenv$status <- list(
 ### just a pinch of sugar
 get.status <- function(var)
 {
-  name <- as.character(substitute(name))
+  name <- as.character(substitute(var))
   pbdenv$status[[name]]
 }
 
 set.status <- function(var, val)
 {
-  name <- as.character(substitute(name))
+  name <- as.character(substitute(var))
   pbdenv$status[[name]] <- val
+  invisible()
 }
 
 
@@ -99,13 +100,13 @@ pbd_repl_printer <- function()
 #  print(ret)
 #  cat("----------------------------\n")
   
-  if (pbdenv$status$visible)
-    cat(paste(pbdenv$status$ret, collapse="\n"), "\n")
+  if (get.status(visible))
+    cat(paste(get.status(ret), collapse="\n"), "\n")
   
-  if (pbdenv$status$num_warnings > 0)
+  if (get.status(num_warnings) > 0)
   {
-    if (pbdenv$status$num_warnings > 10)
-      cat(paste("There were", pbdenv$status$num_warnings, "warnings (use warnings() to see them)\n"))
+    if (get.status(num_warnings) > 10)
+      cat(paste("There were", get.status(num_warnings), "warnings (use warnings() to see them)\n"))
     else
       print(warnings())
   }
@@ -138,12 +139,12 @@ pbd_warning <- function(warn)
 pbd_error <- function(err)
 {
   msg <- err$message
-  pbdenv$status$continuation <- grepl(msg, pattern="unexpected end of input")
+  set.status(continuation, grepl(msg, pattern="unexpected end of input"))
   
-  if (!pbdenv$status$continuation)
+  if (!get.status(continuation))
   {
     msg <- sub(x=msg, pattern=" in eval\\(expr, envir, enclos\\) ", replacement="")
-    pbdenv$status$lasterror <- paste0("Error: ", msg, "\n")
+    set.status(lasterror, paste0("Error: ", msg, "\n"))
   }
   
   return(invisible())
@@ -153,7 +154,8 @@ pbd_error <- function(err)
 
 pbd_show_errors <- function()
 {
-  if (!is.null(pbdenv$status$lasterror)) cat(pbdenv$status$lasterror)
+  if (!is.null(get.status(lasterror)))
+    cat(get.status(lasterror))
   
   invisible()
 }
@@ -162,21 +164,22 @@ pbd_show_errors <- function()
 
 pbd_show_warnings <- function()
 {
-  nwarnings <- length(pbdenv$status$warnings)
+  warnings <- get.status(warnings)
+  nwarnings <- length(warnings)
   
-  if (!is.null(pbdenv$status$warnings)) 
+  if (!is.null(warnings))
   {
     if (nwarnings == 1)
     {
       cat("Warning message:\n")
-      cat(pbdenv$status$warnings)
+      cat(warnings)
     }
     else if (nwarnings < 11)
     {
       cat("Warning messages:\n")
       for (i in 1:nwarnings)
       {
-        w <- pbdenv$status$warnings[i]
+        w <- warnings[i]
         cat(paste0(i, ": ", w, "\n"))
       }
     }
@@ -194,8 +197,8 @@ pbd_show_warnings <- function()
 
 pbd_eval <- function(input, whoami, env)
 {
-  pbdenv$status$continuation <- FALSE
-  pbdenv$status$lasterror <- NULL
+  set.status(continuation, FALSE)
+  set.status(lasterror, NULL)
   
   if (whoami == "local")
   {
@@ -222,12 +225,12 @@ pbd_eval <- function(input, whoami, env)
     
     if (!is.null(ret))
     {
-      pbdenv$status$visible <- ret$visible
+      set.status(visible, ret$visible)
       
       if (!ret$visible)
-      pbdenv$status$ret <- NULL
-    else
-      pbdenv$status$ret <- capture.output(ret$value)
+        set.status(ret, NULL)
+      else
+        set.status(ret, capture.output(ret$value))
     }
     
     send.socket(pbdenv$socket, pbdenv$status)
@@ -240,7 +243,7 @@ pbd_eval <- function(input, whoami, env)
 
 pbd_exit <- function()
 {
-  pbdenv$status$should_exit <- TRUE
+  set.status(should_exit, TRUE)
   
   return(invisible())
 }
@@ -249,8 +252,8 @@ pbd_exit <- function()
 
 pbd_repl_init <- function()
 {
-  if (!pbdenv$status$pbd_prompt_active)
-    pbdenv$status$pbd_prompt_active <- TRUE
+  if (!get.status(pbd_prompt_active))
+    set.status(pbd_prompt_active, TRUE)
   else
   {
     cat("The pbd repl is already running!\n")
@@ -302,23 +305,24 @@ pbd_repl <- function(env=sys.parent())
   while (TRUE)
   {
     input <- character(0)
-    pbdenv$status$continuation <- FALSE
+    set.status(continuation, FALSE)
     
     while (TRUE)
     {
       pbdenv$visible <- withVisible(invisible())
-      input <- pbd_readline(input=input, continuation=pbdenv$status$continuation)
+      input <- pbd_readline(input=input, continuation=get.status(continuation))
       
       pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
       
-      if (pbdenv$status$continuation) next
+      if (get.status(continuation)) next
       
       pbd_repl_printer()
       
       ### Should go after all other evals and handlers
-      if (pbdenv$status$should_exit)
+      if (get.status(should_exit))
       {
-        pbdenv$status$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
+        set.status(pbd_prompt_active, FALSE)
+        set.status(should_exit, FALSE)
         return(invisible())
       }
       
@@ -326,7 +330,8 @@ pbd_repl <- function(env=sys.parent())
     }
   }
   
-  pbdenv$status$pbd_prompt_active <- pbdenv$status$should_exit <- FALSE
+  set.status(pbd_prompt_active, FALSE)
+  set.status(should_exit, FALSE)
   return(invisible())
 }
 
