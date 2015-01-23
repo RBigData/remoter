@@ -257,11 +257,11 @@ pbd_repl <- function(env=sys.parent())
     while (TRUE)
     {
       pbdenv$visible <- withVisible(invisible())
-      input <- pbd_readline(input=input, continuation=pbdenv$continuation)
+      input <- pbd_readline(input=input, continuation=pbdenv$status$continuation)
       
       ret <- pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
       
-      if (pbdenv$continuation) next
+      if (pbdenv$status$continuation) next
       
       pbd_repl_printer(ret)
       
