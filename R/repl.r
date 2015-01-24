@@ -44,9 +44,9 @@ set.status <- function(var, val)
 
 
 ### ------------------------------------------------
-pbd_readline <- function(input, continuation)
+pbd_readline <- function(input)
 {
-  if (continuation)
+  if (get.status(continuation))
     symb <- "+ "
   else
     symb <- "> "
@@ -200,22 +200,23 @@ pbd_eval <- function(input, whoami, env)
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   
+  print(pbdenv$whoami)
+  
   if (whoami == "local")
   {
     send.socket(pbdenv$socket, data=input)
     
     ### Special cases
-    if (grepl(x=input, pattern="^pbd_localize\\(", perl=TRUE))
+    if (all(grepl(x=input, pattern="^pbd_localize\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (grepl(x=input, pattern="^ls.local\\(", perl=TRUE))
+    else if (all(grepl(x=input, pattern="^ls.local\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (grepl(x=input, pattern="^rm.local\\(", perl=TRUE))
+    else if (all(grepl(x=input, pattern="^rm.local\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (grepl(x=input, pattern="^eval.local\\(", perl=TRUE))
+    else if (all(grepl(x=input, pattern="^eval.local\\(", perl=TRUE)))
       eval(parse(text=input))
     
-    
-    pbdenv$status <- receive.socket(pbdenv$socket)
+        pbdenv$status <- receive.socket(pbdenv$socket)
     
     pbd_show_errors()
     pbd_show_warnings()
@@ -300,9 +301,7 @@ pbd_repl <- function(env=sys.parent())
 {
   ### FIXME needed?
   if (!interactive() && pbdenv$whoami == "local")
-  {
     stop("You should only use this interactively")
-  }
   
   if (pbdenv$whoami == "remote")
     cat("Hello! This is the server; please don't type things here!\n\n")
@@ -317,11 +316,12 @@ pbd_repl <- function(env=sys.parent())
   {
     input <- character(0)
     set.status(continuation, FALSE)
+    set.status(visible, FALSE)
     
     while (TRUE)
     {
       pbdenv$visible <- withVisible(invisible())
-      input <- pbd_readline(input=input, continuation=get.status(continuation))
+      input <- pbd_readline(input=input)
       
       pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
       
@@ -343,6 +343,7 @@ pbd_repl <- function(env=sys.parent())
   
   set.status(pbd_prompt_active, FALSE)
   set.status(should_exit, FALSE)
+  
   return(invisible())
 }
 
