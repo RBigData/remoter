@@ -12,10 +12,14 @@ pbdenv <- new.env()
 # options
 pbdenv$prompt <- "pbdR"
 pbdenv$port <- 5555
+pbdenv$remote_port <- 5556
 
 # internals
 pbdenv$context <- NULL
 pbdenv$socket <- NULL
+
+pbdenv$remote_context <- NULL
+pbdenv$remote_socket <- NULL
 
 pbdenv$status <- list(
   ret               = invisible(),
@@ -232,6 +236,13 @@ pbd_eval <- function(input, whoami, env)
       msg <- NULL
     
     msg <- bcast(msg, rank.source=0)
+#    if (comm.rank() == 0)
+#      send.socket(pbdenv$remote_socket, data=msg)
+#    else
+#      msg <- receive.socket(pbdenv$remote_socket)
+    
+    comm.print(msg, all.rank=T)
+    barrier()
     
     ret <- 
     withCallingHandlers(
@@ -240,6 +251,7 @@ pbd_eval <- function(input, whoami, env)
         }, interrupt=pbd_interrupt, error=pbd_error
       ), warning=pbd_warning
     )
+    
     
     if (comm.rank() == 0)
     {
@@ -286,11 +298,8 @@ pbd_repl_init <- function()
   if (pbdenv$whoami == "local")
   {
     pbdenv$context <- init.context()
-    
-    socket <- init.socket(pbdenv$context, "ZMQ_REQ")
-    pbdenv$socket <- socket
-    
-    connect.socket(socket, paste0("tcp://localhost:", pbdenv$port))
+    pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REQ")
+    connect.socket(pbdenv$socket, paste0("tcp://localhost:", pbdenv$port))
   }
   else if (pbdenv$whoami == "remote")
   {
@@ -302,12 +311,22 @@ pbd_repl_init <- function()
     
     if (comm.rank() == 0)
     {
+      ### client/server
       pbdenv$context <- init.context()
+      pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
+      bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
       
-      socket <- init.socket(pbdenv$context,"ZMQ_REP")
-      pbdenv$socket <- socket
-      
-      bind.socket(socket, paste0("tcp://*:", pbdenv$port))
+      ### rank 0 setup for talking to other ranks
+      pbdenv$remote_context <- init.context()
+      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_REP")
+      bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
+    }
+    else
+    {
+      ### other ranks
+      pbdenv$remote_context <- init.context()
+      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_REQ")
+      connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
     }
   }
   
@@ -321,7 +340,6 @@ pbd_repl <- function(env=sys.parent())
   ### FIXME needed?
   if (!interactive() && pbdenv$whoami == "local")
     stop("You should only use this interactively")
-  
   
   init <- pbd_repl_init()
   if (!init) return(invisible())
