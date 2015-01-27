@@ -235,14 +235,17 @@ pbd_eval <- function(input, whoami, env)
     else
       msg <- NULL
     
-    msg <- bcast(msg, rank.source=0)
-#    if (comm.rank() == 0)
-#      send.socket(pbdenv$remote_socket, data=msg)
-#    else
-#      msg <- receive.socket(pbdenv$remote_socket)
+#    msg <- bcast(msg, rank.source=0)
+    if (comm.rank() == 0)
+    {
+      send.socket(pbdenv$remote_socket, data=msg)
+    }
+    else
+    {
+      msg <- receive.socket(pbdenv$remote_socket)
+    }
     
-    comm.print(msg, all.rank=T)
-    barrier()
+    barrier() # just in case ...
     
     ret <- 
     withCallingHandlers(
@@ -318,14 +321,14 @@ pbd_repl_init <- function()
       
       ### rank 0 setup for talking to other ranks
       pbdenv$remote_context <- init.context()
-      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_REP")
+      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
       bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
     }
     else
     {
       ### other ranks
       pbdenv$remote_context <- init.context()
-      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_REQ")
+      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
       connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
     }
   }
