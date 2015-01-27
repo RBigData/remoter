@@ -222,9 +222,16 @@ pbd_eval <- function(input, whoami, env)
   }
   else if (whoami == "remote")
   {
-    cat("Awaiting message:  ")
-    msg <- receive.socket(pbdenv$socket)
-    cat(msg, "\n")
+    if (comm.rank() == 0)
+    {
+      cat("Awaiting message:  ")
+      msg <- receive.socket(pbdenv$socket)
+      cat(msg, "\n")
+    }
+    else
+      msg <- NULL
+    
+    msg <- bcast(msg, rank.source=0)
     
     ret <- 
     withCallingHandlers(
@@ -234,17 +241,21 @@ pbd_eval <- function(input, whoami, env)
       ), warning=pbd_warning
     )
     
-    if (!is.null(ret))
+    if (comm.rank() == 0)
     {
-      set.status(visible, ret$visible)
+      if (!is.null(ret))
+      {
+        set.status(visible, ret$visible)
+        
+        if (!ret$visible)
+          set.status(ret, NULL)
+        else
+          set.status(ret, capture.output(ret$value))
+      }
       
-      if (!ret$visible)
-        set.status(ret, NULL)
-      else
-        set.status(ret, capture.output(ret$value))
+      send.socket(pbdenv$socket, pbdenv$status)
     }
     
-    send.socket(pbdenv$socket, pbdenv$status)
   }
   else
     stop("bad 'whoami'")
@@ -283,12 +294,21 @@ pbd_repl_init <- function()
   }
   else if (pbdenv$whoami == "remote")
   {
-    pbdenv$context <- init.context()
+    ### Order very much matters!
+    suppressPackageStartupMessages(library(pbdMPI))
     
-    socket <- init.socket(pbdenv$context,"ZMQ_REP")
-    pbdenv$socket <- socket
+    if (comm.rank() == 0)
+      cat("Hello! This is the server; please don't type things here!\n\n")
     
-    bind.socket(socket, paste0("tcp://*:", pbdenv$port))
+    if (comm.rank() == 0)
+    {
+      pbdenv$context <- init.context()
+      
+      socket <- init.socket(pbdenv$context,"ZMQ_REP")
+      pbdenv$socket <- socket
+      
+      bind.socket(socket, paste0("tcp://*:", pbdenv$port))
+    }
   }
   
   return(TRUE)
@@ -301,9 +321,6 @@ pbd_repl <- function(env=sys.parent())
   ### FIXME needed?
   if (!interactive() && pbdenv$whoami == "local")
     stop("You should only use this interactively")
-  
-  if (pbdenv$whoami == "remote")
-    cat("Hello! This is the server; please don't type things here!\n\n")
   
   
   init <- pbd_repl_init()
