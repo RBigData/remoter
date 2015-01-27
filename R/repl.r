@@ -14,6 +14,7 @@ pbdenv$prompt <- "pbdR"
 pbdenv$port <- 5555
 
 # internals
+pbdenv$context <- NULL
 pbdenv$socket <- NULL
 
 pbdenv$status <- list(
@@ -200,8 +201,6 @@ pbd_eval <- function(input, whoami, env)
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   
-  print(pbdenv$whoami)
-  
   if (whoami == "local")
   {
     send.socket(pbdenv$socket, data=input)
@@ -216,7 +215,7 @@ pbd_eval <- function(input, whoami, env)
     else if (all(grepl(x=input, pattern="^eval.local\\(", perl=TRUE)))
       eval(parse(text=input))
     
-        pbdenv$status <- receive.socket(pbdenv$socket)
+    pbdenv$status <- receive.socket(pbdenv$socket)
     
     pbd_show_errors()
     pbd_show_warnings()
@@ -275,18 +274,18 @@ pbd_repl_init <- function()
   ### Initialize zmq
   if (pbdenv$whoami == "local")
   {
-    context <- init.context()
+    pbdenv$context <- init.context()
     
-    socket <- init.socket(context, "ZMQ_REQ")
+    socket <- init.socket(pbdenv$context, "ZMQ_REQ")
     pbdenv$socket <- socket
     
     connect.socket(socket, paste0("tcp://localhost:", pbdenv$port))
   }
   else if (pbdenv$whoami == "remote")
   {
-    context <- init.context()
+    pbdenv$context <- init.context()
     
-    socket <- init.socket(context,"ZMQ_REP")
+    socket <- init.socket(pbdenv$context,"ZMQ_REP")
     pbdenv$socket <- socket
     
     bind.socket(socket, paste0("tcp://*:", pbdenv$port))
