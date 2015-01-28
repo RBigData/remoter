@@ -238,7 +238,8 @@ pbd_eval <- function(input, whoami, env)
 #    msg <- bcast(msg, rank.source=0)
     if (comm.rank() == 0)
     {
-      send.socket(pbdenv$remote_socket, data=msg)
+      for (rnk in 1:(comm.size()-1))
+        send.socket(pbdenv$remote_socket, data=msg)
     }
     else
     {
