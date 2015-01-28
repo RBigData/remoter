@@ -1,8 +1,3 @@
-### TODO:
-  # -warnings
-  # -handle C-c somehow ???
-  # -discover source of package loading hang
-
 library(rzmq)
 
 
@@ -13,6 +8,8 @@ pbdenv <- new.env()
 pbdenv$prompt <- "pbdR"
 pbdenv$port <- 5555
 pbdenv$remote_port <- 5556
+pbdenv$bcast_method <- "zmq"
+
 
 # internals
 pbdenv$context <- NULL
@@ -31,6 +28,14 @@ pbdenv$status <- list(
   should_exit       = FALSE,
   continuation      = FALSE
 )
+
+pbdenv_checker <- function()
+{
+  if (pbdenv$bcast_method != "mpi" && pbdenv$bcast_method != "zmq")
+    stop("'bcast_method' must be one of 'mpi' or 'zmq'")
+  
+  return(TRUE)
+}
 
 ### just a pinch of sugar
 get.status <- function(var)
@@ -200,6 +205,30 @@ pbd_show_warnings <- function()
 
 
 
+pbd_bcast <- function(msg)
+{
+  if (pbdenv$bcast_method == "mpi")
+  {
+    msg <- bcast(msg, rank.source=0)
+  }
+  else if (pbdenv$bcast_method == "zmq")
+  {
+    if (comm.rank() == 0)
+    {
+      for (rnk in 1:(comm.size()-1))
+        send.socket(pbdenv$remote_socket, data=msg)
+    }
+    else
+    {
+      msg <- receive.socket(pbdenv$remote_socket)
+    }
+  }
+  
+  return(msg)
+}
+
+
+
 pbd_eval <- function(input, whoami, env)
 {
   set.status(continuation, FALSE)
@@ -235,16 +264,7 @@ pbd_eval <- function(input, whoami, env)
     else
       msg <- NULL
     
-#    msg <- bcast(msg, rank.source=0)
-    if (comm.rank() == 0)
-    {
-      for (rnk in 1:(comm.size()-1))
-        send.socket(pbdenv$remote_socket, data=msg)
-    }
-    else
-    {
-      msg <- receive.socket(pbdenv$remote_socket)
-    }
+    msg <- pbd_bcast(msg)
     
     barrier() # just in case ...
     
@@ -319,18 +339,24 @@ pbd_repl_init <- function()
       pbdenv$context <- init.context()
       pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
       bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
-      
-      ### rank 0 setup for talking to other ranks
-      pbdenv$remote_context <- init.context()
-      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
-      bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
     }
-    else
+    
+    if (pbdenv$bcast_method == "zmq")
     {
-      ### other ranks
-      pbdenv$remote_context <- init.context()
-      pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
-      connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+      if (comm.rank() == 0)
+      {
+        ### rank 0 setup for talking to other ranks
+        pbdenv$remote_context <- init.context()
+        pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
+        bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
+      }
+      else
+      {
+        ### other ranks
+        pbdenv$remote_context <- init.context()
+        pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
+        connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+      }
     }
   }
   
@@ -411,10 +437,13 @@ pbd_localize <- function(object, newname)
   }
   else if (pbdenv$whoami == "remote")
   {
-    if (!exists(deparse(substitute(object))))
-      ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
-    else
-      ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
+    if (comm.rank() == 0)
+    {
+      if (!exists(deparse(substitute(object))))
+        ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
+      else
+        ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
+    }
   }
   
   return(invisible(ret))
