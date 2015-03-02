@@ -1,6 +1,9 @@
-pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE)
+pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wait=TRUE)
 {
   ### Input checks
+  if (same.str(get.os(), "windows"))
+    stop("doesn't work :[")
+  
   if (!is.character(body))
     stop("argument 'body' must be a character string")
   else if (length(body) == 0)
@@ -25,7 +28,7 @@ pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE)
   if (auto.dmat)
     auto <- TRUE
   
-   if (auto)
+  if (auto)
   {
     auto.header <- "suppressPackageStartupMessages(library(pbdMPI, quietly=TRUE))\ninit()\n\n"
     
@@ -38,23 +41,22 @@ pbdRscript <- function(body, cores=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE)
   
   script <- tempfile()
   conn <- file(script, open="wt")
+  writeLines(paste0(".__the_pbd_script <- \"", script, "\""), conn)
   writeLines(body, conn)
+  writeLines("unlink(.__the_pbd_script)", conn)
   close(conn)
   
+  if (pbdenv$debug)
+    cat("server tmpfile:  ", script, "\n")
   
-  if (same.str(get.os(), "windows"))
-    stop("doesn't work :[")
-  else
-  {
-    if (pid)
-      ret <- system(paste("mpirun -np", cores, "Rscript", script, ' &\necho "PID=$!\n"'), intern=FALSE)
-    else
-      ret <- system(paste("mpirun -np", cores, "Rscript", script), intern=FALSE)
-  }
+  cmd <- paste("mpirun -np", cores, "Rscript", script)
+  if (pid)
+    cmd <- paste(cmd, "&\necho \"PID=$!\n")
+  
+  ret <- system(cmd, intern=FALSE, wait=wait)
   
   ### manage return
 #  ret <- mcparallel(system(paste("mpirun -np", cores, "Rscript", script), intern=intern))
-  
   
   invisible()
 }
