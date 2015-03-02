@@ -12,6 +12,8 @@ pbdenv$bcast_method <- "zmq"
 pbdenv$context <- NULL
 pbdenv$socket <- NULL
 pbdenv$debug <- FALSE
+pbdenv$verbose <- TRUE
+pbdenv$client_lasterror <- ""
 
 pbdenv$remote_context <- NULL
 pbdenv$remote_socket <- NULL
@@ -74,6 +76,16 @@ pbd_readline <- function(input)
 
 
 
+pbd_client_stop <- function(msg)
+{
+  pbdenv$client_lasterror <- msg
+  cat("Error: ", msg, "\n")
+  
+  invisible()
+}
+
+
+
 pbd_sanitize <- function(inputs)
 {
   for (i in 1:length(inputs))
@@ -81,8 +93,15 @@ pbd_sanitize <- function(inputs)
     input <- inputs[i]
     if (grepl(x=input, pattern="^(q\\(|quit\\()", perl=TRUE)) 
       inputs[i] <- "pbd_exit()"
+    else if (grepl(x=input, pattern="^geterrmessage\\(", perl=TRUE))
+      inputs[i] <- pbdenv$client_lasterror
     else if (grepl(x=input, pattern="^(\\?|\\?\\?|help\\()", perl=TRUE))
-      stop("not supported") # FIXME make this an internal stop error
+    {
+      pbd_client_stop("Reading help files from the server is currently not supported.")
+      inputs[i] <- "invisible()"
+    }
+    else if (input == "")
+      inputs[i] <- "invisible()"
   }
   
   return(inputs)
