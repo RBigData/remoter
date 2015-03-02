@@ -11,6 +11,7 @@ pbdenv$bcast_method <- "zmq"
 # internals
 pbdenv$context <- NULL
 pbdenv$socket <- NULL
+pbdenv$debug <- FALSE
 
 pbdenv$remote_context <- NULL
 pbdenv$remote_socket <- NULL
@@ -257,7 +258,9 @@ pbd_eval <- function(input, whoami, env)
   {
     if (comm.rank() == 0)
     {
-      cat("Awaiting message:  ")
+      if (pbdenv$debug)
+        cat("Awaiting message:  ")
+      
       msg <- receive.socket(pbdenv$socket)
       cat(msg, "\n")
     }
@@ -330,11 +333,14 @@ pbd_repl_init <- function()
     ### Order very much matters!
     suppressPackageStartupMessages(library(pbdMPI))
     
-    if (comm.size() == 1)
-      cat("WARNING:  You should restart with mpirun and more than 1 MPI rank.\n")
-    
-    if (comm.rank() == 0)
-      cat("Hello! This is the server; please don't type things here!\n\n")
+    if (pbdenv$debug)
+    {
+      if (comm.size() == 1)
+        cat("WARNING:  You should restart with mpirun and more than 1 MPI rank.\n")
+      
+      if (comm.rank() == 0)
+        cat("Hello! This is the server; please don't type things here!\n\n")
+    }
     
     if (comm.rank() == 0)
     {
