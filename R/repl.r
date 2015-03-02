@@ -262,7 +262,9 @@ pbd_eval <- function(input, whoami, env)
         cat("Awaiting message:  ")
       
       msg <- receive.socket(pbdenv$socket)
-      cat(msg, "\n")
+      
+      if (pbdenv$debug)
+        cat(msg, "\n")
     }
     else
       msg <- NULL

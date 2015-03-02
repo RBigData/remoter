@@ -4,7 +4,7 @@ suppressMessages(source("../R/repl.r"))
 
 start_pbd_servers <- function(ranks=2, bcast_method="zmq", port=5555)
 {
-  ### FIXME replace first 3 lines with library(pbdCS) eventually
+  ### FIXME remove source() call eventually
   rscript <- paste0("
     suppressPackageStartupMessages(library(pbdCS))
     source('../R/repl.r')
