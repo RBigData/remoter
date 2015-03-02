@@ -1,6 +1,3 @@
-library(rzmq)
-
-
 ### Global data
 pbdenv <- new.env()
 
@@ -213,14 +210,17 @@ pbd_bcast <- function(msg)
   }
   else if (pbdenv$bcast_method == "zmq")
   {
-    if (comm.rank() == 0)
+    if (comm.size() > 1)
     {
-      for (rnk in 1:(comm.size()-1))
-        send.socket(pbdenv$remote_socket, data=msg)
-    }
-    else
-    {
-      msg <- receive.socket(pbdenv$remote_socket)
+      if (comm.rank() == 0)
+      {
+        for (rnk in 1:(comm.size()-1))
+          send.socket(pbdenv$remote_socket, data=msg)
+      }
+      else
+      {
+        msg <- receive.socket(pbdenv$remote_socket)
+      }
     }
   }
   
@@ -330,6 +330,9 @@ pbd_repl_init <- function()
     ### Order very much matters!
     suppressPackageStartupMessages(library(pbdMPI))
     
+    if (comm.size() == 1)
+      cat("WARNING:  You should restart with mpirun and more than 1 MPI rank.\n")
+    
     if (comm.rank() == 0)
       cat("Hello! This is the server; please don't type things here!\n\n")
     
@@ -343,19 +346,22 @@ pbd_repl_init <- function()
     
     if (pbdenv$bcast_method == "zmq")
     {
-      if (comm.rank() == 0)
+      if (comm.size() > 1)
       {
-        ### rank 0 setup for talking to other ranks
-        pbdenv$remote_context <- init.context()
-        pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
-        bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
-      }
-      else
-      {
-        ### other ranks
-        pbdenv$remote_context <- init.context()
-        pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
-        connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+        if (comm.rank() == 0)
+        {
+          ### rank 0 setup for talking to other ranks
+          pbdenv$remote_context <- init.context()
+          pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
+          bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
+        }
+        else
+        {
+          ### other ranks
+          pbdenv$remote_context <- init.context()
+          pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
+          connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+        }
       }
     }
   }
