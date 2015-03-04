@@ -6,13 +6,20 @@ job schedulers on HPC resources.
 
 ## Usage
 
-TODO
+```r
+library(pbdCS)
+
+
+pbd_launch_servers()
+pbd_launch_client()
+```
+
 
 
 ## Installation
 
 ```r
 library(devtools)
-install_github("wrathematics/cs")
+install_github("wrathematics/pbdCS")
 ```
 
