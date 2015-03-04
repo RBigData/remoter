@@ -1,4 +1,5 @@
 ### Global data
+#' @export
 pbdenv <- new.env()
 
 # options
@@ -323,6 +324,7 @@ pbd_eval <- function(input, whoami, env)
 
 
 
+#' @export
 pbd_exit <- function()
 {
   set.status(should_exit, TRUE)
@@ -398,6 +400,7 @@ pbd_repl_init <- function()
 
 
 
+#' @export
 pbd_repl <- function(env=sys.parent())
 {
   ### FIXME needed?
@@ -446,6 +449,7 @@ pbd_repl <- function(env=sys.parent())
 
 
 
+#' @export
 pbd_localize <- function(object, newname)
 {
   err <- ".__pbd_localize_failure"
@@ -484,6 +488,7 @@ pbd_localize <- function(object, newname)
 
 
 
+#' @export
 ls.local <- function(envir, all.names=FALSE, pattern)
 {
   if (missing(envir))
@@ -498,6 +503,7 @@ ls.local <- function(envir, all.names=FALSE, pattern)
 
 
 ### TODO error checking
+#' @export
 rm.local <- function(..., list=character(), envir)
 {
   if (pbdenv$whoami == "local")
@@ -517,6 +523,7 @@ rm.local <- function(..., list=character(), envir)
 
 
 ### TODO basically everything
+#' @export
 eval.local <- function(expr)
 {
   if (pbdenv$whoami == "local")
