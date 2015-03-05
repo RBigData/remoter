@@ -324,6 +324,16 @@ pbd_eval <- function(input, whoami, env)
 
 
 
+#' pbd_exit
+#' 
+#' Exit the pbdR client/server.
+#' 
+#' @description
+#' This function cleanly shuts down any pbdR servers which have been
+#' spawned, as well as shutting down the client.  Failing to use
+#' this function to shut down the client/server may cause unexpected
+#' results.
+#' 
 #' @export
 pbd_exit <- function()
 {
@@ -400,6 +410,17 @@ pbd_repl_init <- function()
 
 
 
+#' pbd_repl
+#' 
+#' The REPL for the client/server.
+#' 
+#' @description
+#' This is exported for clean access reasons; you shoud not directly
+#' use this function.
+#' 
+#' @param env 
+#' Environment where repl evaluations will take place.
+#'
 #' @export
 pbd_repl <- function(env=sys.parent())
 {
@@ -449,6 +470,38 @@ pbd_repl <- function(env=sys.parent())
 
 
 
+#' pbd_localize
+#' 
+#' Localize R objects.
+#' 
+#' @description
+#' This function allows you to pass an object from MPI rank 0 of 
+#' the servers to the local R session behind the client.
+#' 
+#' @param object 
+#' 
+#' @param newname
+#' 
+#' 
+#' @examples
+#' \dontrun{
+#' ### Prompts are listed to clarify when something is eval'd locally vs remotely
+#' > library(pbdCS)
+#' > y
+#' ###  Error: object 'y' not found
+#' > pbd_launch_servers()
+#' > pbd_launch_client()
+#' pbdR> x
+#' ### Error: object 'x' not found
+#' pbdR> x <- "some data"
+#' pbdR> x
+#' ###  [1] "some data" 
+#' pbdR> pbd_localize(x, "y")
+#' pbdR> pbd_exit()
+#' > y
+#' ###  [1] "some data"
+#' }
+#' 
 #' @export
 pbd_localize <- function(object, newname)
 {
@@ -488,6 +541,22 @@ pbd_localize <- function(object, newname)
 
 
 
+#' ls.local
+#' 
+#' View objects on the client.
+#' 
+#' @description
+#' A function to view environments on the client's R session.  To
+#' view objects on the server, use \code{ls()}.
+#' 
+#' @param envir
+#' Environment (as in \code{ls()}).
+#' @param all.names
+#' Logical that determines if all names are returned or those beginning
+#' with a '.' are omitted (as in \code{ls()}).
+#' @param pattern
+#' Optional regular expression (as in \code{ls()}).
+#'
 #' @export
 ls.local <- function(envir, all.names=FALSE, pattern)
 {
@@ -502,10 +571,25 @@ ls.local <- function(envir, all.names=FALSE, pattern)
 
 
 
-### TODO error checking
+#' rm.local
+#' 
+#' View objects on the client.
+#' 
+#' @description
+#' A function to remove objects from the client's R session.  To
+#' remove objects on the server, use \code{rm()}.
+#' 
+#' @param ...
+#' Objects to be removed from the client's R session.
+#' @param list
+#' Character vector naming objects to be removed (as in \code{rm()}).
+#' @param envir
+#' Environment (as in \code{rm()}).
+#'
 #' @export
 rm.local <- function(..., list=character(), envir)
 {
+  ### TODO error checking
   if (pbdenv$whoami == "local")
   {
     if (missing(envir))
@@ -522,10 +606,21 @@ rm.local <- function(..., list=character(), envir)
 }
 
 
-### TODO basically everything
+
+#' eval.local
+#' 
+#' Evaluate expressions on the client.
+#' 
+#' @description
+#' A function to evaluate expressions on the client's R session.
+#' 
+#' @param expr
+#' Expression to be evaluated on the client.
+#'
 #' @export
 eval.local <- function(expr)
 {
+  ### TODO basically everything
   if (pbdenv$whoami == "local")
     print(eval(expr=expr))
   

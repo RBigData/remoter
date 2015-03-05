@@ -22,11 +22,14 @@ the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.}
 script should be saved as an R character vector.}
 }
 \description{
-Simple tool for executing pbdR batch jobs from inside R.
-}
-\details{
 This function is a simple wrapper around the system() command.  As such,
 data is not shared between the calling R process and the batch processes
 which execute the 'body' source.
+}
+\details{
+Simple tool for executing pbdR batch jobs from inside R.
+
+This is a simple wrapper around a system call to mpirun on the
+input script.
 }
 

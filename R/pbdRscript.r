@@ -2,6 +2,7 @@
 #' 
 #' Simple tool for executing pbdR batch jobs from inside R.
 #' 
+#' @description
 #' This function is a simple wrapper around the system() command.  As such,
 #' data is not shared between the calling R process and the batch processes
 #' which execute the 'body' source.
@@ -21,6 +22,10 @@
 #' logical; determines if the script should automatically load
 #' the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.
 #'
+#' @details
+#' This is a simple wrapper around a system call to mpirun on the
+#' input script.
+#' 
 #' @export
 pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wait=TRUE)
 {

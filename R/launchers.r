@@ -19,10 +19,39 @@
 #' The port to use for communication between the client and rank 0.
 #' 
 #' @details
-#' TODO: describe structure
+#' The \code{port} values between the client and server \emph{MUST}
+#' agree.  If they do not, this can cause the client to hang.
+#' 
+#' The servers are launched via \code{pbdRscript()}.
+#' 
+#' The client is a specialized REPL that intercepts commands sent
+#' through the R interpreter.  These commands are then sent from the
+#' client to and evaluated on the servers.
+#' 
+#' The client communicates over ZeroMQ with MPI rank 0 (of the 
+#' servers) using a REQ/REP pattern.  Both commands (from client to
+#' server) and returns (from servers to client) are handled in this
+#' way.  Once a command is sent from the client to MPI rank 0,
+#' that command is then "broadcasted" from MPI rank 0 to the other
+#' MPI ranks.  The method of broadcast is handled by the input
+#' \code{bcast_method}.  If \code{bcast_method="mpi"}, then \code{MPI_bcast}
+#' is used to transmit the command.  Otherwise (\code{bcast_method="zmq"})
+#' uses ZeroMQ with a PUSH/PULL pattern.  The MPI method is probably
+#' epsilon faster, but it will busy-wait.  The ZeroMQ bcast method
+#' will not busy wait, in addition to the other benefits ZeroMQ
+#' affords; thus, \code{bcast_method="zmq"} is the default.
+#' 
+#' To shut down the servers and the client, use the command \code{pbd_exit()}.
+#' 
+#' @examples
+#' \dontrun{
+#' library(pbdCS)
+#' pbd_launch_servers()
+#' pbd_launch_client()
+#' }
 #' 
 #' @rdname launchers
-#' 
+#' @seealso \code{\link{pbdRscript}, \link{pbd_exit}}
 #' @export
 pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555)
 {
