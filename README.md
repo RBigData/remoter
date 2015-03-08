@@ -1,26 +1,25 @@
-# pbdinline
+# pbdCS 
 
-This is a very simple R package that aids in using R and pbdR on
-supercomputers.  It contains utilities for running pbdR scripts, as
-well as allocating jobs with pbs schedulers.
+A client/server for the pbdR packages, plus utilities to ease working with
+job schedulers on HPC resources.
 
-This assumes you have MPI and the pbdR utilities installed, but wish
-to control batch execution of pbdR scripts from R instead of the 
-command line.
+
+## Usage
+
+```r
+library(pbdCS)
+
+
+pbd_launch_servers()
+pbd_launch_client()
+```
 
 
 
 ## Installation
 
-The easiest way to install the package is using the devtools package:
-
 ```r
 library(devtools)
-install_github("wrathematics/pbdinline")
+install_github("wrathematics/pbdCS")
 ```
 
-
-
-## Usage
-
-See the demos/ section for example usage.
