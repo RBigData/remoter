@@ -4,14 +4,11 @@ Title: pbdR Client/Server Utilities
 Version: 0.1-0
 Description: A set of utilities for interactivly using pbdR.
 License: BSD 2-clause License + file LICENSE
-Depends:
-    R (>= 2.14.0),
-    parallel,
-    pbdZMQ,
-    pbdMPI
+Depends: R (>= 2.14.0), parallel, pbdZMQ, pbdMPI
 SystemRequirements: pbdMPI
 Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
 NeedsCompilation: no
 ByteCompile: yes
 Author: Drew Schmidt and Wei-Chen Chen
 Maintainer: Drew Schmidt <schmidt@math.utk.com>
+Packaged: 2015-03-14 22:55:49 UTC; snoweye
