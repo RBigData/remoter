@@ -21,17 +21,20 @@
 #' @param auto.dmat 
 #' logical; determines if the script should automatically load
 #' the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.
+#' @param tmpdir
+#' A temporary directory for dumping demon script for pbdR servers.
 #'
 #' @details
 #' This is a simple wrapper around a system call to mpirun on the
 #' input script.
 #' 
 #' @export
-pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wait=TRUE)
+pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
+    pid=TRUE, wait=TRUE, tmpdir = getwd())
 {
   ### Input checks
-  if (same.str(get.os(), "windows"))
-    stop("You can't use this on Windows")
+  # if (same.str(get.os(), "windows"))
+  #   stop("You can't use this on Windows")
   
   if (!is.character(body))
     stop("argument 'body' must be a character string")
@@ -68,7 +71,15 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wai
     body <- paste(auto.header, body, auto.footer, collapse="\n")
   }
   
-  script <- tempfile()
+  ### Create a temp file for pbdR servers.
+  script <- tempfile(tmpdir = tmpdir)
+  if (same.str(get.os(), "windows"))
+  {
+    script <- gsub("\\\\", "/", script)
+    script.bat <- paste0(script, ".bat") 
+  }
+
+  ### Dump demon script to temp file for pbdR servers.
   conn <- file(script, open="wt")
   writeLines(paste0(".__the_pbd_script <- \"", script, "\""), conn)
   writeLines(body, conn)
@@ -78,11 +89,33 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wai
   if (pbdenv$debug)
     cat("server tmpfile:  ", script, "\n")
   
-  cmd <- paste("mpirun -np", nranks, "Rscript", script)
-  if (pid)
-    cmd <- paste(cmd, "&\necho \"PID=$!\n")
-  
-  ret <- system(cmd, intern=FALSE, wait=wait)
+  ### Launch mpi commands.
+  if (!same.str(get.os(), "windows"))
+  {
+    cmd <- paste("mpirun -np", nranks, "Rscript", script)
+    if (pid)
+      cmd <- paste(cmd, "&\necho \"PID=$!\n")
+
+    ### Run system shell command.
+    ret <- system(cmd, intern=FALSE, wait=wait)
+  }
+  else
+  {
+    # cmd <- paste0("start /B cmd.exe /C ",
+    #               "mpiexec -np ", nranks, " Rscript ", script, "\n",
+    #               " del ", script, "*")
+    cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n",
+                  " del /F /Q ", script, "*")
+
+    ### Dump to a windows bat file.
+    conn.bat <- file(script.bat, open="wt")
+    writeLines(cmd, conn.bat)
+    close(conn.bat)
+
+    ### Run system shell command.
+    script.bat <- sub("^\\./", "", script.bat)
+    ret <- shell.exec(script.bat)
+  }
   
   ### manage return
 #  ret <- mcparallel(system(paste("mpirun -np", nranks, "Rscript", script), intern=intern))
