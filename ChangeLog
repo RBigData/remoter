@@ -1,0 +1,13 @@
+
+======================= Log Before Release =====================================
+2015-03-15:
+  * Switch to pbdZMQ and test under Windows.
+
+2015-01-xx:
+  * Switch to and debug with rzmq and ZeroMQ.
+
+2014-12-xx:
+  * Rename to pbdCS.
+
+2014-07-xx:
+  * Original package name pbdinline.
