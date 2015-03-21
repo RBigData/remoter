@@ -227,7 +227,8 @@ pbd_bcast <- function(msg)
 {
   if (pbdenv$bcast_method == "mpi")
   {
-    msg <- bcast(msg, rank.source=0)
+    # msg <- bcast(msg, rank.source=0)
+    msg <- spmd.bcast.message(msg, rank.source = 0)
   }
   else if (pbdenv$bcast_method == "zmq")
   {
