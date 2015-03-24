@@ -101,19 +101,14 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   }
   else
   {
-    # cmd <- paste0("start /B cmd.exe /C ",
-    #               "mpiexec -np ", nranks, " Rscript ", script, "\n",
-    #               " del ", script, "*")
-    cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n",
-                  " del /F /Q ", script, "*")
-
-    ### Dump to a windows bat file.
+    ### Dump command to a windows batch file.
+    cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
     conn.bat <- file(script.bat, open="wt")
     writeLines(cmd, conn.bat)
     close(conn.bat)
-
-    ### Run system shell command.
     script.bat <- sub("^\\./", "", script.bat)
+
+    ### Run system batch command via shell.exec.
     ret <- shell.exec(script.bat)
   }
   
