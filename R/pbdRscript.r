@@ -73,11 +73,11 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   
   ### Create a temp file for pbdR servers.
   script <- tempfile(tmpdir = tmpdir)
-  if (same.str(get.os(), "windows"))
-  {
-    script <- gsub("\\\\", "/", script)
-    script.bat <- paste0(script, ".bat") 
-  }
+  # if (same.str(get.os(), "windows"))
+  # {
+  #   script <- gsub("\\\\", "/", script)
+  #   script.bat <- paste0(script, ".bat") 
+  # }
 
   ### Dump demon script to temp file for pbdR servers.
   conn <- file(script, open="wt")
@@ -101,6 +101,12 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   }
   else
   {
+    ### This does not work well. The minimized or invisible must be FALSE.
+    ### The new active cmd window blocks the current R window.
+    # cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
+    # ret <- system(cmd, intern = FALSE, wait = wait,
+    #               minimized = FALSE, invisible = FALSE)
+
     ### Dump command to a windows batch file.
     cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
     conn.bat <- file(script.bat, open="wt")
@@ -109,7 +115,8 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
     script.bat <- sub("^\\./", "", script.bat)
 
     ### Run system batch command via shell.exec.
-    if(!is.loaded("shellexec_wcc", PACKAGE = "pbdZMQ", type = "Call")){
+    if (!is.loaded("shellexec_wcc", PACKAGE = "pbdZMQ", type = "Call"))
+    {
       ret <- shell.exec(script.bat)
     } else{
       ret <- shellexec.wcc(script.bat)
