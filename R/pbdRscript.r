@@ -109,7 +109,11 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
     script.bat <- sub("^\\./", "", script.bat)
 
     ### Run system batch command via shell.exec.
-    ret <- shell.exec(script.bat)
+    if(!is.loaded("shellexec_wcc", PACKAGE = "pbdZMQ", type = "Call")){
+      ret <- shell.exec(script.bat)
+    } else{
+      ret <- shellexec.wcc(script.bat)
+    }
   }
   
   ### manage return
