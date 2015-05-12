@@ -4,8 +4,8 @@ pbdenv <- new.env()
 
 # options
 pbdenv$prompt <- "pbdR"
-pbdenv$port <- 5555
-pbdenv$remote_port <- 5556
+pbdenv$port <- 55555
+pbdenv$remote_port <- 55556
 pbdenv$bcast_method <- "zmq"
 
 
@@ -19,6 +19,7 @@ pbdenv$client_lasterror <- ""
 pbdenv$remote_context <- NULL
 pbdenv$remote_socket <- NULL
 
+# C/S state
 pbdenv$status <- list(
   ret               = invisible(),
   visible           = FALSE,
@@ -223,27 +224,32 @@ pbd_show_warnings <- function()
 
 
 
+pbd_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
+
+pbd_bcast_zmq <- function(msg)
+{
+  if (comm.size() > 1)
+  {
+    if (comm.rank() == 0)
+    {
+      for (rnk in 1:(comm.size()-1))
+        send.socket(pbdenv$remote_socket, data=msg)
+    }
+    else
+    {
+      msg <- receive.socket(pbdenv$remote_socket)
+    }
+  }
+  
+  msg
+}
+
 pbd_bcast <- function(msg)
 {
   if (pbdenv$bcast_method == "mpi")
-  {
-    msg <- bcast(msg, rank.source=0)
-  }
+    msg <- pbd_bcast_mpi(msg=msg)
   else if (pbdenv$bcast_method == "zmq")
-  {
-    if (comm.size() > 1)
-    {
-      if (comm.rank() == 0)
-      {
-        for (rnk in 1:(comm.size()-1))
-          send.socket(pbdenv$remote_socket, data=msg)
-      }
-      else
-      {
-        msg <- receive.socket(pbdenv$remote_socket)
-      }
-    }
-  }
+    msg <- pbd_bcast_zmq(msg=msg)
   
   return(msg)
 }
@@ -360,6 +366,10 @@ pbd_repl_init <- function()
     pbdenv$context <- init.context()
     pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REQ")
     connect.socket(pbdenv$socket, paste0("tcp://localhost:", pbdenv$port))
+    
+    cat("please wait a moment for the servers to spin up...")
+    pbd_eval(input="barrier()", whoami=pbdenv$whoami)
+    cat("\n")
   }
   else if (pbdenv$whoami == "remote")
   {
@@ -377,11 +387,16 @@ pbd_repl_init <- function()
     
     if (comm.rank() == 0)
     {
+      serverip <- getip()
+      invisible(bcast(serverip, rank.source=0))
+      
       ### client/server
       pbdenv$context <- init.context()
       pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
       bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
     }
+    else
+      serverip <- bcast()
     
     if (pbdenv$bcast_method == "zmq")
     {
@@ -399,11 +414,13 @@ pbd_repl_init <- function()
           ### other ranks
           pbdenv$remote_context <- init.context()
           pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
-          connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+          connect.socket(pbdenv$remote_socket, paste0("tcp://", serverip, ":", pbdenv$remote_port))
         }
       }
     }
   }
+  
+  
   
   return(TRUE)
 }
