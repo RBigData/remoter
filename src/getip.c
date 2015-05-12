@@ -11,7 +11,6 @@
 
 
 #define HOME "127.0.0.1"
-#define STRLEN 9
 
 SEXP pbdcs_getip()
 {
@@ -31,7 +30,7 @@ SEXP pbdcs_getip()
       
       addr = inet_ntoa(pAddr->sin_addr);
       
-      if (strncmp(addr, HOME, STRLEN) != 0)
+      if (strncmp(addr, HOME, strlen(HOME)) != 0)
       {
         PROTECT(ip = allocVector(STRSXP, 1));
         SET_STRING_ELT(ip, 0, mkChar(addr));
