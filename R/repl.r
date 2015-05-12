@@ -24,6 +24,7 @@ pbdenv$status <- list(
   ret               = invisible(),
   visible           = FALSE,
   lasterror         = NULL,
+  shouldwarn        = FALSE,
   num_warnings      = 0,
   warnings          = NULL,
   pbd_prompt_active = FALSE,
@@ -102,6 +103,12 @@ pbd_sanitize <- function(inputs)
       pbd_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
     }
+    else if (grepl(x=input, pattern="^warnings\\(", perl=TRUE))
+    {
+      pbdenv$status$shouldwarn <- TRUE
+      pbd_show_warnings()
+      inputs[i] <- "invisible()"
+    }
     else if (input == "")
       inputs[i] <- "invisible()"
   }
@@ -123,22 +130,17 @@ is.error <- function(obj)
 
 pbd_repl_printer <- function()
 {
-  if (pbdenv$whoami == "remote") return(invisible())
-  
-#  cat("----------------------------\n")
-#  print(ret)
-#  cat("----------------------------\n")
+  if (pbdenv$whoami == "remote")
+  {
+    pbdenv$status$shouldwarn <- FALSE
+    return(invisible())
+  }
   
   if (get.status(visible))
     cat(paste(get.status(ret), collapse="\n"), "\n")
   
-  if (get.status(num_warnings) > 0)
-  {
-    if (get.status(num_warnings) > 10)
-      cat(paste("There were", get.status(num_warnings), "warnings (use warnings() to see them)\n"))
-    else
-      print(warnings())
-  }
+  pbd_show_errors()
+  pbd_show_warnings()
   
   return(invisible())
 }
@@ -156,6 +158,7 @@ pbd_interrupt <- function(x)
 
 pbd_warning <- function(warn)
 {
+  pbdenv$status$shouldwarn <- TRUE
   pbdenv$status$num_warnings <- pbdenv$status$num_warnings + 1
   
   pbdenv$status$warnings <- append(pbdenv$status$warnings, conditionMessage(warn))
@@ -196,7 +199,7 @@ pbd_show_warnings <- function()
   warnings <- get.status(warnings)
   nwarnings <- length(warnings)
   
-  if (!is.null(warnings))
+  if (!is.null(warnings) && pbdenv$status$shouldwarn)
   {
     if (nwarnings == 1)
     {
@@ -218,6 +221,8 @@ pbd_show_warnings <- function()
     }
     cat("\n")
   }
+  
+  pbdenv$status$shouldwarn <- FALSE
   
   invisible()
 }
@@ -256,6 +261,7 @@ pbd_bcast <- function(msg)
 
 
 
+### TODO FIXME integrate with pbd_sanitize()
 pbd_eval_filter_server <- function(msg)
 {
   if (all(grepl(x=msg, pattern="^library\\(", perl=TRUE)))
@@ -303,8 +309,8 @@ pbd_eval <- function(input, whoami, env)
     
     pbdenv$status <- receive.socket(pbdenv$socket)
     
-    pbd_show_errors()
-    pbd_show_warnings()
+#    pbd_show_errors()
+#    pbd_show_warnings()
   }
   else if (whoami == "remote")
   {
