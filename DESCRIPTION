@@ -11,7 +11,7 @@ Depends:
     pbdMPI
 SystemRequirements: pbdMPI
 Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
-NeedsCompilation: no
+NeedsCompilation: yes
 ByteCompile: yes
 Author: Drew Schmidt and Wei-Chen Chen
 Maintainer: Drew Schmidt <schmidt@math.utk.com>
