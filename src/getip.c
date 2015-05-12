@@ -8,9 +8,16 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 
 
 #define LOCALHOST "127."
+
+// FIXME this SHOULD be in net/if.h, but doesn't get included for some insane reason
+#ifndef IFF_LOOPBACK
+#define IFF_LOOPBACK 0 // skip if undefined
+#endif
 
 // hope they don't do something weird lol
 SEXP pbdcs_getip()
@@ -31,7 +38,9 @@ SEXP pbdcs_getip()
       
       addr = inet_ntoa(pAddr->sin_addr);
       
-      if (strcmp(tmp->ifa_name, "lo") != 0 && strcmp(addr, LOCALHOST) != 0)
+      if (strcmp(tmp->ifa_name, "lo") != 0  && 
+          strcmp(addr, LOCALHOST)     != 0  && 
+          !(tmp->ifa_flags & IFF_LOOPBACK)  )
       {
         PROTECT(ip = allocVector(STRSXP, 1));
         SET_STRING_ELT(ip, 0, mkChar(addr));
