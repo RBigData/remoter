@@ -10,8 +10,9 @@
 #include <arpa/inet.h>
 
 
-#define HOME "127.0.0.1"
+#define LOCALHOST "127."
 
+// hope they don't do something weird lol
 SEXP pbdcs_getip()
 {
   SEXP ip;
@@ -30,7 +31,7 @@ SEXP pbdcs_getip()
       
       addr = inet_ntoa(pAddr->sin_addr);
       
-      if (strncmp(addr, HOME, strlen(HOME)) != 0)
+      if (strcmp(tmp->ifa_name, "lo") != 0 && strcmp(addr, LOCALHOST) != 0)
       {
         PROTECT(ip = allocVector(STRSXP, 1));
         SET_STRING_ELT(ip, 0, mkChar(addr));
