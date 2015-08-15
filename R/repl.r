@@ -4,8 +4,8 @@ pbdenv <- new.env()
 
 # options
 pbdenv$prompt <- "pbdR"
-pbdenv$port <- 5555
-pbdenv$remote_port <- 5556
+pbdenv$port <- 55555
+pbdenv$remote_port <- 55556
 pbdenv$bcast_method <- "zmq"
 
 
@@ -19,10 +19,12 @@ pbdenv$client_lasterror <- ""
 pbdenv$remote_context <- NULL
 pbdenv$remote_socket <- NULL
 
+# C/S state
 pbdenv$status <- list(
   ret               = invisible(),
   visible           = FALSE,
   lasterror         = NULL,
+  shouldwarn        = FALSE,
   num_warnings      = 0,
   warnings          = NULL,
   pbd_prompt_active = FALSE,
@@ -101,6 +103,12 @@ pbd_sanitize <- function(inputs)
       pbd_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
     }
+    else if (grepl(x=input, pattern="^warnings\\(", perl=TRUE))
+    {
+      pbdenv$status$shouldwarn <- TRUE
+      pbd_show_warnings()
+      inputs[i] <- "invisible()"
+    }
     else if (input == "")
       inputs[i] <- "invisible()"
   }
@@ -122,22 +130,17 @@ is.error <- function(obj)
 
 pbd_repl_printer <- function()
 {
-  if (pbdenv$whoami == "remote") return(invisible())
-  
-#  cat("----------------------------\n")
-#  print(ret)
-#  cat("----------------------------\n")
+  if (pbdenv$whoami == "remote")
+  {
+    pbdenv$status$shouldwarn <- FALSE
+    return(invisible())
+  }
   
   if (get.status(visible))
     cat(paste(get.status(ret), collapse="\n"), "\n")
   
-  if (get.status(num_warnings) > 0)
-  {
-    if (get.status(num_warnings) > 10)
-      cat(paste("There were", get.status(num_warnings), "warnings (use warnings() to see them)\n"))
-    else
-      print(warnings())
-  }
+  pbd_show_errors()
+  pbd_show_warnings()
   
   return(invisible())
 }
@@ -155,6 +158,7 @@ pbd_interrupt <- function(x)
 
 pbd_warning <- function(warn)
 {
+  pbdenv$status$shouldwarn <- TRUE
   pbdenv$status$num_warnings <- pbdenv$status$num_warnings + 1
   
   pbdenv$status$warnings <- append(pbdenv$status$warnings, conditionMessage(warn))
@@ -195,7 +199,7 @@ pbd_show_warnings <- function()
   warnings <- get.status(warnings)
   nwarnings <- length(warnings)
   
-  if (!is.null(warnings))
+  if (!is.null(warnings) && pbdenv$status$shouldwarn)
   {
     if (nwarnings == 1)
     {
@@ -218,35 +222,69 @@ pbd_show_warnings <- function()
     cat("\n")
   }
   
+  pbdenv$status$shouldwarn <- FALSE
+  
   invisible()
 }
 
 
 
-pbd_bcast <- function(msg)
+# pbd_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
+pbd_bcast_mpi <- function(msg) spmd.bcast.message(msg, rank.source = 0)
+
+pbd_bcast_zmq <- function(msg)
 {
-  if (pbdenv$bcast_method == "mpi")
+  if (comm.size() > 1)
   {
-    # msg <- bcast(msg, rank.source=0)
-    msg <- spmd.bcast.message(msg, rank.source = 0)
-  }
-  else if (pbdenv$bcast_method == "zmq")
-  {
-    if (comm.size() > 1)
+    if (comm.rank() == 0)
     {
-      if (comm.rank() == 0)
-      {
-        for (rnk in 1:(comm.size()-1))
-          send.socket(pbdenv$remote_socket, data=msg)
-      }
-      else
-      {
-        msg <- receive.socket(pbdenv$remote_socket)
-      }
+      for (rnk in 1:(comm.size()-1))
+        send.socket(pbdenv$remote_socket, data=msg)
+    }
+    else
+    {
+      msg <- receive.socket(pbdenv$remote_socket)
     }
   }
   
+  msg
+}
+
+pbd_bcast <- function(msg)
+{
+  if (pbdenv$bcast_method == "mpi")
+    msg <- pbd_bcast_mpi(msg=msg)
+  else if (pbdenv$bcast_method == "zmq")
+    msg <- pbd_bcast_zmq(msg=msg)
+  
   return(msg)
+}
+
+
+
+### TODO FIXME integrate with pbd_sanitize()
+pbd_eval_filter_server <- function(msg)
+{
+  if (all(grepl(x=msg, pattern="^library\\(", perl=TRUE)))
+  {
+    if (comm.rank() == 0)
+    {
+      msg <- paste0("
+        tmp <- file(tempfile())
+        sink(tmp, append=TRUE)
+        sink(tmp, append=TRUE, type='message')\n", 
+        msg, "\n
+        sink()
+        sink(type='message')
+        cat(paste(readLines(tmp), collapse='\n'))
+        unlink(tmp)
+      ")
+    }
+    else
+      msg <- paste0("suppressPackageStartupMessages(", msg, ")")
+  }
+  
+  msg
 }
 
 
@@ -272,8 +310,8 @@ pbd_eval <- function(input, whoami, env)
     
     pbdenv$status <- receive.socket(pbdenv$socket)
     
-    pbd_show_errors()
-    pbd_show_warnings()
+#    pbd_show_errors()
+#    pbd_show_warnings()
   }
   else if (whoami == "remote")
   {
@@ -291,8 +329,9 @@ pbd_eval <- function(input, whoami, env)
       msg <- NULL
     
     msg <- pbd_bcast(msg)
-    
     barrier() # just in case ...
+    
+    msg <- pbd_eval_filter_server(msg=msg)
     
     ret <- 
     withCallingHandlers(
@@ -361,6 +400,10 @@ pbd_repl_init <- function()
     pbdenv$context <- init.context()
     pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REQ")
     connect.socket(pbdenv$socket, paste0("tcp://localhost:", pbdenv$port))
+    
+    cat("please wait a moment for the servers to spin up...")
+    pbd_eval(input="barrier()", whoami=pbdenv$whoami)
+    cat("\n")
   }
   else if (pbdenv$whoami == "remote")
   {
@@ -378,11 +421,16 @@ pbd_repl_init <- function()
     
     if (comm.rank() == 0)
     {
+      serverip <- getip()
+      invisible(bcast(serverip, rank.source=0))
+      
       ### client/server
       pbdenv$context <- init.context()
       pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
       bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
     }
+    else
+      serverip <- bcast()
     
     if (pbdenv$bcast_method == "zmq")
     {
@@ -400,11 +448,13 @@ pbd_repl_init <- function()
           ### other ranks
           pbdenv$remote_context <- init.context()
           pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
-          connect.socket(pbdenv$remote_socket, paste0("tcp://localhost:", pbdenv$remote_port))
+          connect.socket(pbdenv$remote_socket, paste0("tcp://", serverip, ":", pbdenv$remote_port))
         }
       }
     }
   }
+  
+  
   
   return(TRUE)
 }

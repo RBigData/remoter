@@ -9,7 +9,7 @@ init()
 comm.print("Setting up servers...")
 
 ### Server and all clients need this.
-suppressMessages(library(pbdinline, quietly = TRUE))
+suppressMessages(library(pbdCS, quietly = TRUE))
 ret.check <- TRUE
 .pbdCSEnv$log <- vector(mode = "list", .CS.CT$log.size)
 .pbdCSEnv$log.counter <- 1

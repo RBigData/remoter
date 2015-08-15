@@ -1,2 +1,6 @@
 *~
 *.pdf
+
+
+src/*.o
+src/*.so
