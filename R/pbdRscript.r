@@ -73,11 +73,11 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   
   ### Create a temp file for pbdR servers.
   script <- tempfile(tmpdir = tmpdir)
-  # if (same.str(get.os(), "windows"))
-  # {
-  #   script <- gsub("\\\\", "/", script)
-  #   script.bat <- paste0(script, ".bat") 
-  # }
+  if (same.str(get.os(), "windows"))
+  {
+    script <- gsub("\\\\", "/", script)
+    script.bat <- paste0(script, ".bat") 
+  }
 
   ### Dump demon script to temp file for pbdR servers.
   conn <- file(script, open="wt")
