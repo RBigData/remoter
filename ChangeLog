@@ -2,6 +2,7 @@
 ======================= Log Before Release =====================================
 2015-08-15:
   * Merge from Drew's version and recheck again.
+  * Fix windows problems.
 
 2015-04-25:
   * Add shellexec.wcc() to avoid blocking active R windows.
