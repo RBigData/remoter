@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#ifndef WIN
+
 #include <sys/types.h>
 #include <ifaddrs.h>
 #include <sys/socket.h>
@@ -11,7 +14,6 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 
-
 #define LOCALHOST "127."
 
 // FIXME this SHOULD be in net/if.h, but doesn't get included for some insane reason
@@ -19,9 +21,12 @@
 #define IFF_LOOPBACK 0 // skip if undefined
 #endif
 
+#endif
+
 // hope they don't do something weird lol
 SEXP pbdcs_getip()
 {
+#ifndef WIN
   SEXP ip;
   struct ifaddrs *tmp, *ifap;
   struct sockaddr_in *pAddr;
@@ -54,6 +59,7 @@ SEXP pbdcs_getip()
   }
   
   freeifaddrs(ifap);
+#endif
   
   return R_NilValue;
 }
