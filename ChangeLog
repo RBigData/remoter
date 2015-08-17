@@ -1,24 +1,6 @@
+Release 0.1-0:
+  * Removed tmpdir() usage (wcc).
+  * Fixed to work on Windows (wcc).
+  * Develop basic client/server over ZMQ.
+  * Rename pbdinline to pbdCS.
 
-======================= Log Before Release =====================================
-2015-08-15:
-  * Merge from Drew's version and recheck again.
-  * Fix windows problems.
-  * Drop tmpdir.
-
-2015-04-25:
-  * Add shellexec.wcc() to avoid blocking active R windows.
-
-2015-03-23:
-  * Test with spmd.bcast.message().
-
-2015-03-15:
-  * Switch to pbdZMQ and test under Windows.
-
-2015-01-xx:
-  * Switch to and debug with rzmq and ZeroMQ.
-
-2014-12-xx:
-  * Rename to pbdCS.
-
-2014-07-xx:
-  * Original package name pbdinline.
