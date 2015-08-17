@@ -229,7 +229,8 @@ pbd_show_warnings <- function()
 
 
 
-pbd_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
+# pbd_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
+pbd_bcast_mpi <- function(msg) spmd.bcast.message(msg, rank.source = 0)
 
 pbd_bcast_zmq <- function(msg)
 {

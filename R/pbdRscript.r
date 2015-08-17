@@ -27,11 +27,12 @@
 #' input script.
 #' 
 #' @export
-pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wait=TRUE)
+pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
+    pid=TRUE, wait=TRUE)
 {
   ### Input checks
-  if (same.str(get.os(), "windows"))
-    stop("You can't use this on Windows")
+  # if (same.str(get.os(), "windows"))
+  #   stop("You can't use this on Windows")
   
   if (!is.character(body))
     stop("argument 'body' must be a character string")
@@ -68,7 +69,15 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wai
     body <- paste(auto.header, body, auto.footer, collapse="\n")
   }
   
+  ### Create a temp file for pbdR servers.
   script <- tempfile()
+  if (same.str(get.os(), "windows"))
+  {
+    script <- gsub("\\\\", "/", script)
+    script.bat <- paste0(script, ".bat") 
+  }
+
+  ### Dump demon script to temp file for pbdR servers.
   conn <- file(script, open="wt")
   writeLines(paste0(".__the_pbd_script <- \"", script, "\""), conn)
   writeLines(body, conn)
@@ -78,11 +87,39 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE, pid=TRUE, wai
   if (pbdenv$debug)
     cat("server tmpfile:  ", script, "\n")
   
-  cmd <- paste("mpirun -np", nranks, "Rscript", script)
-  if (pid)
-    cmd <- paste(cmd, "&\necho \"PID=$!\n")
-  
-  ret <- system(cmd, intern=FALSE, wait=wait)
+  ### Launch mpi commands.
+  if (!same.str(get.os(), "windows"))
+  {
+    cmd <- paste("mpirun -np", nranks, "Rscript", script)
+    if (pid)
+      cmd <- paste(cmd, "&\necho \"PID=$!\n")
+
+    ### Run system shell command.
+    ret <- system(cmd, intern=FALSE, wait=wait)
+  }
+  else
+  {
+    ### This does not work well. The minimized or invisible must be FALSE.
+    ### The new active cmd window blocks the current R window.
+    # cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
+    # ret <- system(cmd, intern = FALSE, wait = wait,
+    #               minimized = FALSE, invisible = FALSE)
+
+    ### Dump command to a windows batch file.
+    cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
+    conn.bat <- file(script.bat, open="wt")
+    writeLines(cmd, conn.bat)
+    close(conn.bat)
+    script.bat <- sub("^\\./", "", script.bat)
+
+    ### Run system batch command via shell.exec.
+    if (!is.loaded("shellexec_wcc", PACKAGE = "pbdZMQ", type = "Call"))
+    {
+      ret <- shell.exec(script.bat)
+    } else{
+      ret <- shellexec.wcc(script.bat)
+    }
+  }
   
   ### manage return
 #  ret <- mcparallel(system(paste("mpirun -np", nranks, "Rscript", script), intern=intern))

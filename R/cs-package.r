@@ -3,7 +3,7 @@
 #' @name pbdCS-package
 #' 
 #' @import pbdMPI
-#' @import rzmq
+#' @import pbdZMQ
 #'
 #' @useDynLib pbdCS
 #' 
