@@ -17,8 +17,6 @@
 #' script should be saved as an R character vector.
 #' @param port
 #' The port to use for communication between the client and rank 0.
-#' @param tmpdir
-#' A temporary directory for dumping demon script for pbdR servers.
 #' 
 #' @details
 #' The \code{port} values between the client and server \emph{MUST}
@@ -55,8 +53,7 @@
 #' @rdname launchers
 #' @seealso \code{\link{pbdRscript}, \link{pbd_exit}}
 #' @export
-pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555,
-    tmpdir = getwd())
+pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555)
 {
   bcast_method <- match.arg(tolower(bcast_method), c("zmq", "mpi"))
   
@@ -69,8 +66,7 @@ pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555,
     finalize()
   ")
   
-  pbdRscript(rscript, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE,
-             tmpdir = tmpdir)
+  pbdRscript(rscript, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE)
   
   invisible(TRUE)
 }

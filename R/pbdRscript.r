@@ -21,8 +21,6 @@
 #' @param auto.dmat 
 #' logical; determines if the script should automatically load
 #' the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.
-#' @param tmpdir
-#' A temporary directory for dumping demon script for pbdR servers.
 #'
 #' @details
 #' This is a simple wrapper around a system call to mpirun on the
@@ -30,7 +28,7 @@
 #' 
 #' @export
 pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
-    pid=TRUE, wait=TRUE, tmpdir = getwd())
+    pid=TRUE, wait=TRUE)
 {
   ### Input checks
   # if (same.str(get.os(), "windows"))
@@ -72,7 +70,7 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   }
   
   ### Create a temp file for pbdR servers.
-  script <- tempfile(tmpdir = tmpdir)
+  script <- tempfile()
   if (same.str(get.os(), "windows"))
   {
     script <- gsub("\\\\", "/", script)
