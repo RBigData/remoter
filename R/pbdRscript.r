@@ -11,9 +11,6 @@
 #' character; the pbdR script to be evaluated.
 #' @param nranks 
 #' The number of MPI ranks to launch.
-#' @param intern
-#' logical; determines if the output of the evaluation of the
-#' script should be saved as an R character vector.
 #' @param auto
 #' logical; determines if the script should automatically load the
 #' pbdMPI package, and call init() (at the beginning) and finalize() (at the
@@ -21,6 +18,11 @@
 #' @param auto.dmat 
 #' logical; determines if the script should automatically load
 #' the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.
+#' @param pid
+#' Logical; determines if the process id (pid) should be printed to the
+#' terminal or not. This is useful if you need to kill a hung job.
+#' @param wait
+#' Logical values passed to R's \code{system()}.
 #'
 #' @details
 #' This is a simple wrapper around a system call to mpirun on the
@@ -46,8 +48,6 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   
   if (!is.int(nranks))
     stop("argument 'nranks' must be an integer")
-#  if (!is.logical(intern))
-#    stop("argument 'intern' must be logical")
   if (!is.logical(auto))
     stop("argument 'auto' must be logical")
   if (!is.logical(auto.dmat))
@@ -99,12 +99,6 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
   }
   else
   {
-    ### This does not work well. The minimized or invisible must be FALSE.
-    ### The new active cmd window blocks the current R window.
-    # cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
-    # ret <- system(cmd, intern = FALSE, wait = wait,
-    #               minimized = FALSE, invisible = FALSE)
-
     ### Dump command to a windows batch file.
     cmd <- paste0("mpiexec -np ", nranks, " Rscript ", script, "\n")
     conn.bat <- file(script.bat, open="wt")

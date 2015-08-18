@@ -19,8 +19,10 @@ end).}
 \item{auto.dmat}{logical; determines if the script should automatically load
 the pbdDMAT package and call init.grid(). Automatically sets \code{auto=TRUE}.}
 
-\item{intern}{logical; determines if the output of the evaluation of the
-script should be saved as an R character vector.}
+\item{pid}{Logical; determines if the process id (pid) should be printed to the
+terminal or not. This is useful if you need to kill a hung job.}
+
+\item{wait}{Logical values passed to R's \code{system()}.}
 }
 \description{
 This function is a simple wrapper around the system() command.  As such,
