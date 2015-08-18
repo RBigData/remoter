@@ -9,7 +9,7 @@ Depends: R (>= 3.0.0),
   pbdZMQ (>= 0.1-0), 
   pbdMPI (>= 0.2-6)
 SystemRequirements: Linux, Mac OSX, or Windows.
-Enhances: pbdMPI, pbdSLAP, pbdBASE, pbdDMAT
+Enhances: pbdSLAP, pbdBASE, pbdDMAT
 NeedsCompilation: yes
 ByteCompile: yes
 Author: Drew Schmidt and Wei-Chen Chen
