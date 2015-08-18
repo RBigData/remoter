@@ -7,9 +7,10 @@
 pbd_localize(object, newname)
 }
 \arguments{
-\item{object}{}
+\item{object}{A remote R object.}
 
-\item{newname}{}
+\item{newname}{The name the object should take when it becomes local. If left blank,
+the local name will have the original (remote) object's name.}
 }
 \description{
 This function allows you to pass an object from MPI rank 0 of

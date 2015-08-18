@@ -1,4 +1,5 @@
-### Global data
+#' State management for the pbdR Client/Server
+#' 
 #' @export
 pbdenv <- new.env()
 
@@ -351,7 +352,7 @@ pbd_eval <- function(input, whoami, env)
         if (!ret$visible)
           set.status(ret, NULL)
         else
-          set.status(ret, capture.output(ret$value))
+          set.status(ret, utils::capture.output(ret$value))
       }
       
       send.socket(pbdenv$socket, pbdenv$status)
@@ -530,9 +531,10 @@ pbd_repl <- function(env=sys.parent())
 #' the servers to the local R session behind the client.
 #' 
 #' @param object 
-#' 
+#' A remote R object.
 #' @param newname
-#' 
+#' The name the object should take when it becomes local. If left blank,
+#' the local name will have the original (remote) object's name.
 #' 
 #' @examples
 #' \dontrun{

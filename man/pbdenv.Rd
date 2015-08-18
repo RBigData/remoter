@@ -4,7 +4,7 @@
 \name{pbdenv}
 \alias{pbdenv}
 \title{State management for the pbdR Client/Server}
-\format{\preformatted{<environment: 0x2c4ae70> 
+\format{\preformatted{<environment: 0x2e33f98> 
 }}
 \usage{
 pbdenv

@@ -16,9 +16,6 @@ pbd_launch_client(port = 5555)
 for ZeroMQ-based communication, or "mpi" for}
 
 \item{port}{The port to use for communication between the client and rank 0.}
-
-\item{intern}{logical; determines if the output of the evaluation of the
-script should be saved as an R character vector.}
 }
 \description{
 This function is a simple wrapper around the system() command.  As such,

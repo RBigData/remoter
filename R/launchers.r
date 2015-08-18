@@ -12,9 +12,6 @@
 #' @param bcast_method
 #' The method used by the servers to communicate.  Options are "zmq"
 #' for ZeroMQ-based communication, or "mpi" for 
-#' @param intern
-#' logical; determines if the output of the evaluation of the
-#' script should be saved as an R character vector.
 #' @param port
 #' The port to use for communication between the client and rank 0.
 #' 
