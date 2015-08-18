@@ -6,7 +6,6 @@ Description: A set of utilities for interactivly using pbdR.
 License: BSD 2-clause License + file LICENSE
 Depends: R (>= 3.0.0), 
   methods,
-  parallel, 
   pbdZMQ (>= 0.1-0), 
   pbdMPI (>= 0.2-6)
 SystemRequirements: Linux, Mac OSX, or Windows.

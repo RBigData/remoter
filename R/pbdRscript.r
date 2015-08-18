@@ -121,9 +121,6 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
     }
   }
   
-  ### manage return
-#  ret <- mcparallel(system(paste("mpirun -np", nranks, "Rscript", script), intern=intern))
-  
   invisible()
 }
 
