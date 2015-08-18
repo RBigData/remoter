@@ -1,5 +1,6 @@
 *~
 *.pdf
+*.swp
 
 
 src/*.o
