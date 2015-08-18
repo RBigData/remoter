@@ -1,6 +1,10 @@
-set machine for session
+TODO:
+  * capture "invisble" outputs (e.g., package loading, init.grid(), ...)
+  * gotta do something about finalize()
+  * Need a save way to exit the server
+  * remote connections?
 
+Safety:
+  * comm.stop() segfaults ?!?
+  * C-c ????
 
-email when job is done
-
-all my jobs function (in case you get d/conned)
