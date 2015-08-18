@@ -36,7 +36,7 @@ pbd.server <- function(method = c("shiny", "terminal"),
 
 pbd.client <- function(URL, method = c("shiny", "terminal")){
   if(method[1] == "shiny"){
-    browseURL(URL)
+    utils::browseURL(URL)
   } else if(method[1] == "terminal"){
     # Open an R (current) session to the return value of pbd_server.
   } else{
