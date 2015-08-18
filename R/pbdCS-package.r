@@ -3,6 +3,7 @@
 #' @name pbdCS-package
 #' 
 #' @import methods
+#' @import utils
 #' @import pbdMPI
 #' @import pbdZMQ
 #'
