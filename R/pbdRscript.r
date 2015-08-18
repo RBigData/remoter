@@ -40,7 +40,7 @@ pbdRscript <- function(body, nranks=1, auto=TRUE, auto.dmat=FALSE,
     stop("argument 'body' must be a non-empty character string")
   else if (length(body) > 1)
   {
-    warn("function body has length > 1; only the first element will be used")
+    warning("function body has length > 1; only the first element will be used")
     body <- body[1L]
   }
   
