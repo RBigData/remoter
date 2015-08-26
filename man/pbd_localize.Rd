@@ -4,13 +4,16 @@
 \alias{pbd_localize}
 \title{pbd_localize}
 \usage{
-pbd_localize(object, newname)
+pbd_localize(object, newname, env = .GlobalEnv)
 }
 \arguments{
 \item{object}{A remote R object.}
 
 \item{newname}{The name the object should take when it becomes local. If left blank,
 the local name will have the original (remote) object's name.}
+
+\item{env}{The environment into which the assignment will take place. The
+default is the global environment.}
 }
 \description{
 This function allows you to pass an object from MPI rank 0 of

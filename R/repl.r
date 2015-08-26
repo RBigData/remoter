@@ -1,3 +1,7 @@
+### For R CMD check
+utils::globalVariables(c("continuation", "lasterror", "visible", "should_exit", "pbd_prompt_active", "ret", "lasterror"))
+
+
 #' State management for the pbdR Client/Server
 #' 
 #' @export
@@ -535,6 +539,9 @@ pbd_repl <- function(env=sys.parent())
 #' @param newname
 #' The name the object should take when it becomes local. If left blank,
 #' the local name will have the original (remote) object's name.
+#' @param env
+#' The environment into which the assignment will take place. The
+#' default is the global environment.
 #' 
 #' @examples
 #' \dontrun{
@@ -556,7 +563,7 @@ pbd_repl <- function(env=sys.parent())
 #' }
 #' 
 #' @export
-pbd_localize <- function(object, newname)
+pbd_localize <- function(object, newname, env=.GlobalEnv)
 {
   err <- ".__pbd_localize_failure"
   
@@ -574,7 +581,7 @@ pbd_localize <- function(object, newname)
     if (!missing(newname))
       name <- newname
     
-    assign(x=name, value=value, envir=.GlobalEnv)
+    assign(x=name, value=value, envir=env)
     
     ret <- TRUE
   }
