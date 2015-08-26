@@ -409,7 +409,7 @@ pbd_repl_init <- function()
   else if (pbdenv$whoami == "remote")
   {
     ### Order very much matters!
-    suppressPackageStartupMessages(library(pbdMPI))
+###    suppressPackageStartupMessages(library(pbdMPI))
     
     if (pbdenv$debug)
     {
