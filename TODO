@@ -1,10 +1,12 @@
 TODO:
   * capture "invisble" outputs (e.g., package loading, init.grid(), ...)
   * gotta do something about finalize()
-  * Need a save way to exit the server
   * remote connections?
 
 Safety:
   * comm.stop() segfaults ?!?
   * C-c ????
 
+Vignette:
+  * make one
+  * discuss bcast method
