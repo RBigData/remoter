@@ -1,8 +1,6 @@
 # pbdCS 
 
-A client/server for the pbdR packages, plus utilities to ease working with
-job schedulers on HPC resources.
-
+A client/server for the pbdR packages.
 
 ## Usage
 
