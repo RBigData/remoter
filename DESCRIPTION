@@ -1,8 +1,15 @@
 Package: pbdCS
 Type: Package
-Title: pbdR Client/Server Utilities
+Title: 'pbdR' Client/Server Utilities
 Version: 0.1-0
-Description: A set of utilities for interactivly using pbdR.
+Description: A set of utilities for interactively using the 'pbdR' set
+  of packages.  By design, 'pbdR' uses the Single Program/Multiple Data
+  or 'SPMD' paradigm, which is inherently batch (non-interactive).
+  The client/server allows for the use of interactively controlling
+  batch 'SPMD' servers as one would a regular R session.  The
+  communication between client and server is handled by 'ZeroMQ',
+  and 'intra-server' communication of commands can be handled by 'ZeroMQ'
+  or MPI (see vignette for details).
 License: BSD 2-clause License + file LICENSE
 Depends: R (>= 3.0.0), 
   methods,
