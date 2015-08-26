@@ -1,3 +1,0 @@
-allreduce   pbdCS   Example allreduce.
-dmat        pbdCS   Simple pbdDMAT example.
-stuck       pbdCS   Example of killing a stuck job.
