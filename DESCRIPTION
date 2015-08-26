@@ -20,5 +20,7 @@ SystemRequirements: Linux, Mac OSX, or Windows.
 Enhances: pbdSLAP, pbdBASE, pbdDMAT
 NeedsCompilation: yes
 ByteCompile: yes
-Author: Drew Schmidt and Wei-Chen Chen
+Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
+  email="schmidt@math.utk.edu"),
+  person("Wei-Chen", "Chen", role="aut"))
 Maintainer: Drew Schmidt <schmidt@math.utk.com>
