@@ -16,8 +16,10 @@ Depends: R (>= 3.0.0),
   utils,
   pbdZMQ (>= 0.1-0), 
   pbdMPI (>= 0.2-6)
-SystemRequirements: Linux, Mac OSX, or Windows.
 Enhances: pbdSLAP, pbdBASE, pbdDMAT
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+SystemRequirements: Linux, Mac OSX, or Windows.
 NeedsCompilation: yes
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),

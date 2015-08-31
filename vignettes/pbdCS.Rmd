@@ -1,0 +1,118 @@
+---
+title: "Guide to the pbdCS Package"
+author: "Drew Schmidt"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+bibliography: pbdCS.bib
+vignette: >
+  %\VignetteIndexEntry{A Quick Introduction to the pbdCS Package}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+
+# Introduction
+
+The Programming with Big Data in R project [@pbdR2012], or pbdR (see [r-pbd.org/](http://r-pbd.org)), is a series of R packages that enable the usage of the R language on clusters and supercomputers.
+
+Existing pbdR packages use the Single Program/Multiple Data or SPMD programming model.  This way of thinking is inherently batch (i.e., not interactive), and so is somewhat foreign to many R users, who deeply value the interactivity of the language.
+
+
+
+# Installation
+
+
+## Installation from R
+
+The package is currently available on GitHub, and can be installed from R using the **devtools** package, which will handle dependency resolution.  To do so, simply enter:
+
+```r
+devtools::install_github("RBigData/pbdCS")
+```
+
+Into your R session.  Eventually this package will be published on the CRAN, and at that time can be installed with the usual `install.packages("pbdCS")` call.
+
+
+## Installation from the command line
+
+If you are working in an environment where you can not directly access external networks, or have difficulty installing the *numerous* dependencies of the **devtools** package, you can easily install the package from the command line.  You can download the source directly from CRAN (once available), or first download a snapshot from GitHub via the link:
+
+[https://github.com/RBigData/pbdCS/archive/master.zip](https://github.com/RBigData/pbdCS/archive/master.zip)
+
+Then from the shell, running
+
+```sh
+unzip master
+mv master/ pbdCS/
+R CMD build pbdCS/
+R CMD INSTALL pbdCS_0.1-0.tar.gz
+```
+
+This is assuming that you have the necessary **pbdCS** package dependencies installed already.  For 
+
+
+
+# Creating the Client and Servers
+
+For each of the ways of using **pbdCS**, you will need to begin by starting an interactive R session.  The client can not run in batch mode; if you find yourself wishing to run in batch, simply execute the scripts in batch without use of **pbdCS**.  This R session is the "client".  It simply exists to receive commands that will be sent to a collection of batch, SPMD servers.
+
+How you launch the servers will depend on the machine configuration you wish to use.
+
+
+## Clients and Servers on the Same Machine
+
+This is the simplest way to use the client/server.  Examples are running on a laptop, or an interactive shell session granted to you from a batch scheduler (pbs, slurm, ...).
+
+In your interactive R session (the client), enter:
+```r
+library(pbdCS)
+
+
+pbd_launch_servers()
+pbd_launch_client()
+```
+
+Executing this code should produce something like the following:
+
+```
+Loading required package: pbdZMQ
+Loading required package: pbdMPI
+Loading required package: rlecuyer
+please wait a moment for the servers to spin up...
+pbdR> 
+```
+
+At this point, you will be using a `pbdR>` prompt in your interactive R session, and the servers will be running in the background.
+
+An advantage to separating the commands in this way (as opposed to having a unified `pbdCS()` or something similar) is that we can freely terminate the client --- perhaps depiberately or through network timeout --- and then resume communication with the servers by reissuing the command `pbd_launch_client()`.
+
+
+
+## Clients and Servers on Different Machines
+
+TODO
+
+
+# Using the pbdR Client/Server Framework
+
+## Philosophy
+
+By default, all code entered to the client is executed on the batch SPMD servers.  
+
+
+## Utilities
+
+There are several helper utilities for managing data between the client and server.  Generally speaking, you should not need to directly move data between client and servers.  However, after performing an analysis on the servers and reducing the data, perhaps for plotting, it may be necessary to move data from server to client.  One way to do this is the obvious way of serializing to disk and then reading into a local R session after terminating the client and servers.  However
+
+Also recall that the client by default will simply act as a bridge to the servers, passing all commands along without executing them locally.  If you for some reason need to 
+
+
+## Shutting Everything Down
+
+From the client, enter the command `pbd_exit()`, or alternatively `q()`.  Doing so will terminate the batch SPMD servers, as well as close the client REPL.  This will not shut down the interactive R session that was hosting the client, even is `q()` is entered.
+
+
+
+# References
