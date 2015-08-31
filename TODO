@@ -6,7 +6,10 @@ TODO:
 Safety:
   * comm.stop() segfaults ?!?
   * C-c ????
+  * **IMPORTANT** safety on running pbd_launch_client() before pbd_launch_servers()
 
 Vignette:
   * make one
   * discuss bcast method
+
+
