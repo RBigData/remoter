@@ -3,6 +3,7 @@
 export(eval.local)
 export(ls.local)
 export(pbdRscript)
+export(pbdSpawn)
 export(pbd_exit)
 export(pbd_launch_client)
 export(pbd_launch_servers)

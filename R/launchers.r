@@ -71,7 +71,6 @@ pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555)
 
 
 #' @rdname launchers
-#' 
 #' @export
 pbd_launch_client <- function(port=5555)
 {
@@ -84,3 +83,13 @@ pbd_launch_client <- function(port=5555)
 }
 
 
+
+#' @rdname launchers
+#' @export
+pbdSpawn <- function(nranks=2, bcast_method="zmq", port=5555)
+{
+  pbd_launch_servers(nranks=nranks, bcast_method=bcast_method, port=port)
+  pbd_launch_client(port=port)
+  
+  invisible(TRUE)
+}
