@@ -64,3 +64,13 @@ get.os <- function()
   return( ret )
 }
 
+
+
+dirsep <- function()
+{
+  if (same.str(get.os(), "windows"))
+    "\\\\"
+  else
+    "/"
+}
+
