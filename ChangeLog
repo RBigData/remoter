@@ -1,5 +1,5 @@
 Release 0.1-0:
-  * Removed tmpdir() usage (wcc).
+  * Added vignette.
   * Fixed to work on Windows (wcc).
   * Develop basic client/server over ZMQ.
   * Rename pbdinline to pbdCS.
