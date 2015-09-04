@@ -114,6 +114,10 @@ pbd_sanitize <- function(inputs)
       pbd_show_warnings()
       inputs[i] <- "invisible()"
     }
+    else if (grepl(x=input, pattern="^finalize\\(", perl=TRUE))
+    {
+      inputs[i] <- "pbd_exit()"
+    }
     else if (input == "")
       inputs[i] <- "invisible()"
   }
@@ -460,7 +464,6 @@ pbd_repl_init <- function()
   }
   
   
-  
   return(TRUE)
 }
 
@@ -484,8 +487,8 @@ pbd_repl <- function(env=sys.parent())
   if (!interactive() && pbdenv$whoami == "local")
     stop("You should only use this interactively")
   
-  init <- pbd_repl_init()
-  if (!init) return(invisible())
+  if (!pbd_repl_init())
+    return(invisible())
   
   
   ### the repl
