@@ -6,19 +6,27 @@
 \alias{pbd_launch_servers}
 \title{Client/Server Launchers}
 \usage{
-pbd_launch_servers(nranks = 2, bcast_method = "zmq", port = 5555)
+pbd_launch_servers(nranks = 2, mpicmd = "mpirun", bcast_method = "zmq",
+  port = 5555)
 
 pbd_launch_client(port = 5555)
 
-pbdSpawn(nranks = 2, bcast_method = "zmq", port = 5555)
+pbdSpawn(nranks = 2, bcast_method = "zmq", port = "random")
 }
 \arguments{
 \item{nranks}{The number of MPI ranks to launch.}
 
+\item{mpicmd}{The command to launch mpi as a string (e.g., "mpirun", "mpiexec",
+"aprun", ...).}
+
 \item{bcast_method}{The method used by the servers to communicate.  Options are "zmq"
 for ZeroMQ-based communication, or "mpi" for}
 
-\item{port}{The port to use for communication between the client and rank 0.}
+\item{port}{A numeric value, or optionally for \code{pbdSpawn()}, the string
+"random".  For numeric values, this is the port that will be
+used for communication between the client and rank 0 of the
+servers.  If "random" is used, then a valid, random port
+will be selected.}
 }
 \description{
 This function is a simple wrapper around the system() command.  As such,

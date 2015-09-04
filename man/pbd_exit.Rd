@@ -4,7 +4,7 @@
 \alias{pbd_exit}
 \title{pbd_exit}
 \usage{
-pbd_exit()
+pbd_exit(clientonly = FALSE)
 }
 \description{
 This function cleanly shuts down any pbdR servers which have been
