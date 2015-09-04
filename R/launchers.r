@@ -9,11 +9,18 @@
 #' 
 #' @param nranks 
 #' The number of MPI ranks to launch.
+#' @param mpicmd
+#' The command to launch mpi as a string (e.g., "mpirun", "mpiexec", 
+#' "aprun", ...).
 #' @param bcast_method
 #' The method used by the servers to communicate.  Options are "zmq"
 #' for ZeroMQ-based communication, or "mpi" for 
 #' @param port
-#' The port to use for communication between the client and rank 0.
+#' A numeric value, or optionally for \code{pbdSpawn()}, the string
+#' "random".  For numeric values, this is the port that will be
+#' used for communication between the client and rank 0 of the 
+#' servers.  If "random" is used, then a valid, random port
+#' will be selected.
 #' 
 #' @details
 #' The \code{port} values between the client and server \emph{MUST}
@@ -50,7 +57,7 @@
 #' @rdname launchers
 #' @seealso \code{\link{pbdRscript}, \link{pbd_exit}}
 #' @export
-pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555)
+pbd_launch_servers <- function(nranks=2, mpicmd="mpirun", bcast_method="zmq", port=5555)
 {
   bcast_method <- match.arg(tolower(bcast_method), c("zmq", "mpi"))
   
@@ -63,7 +70,7 @@ pbd_launch_servers <- function(nranks=2, bcast_method="zmq", port=5555)
     finalize()
   ")
   
-  pbdRscript(rscript, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE)
+  pbdRscript(body=rscript, mpicmd=mpicmd, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE)
   
   invisible(TRUE)
 }
@@ -86,8 +93,18 @@ pbd_launch_client <- function(port=5555)
 
 #' @rdname launchers
 #' @export
-pbdSpawn <- function(nranks=2, bcast_method="zmq", port=5555)
+pbdSpawn <- function(nranks=2, bcast_method="zmq", port="random")
 {
+  if (is.character(port))
+  {
+    if (port == "random")
+      port <- random_port()
+  }
+  else
+    stop("")
+  
+  ### TODO check port
+  
   pbd_launch_servers(nranks=nranks, bcast_method=bcast_method, port=port)
   pbd_launch_client(port=port)
   

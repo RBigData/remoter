@@ -69,8 +69,9 @@ get.os <- function()
 dirsep <- function()
 {
   if (same.str(get.os(), "windows"))
-    "\\\\"
+    "\\"
   else
     "/"
 }
+
 
