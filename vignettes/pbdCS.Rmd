@@ -66,15 +66,20 @@ How you launch the servers will depend on the machine configuration you wish to 
 This is the simplest way to use the client/server.  Examples are running on a laptop, or an interactive shell session granted to you from a batch scheduler (pbs, slurm, ...).
 
 In your interactive R session (the client), enter:
+
 ```r
 library(pbdCS)
-
 
 pbd_launch_servers()
 pbd_launch_client()
 ```
 
-Executing this code should produce something like the following:
+or the unified version:
+
+```r
+pbdCS::pbdSpawn()
+```
+Executing either of these should produce something like the following:
 
 ```
 Loading required package: pbdZMQ
@@ -86,8 +91,11 @@ pbdR>
 
 At this point, you will be using a `pbdR>` prompt in your interactive R session, and the servers will be running in the background.
 
-An advantage to separating the commands in this way (as opposed to having a unified `pbdCS()` or something similar) is that we can freely terminate the client --- perhaps depiberately or through network timeout --- and then resume communication with the servers by reissuing the command `pbd_launch_client()`.
+An advantage to separating the commands is that it makes it more obvious that the client and server are independent.   In fact, you can freely terminate the client --- perhaps depiberately or through network timeout --- and then resume communication with the servers by reissuing the command `pbd_launch_client()`.  The following is example terminal output demonstrating this behavior:
 
+```r
+
+```
 
 
 ## Clients and Servers on Different Machines
