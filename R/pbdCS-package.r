@@ -3,9 +3,11 @@
 #' @name pbdCS-package
 #' 
 #' @import methods
-#' @import utils
 #' @import pbdMPI
 #' @import pbdZMQ
+#' 
+#' @importFrom stats runif
+#' @importFrom utils capture.output globalVariables
 #'
 #' @useDynLib pbdCS
 #' 
