@@ -10,6 +10,7 @@ pbdenv <- new.env()
 # options
 pbdenv$prompt <- "pbdR"
 pbdenv$port <- 55555
+pbdenv$remote_addr <- "localhost"
 pbdenv$remote_port <- 55556
 pbdenv$bcast_method <- "zmq"
 
@@ -408,7 +409,7 @@ pbd_repl_init <- function()
   {
     pbdenv$context <- init.context()
     pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REQ")
-    connect.socket(pbdenv$socket, paste0("tcp://localhost:", pbdenv$port))
+    connect.socket(pbdenv$socket, paste0("tcp://", pbdenv$remote_addr, ":", pbdenv$port))
     
     cat("please wait a moment for the servers to spin up...")
     pbd_eval(input="barrier()", whoami=pbdenv$whoami)
