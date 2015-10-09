@@ -9,7 +9,7 @@
 pbd_launch_servers(nranks = 2, mpicmd = "mpirun", bcast_method = "zmq",
   port = 5555)
 
-pbd_launch_client(port = 5555)
+pbd_launch_client(remote_addr = "localhost", port = 5555)
 
 pbdSpawn(nranks = 2, bcast_method = "zmq", port = "random")
 }
@@ -27,6 +27,8 @@ for ZeroMQ-based communication, or "mpi" for}
 used for communication between the client and rank 0 of the
 servers.  If "random" is used, then a valid, random port
 will be selected.}
+
+\item{remote_addr}{The remote host/address/endpoint.}
 }
 \description{
 This function is a simple wrapper around the system() command.  As such,

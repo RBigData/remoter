@@ -15,6 +15,8 @@
 #' @param bcast_method
 #' The method used by the servers to communicate.  Options are "zmq"
 #' for ZeroMQ-based communication, or "mpi" for 
+#' @param remote_addr
+#' The remote host/address/endpoint.
 #' @param port
 #' A numeric value, or optionally for \code{pbdSpawn()}, the string
 #' "random".  For numeric values, this is the port that will be
@@ -79,10 +81,12 @@ pbd_launch_servers <- function(nranks=2, mpicmd="mpirun", bcast_method="zmq", po
 
 #' @rdname launchers
 #' @export
-pbd_launch_client <- function(port=5555)
+pbd_launch_client <- function(remote_addr="localhost", port=5555)
 {
   pbdenv$whoami <- "local"
   pbdenv$port <- port
+  
+  pbdenv$remote_addr <- remote_addr
   
   pbd_repl()
   

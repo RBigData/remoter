@@ -13,6 +13,7 @@ pbdenv$port <- 55555
 pbdenv$remote_addr <- "localhost"
 pbdenv$remote_port <- 55556
 pbdenv$bcast_method <- "zmq"
+pbdenv$get_remote_addr <- TRUE
 
 
 # internals
@@ -394,6 +395,38 @@ pbd_exit <- function()
 
 
 
+pbd_get_remote_addr <- function()
+{
+  if (pbdenv$whoami == "local")
+  {
+    context <- zmq$Context()
+    socket <- context$socket("ZMQ_REP")
+    socket$bind(address("*", pbdenv$port))
+    pbdenv$remote_addr <- socket$receive()
+    socket$send("got it")
+    
+    ### TODO store address and port in ~/.pbdR/remote
+    socket$close()
+    rm(socket);rm(context)
+    invisible(gc())
+  }
+  else if (pbdenv$whoami == "remote"  &&  comm.rank() == 0)
+  {
+    context <- zmq$Context()
+    socket <- context$socket("ZMQ_REQ")
+    socket$connect(address("localhost", pbdenv$port))
+    socket$send(getip())
+    socket$receive()
+    socket$disconnect()
+    rm(socket);rm(context)
+    invisible(gc())
+  }
+  
+  invisible()
+}
+
+
+
 pbd_repl_init <- function()
 {
   if (!get.status(pbd_prompt_active))
@@ -404,22 +437,25 @@ pbd_repl_init <- function()
     return(FALSE)
   }
   
+  if (pbdenv$whoami == "local")
+    cat("please wait a moment for the servers to spin up...")
+  
+  if (pbdenv$get_remote_addr)
+    pbd_get_remote_addr()
+  
   ### Initialize zmq
   if (pbdenv$whoami == "local")
   {
     pbdenv$context <- init.context()
     pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REQ")
-    connect.socket(pbdenv$socket, paste0("tcp://", pbdenv$remote_addr, ":", pbdenv$port))
+    addr <- pbdZMQ::address(pbdenv$remote_addr, pbdenv$port)
+    connect.socket(pbdenv$socket, addr)
     
-    cat("please wait a moment for the servers to spin up...")
-    pbd_eval(input="barrier()", whoami=pbdenv$whoami)
     cat("\n")
   }
   else if (pbdenv$whoami == "remote")
   {
     ### Order very much matters!
-###    suppressPackageStartupMessages(library(pbdMPI))
-    
     if (pbdenv$debug)
     {
       if (comm.size() == 1)
@@ -598,6 +634,7 @@ pbd_localize <- function(object, newname, env=.GlobalEnv)
       else
         ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
     }
+
   }
   
   return(invisible(ret))
