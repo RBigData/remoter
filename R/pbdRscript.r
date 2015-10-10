@@ -73,7 +73,7 @@ pbdRscript_cmd <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat
   
   if (auto)
   {
-    auto.header <- "suppressPackageStartupMessages(library(pbdMPI, quietly=TRUE))\ninit()\n\n"
+    auto.header <- "suppressPackageStartupMessages(library(pbdMPI, quietly=TRUE))\n\n"
     
     if (auto.dmat)
       auto.header <- paste(auto.header, "\n", "suppressPackageStartupMessages(library(pbdDMAT, quietly=TRUE))\ninit.grid()\n\n")
@@ -81,7 +81,7 @@ pbdRscript_cmd <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat
     auto.footer <- "\n\nfinalize()"
     body <- paste(auto.header, body, auto.footer, collapse="\n")
   }
-  
+
   ### Create a temp file for pbdR servers.
   script <- temp
   if (same.str(get.os(), "windows"))

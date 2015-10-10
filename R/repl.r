@@ -438,7 +438,7 @@ pbd_repl_init <- function()
   }
   
   if (pbdenv$whoami == "local")
-    cat("please wait a moment for the servers to spin up...")
+    cat("please wait a moment for the servers to spin up...\n")
   
   if (pbdenv$get_remote_addr)
     pbd_get_remote_addr()

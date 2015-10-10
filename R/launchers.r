@@ -23,6 +23,9 @@
 #' used for communication between the client and rank 0 of the 
 #' servers.  If "random" is used, then a valid, random port
 #' will be selected.
+#' @param auto.dmat
+#' Logical; deteremines if pbdDMAT should automatically be loaded
+#' and \code{init.grid()} called.
 #' 
 #' @details
 #' The \code{port} values between the client and server \emph{MUST}
@@ -59,7 +62,7 @@
 #' @rdname launchers
 #' @seealso \code{\link{pbdRscript}, \link{pbd_exit}}
 #' @export
-pbd_launch_servers <- function(nranks=2, mpicmd="mpirun", bcast_method="zmq", port=5555)
+pbd_launch_servers <- function(nranks=2, mpicmd="mpirun", bcast_method="zmq", port=5555, auto.dmat=FALSE)
 {
   bcast_method <- match.arg(tolower(bcast_method), c("zmq", "mpi"))
   
@@ -72,7 +75,7 @@ pbd_launch_servers <- function(nranks=2, mpicmd="mpirun", bcast_method="zmq", po
     finalize()
   ")
   
-  pbdRscript(body=rscript, mpicmd=mpicmd, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE)
+  pbdRscript(body=rscript, mpicmd=mpicmd, nranks=nranks, auto=TRUE, pid=FALSE, wait=FALSE, auto.dmat=auto.dmat)
   
   invisible(TRUE)
 }
@@ -97,7 +100,7 @@ pbd_launch_client <- function(remote_addr="localhost", port=5555)
 
 #' @rdname launchers
 #' @export
-pbdSpawn <- function(nranks=2, bcast_method="zmq", port="random")
+pbdSpawn <- function(nranks=2, bcast_method="zmq", port="random", auto.dmat=FALSE)
 {
   if (is.character(port))
   {
@@ -109,7 +112,7 @@ pbdSpawn <- function(nranks=2, bcast_method="zmq", port="random")
   
   ### TODO check port
   
-  pbd_launch_servers(nranks=nranks, bcast_method=bcast_method, port=port)
+  pbd_launch_servers(nranks=nranks, bcast_method=bcast_method, port=port, auto.dmat=auto.dmat)
   pbd_launch_client(port=port)
   
   invisible(TRUE)

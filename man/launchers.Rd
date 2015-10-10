@@ -7,11 +7,12 @@
 \title{Client/Server Launchers}
 \usage{
 pbd_launch_servers(nranks = 2, mpicmd = "mpirun", bcast_method = "zmq",
-  port = 5555)
+  port = 5555, auto.dmat = FALSE)
 
 pbd_launch_client(remote_addr = "localhost", port = 5555)
 
-pbdSpawn(nranks = 2, bcast_method = "zmq", port = "random")
+pbdSpawn(nranks = 2, bcast_method = "zmq", port = "random",
+  auto.dmat = FALSE)
 }
 \arguments{
 \item{nranks}{The number of MPI ranks to launch.}
@@ -27,6 +28,9 @@ for ZeroMQ-based communication, or "mpi" for}
 used for communication between the client and rank 0 of the
 servers.  If "random" is used, then a valid, random port
 will be selected.}
+
+\item{auto.dmat}{Logical; deteremines if pbdDMAT should automatically be loaded
+and \code{init.grid()} called.}
 
 \item{remote_addr}{The remote host/address/endpoint.}
 }
