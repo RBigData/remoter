@@ -2,8 +2,12 @@
 % Please edit documentation in R/pbdRscript.r
 \name{pbdRscript}
 \alias{pbdRscript}
+\alias{pbdRscript_cmd}
 \title{pbdRscript}
 \usage{
+pbdRscript_cmd(body, mpicmd = "mpirun", nranks = 1, auto = TRUE,
+  auto.dmat = FALSE, pid = TRUE, wait = TRUE, temp = tempfile())
+
 pbdRscript(body, mpicmd = "mpirun", nranks = 1, auto = TRUE,
   auto.dmat = FALSE, pid = TRUE, wait = TRUE, temp = tempfile())
 }

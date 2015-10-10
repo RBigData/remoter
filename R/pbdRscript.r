@@ -37,8 +37,15 @@
 #' Temp needs to be a file that the client and all servers can
 #' read from.
 #' 
+#' @name pbdRscript
+#' @rdname pbdRscript
+NULL
+
+
+
+#' @rdname pbdRscript
 #' @export
-pbdRscript <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat=FALSE,
+pbdRscript_cmd <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat=FALSE,
     pid=TRUE, wait=TRUE, temp=tempfile())
 {
   ### Input checks
@@ -95,6 +102,17 @@ pbdRscript <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat=FAL
   
   
   cmd <- paste(mpicmd, "-np", nranks, "Rscript", script)
+  cmd
+}
+
+
+
+#' @rdname pbdRscript
+#' @export
+pbdRscript <- function(body, mpicmd="mpirun", nranks=1, auto=TRUE, auto.dmat=FALSE,
+    pid=TRUE, wait=TRUE, temp=tempfile())
+{
+  cmd <- pbdRscript_cmd(body, mpicmd, nranks, auto, auto.dmat, pid, wait, temp)
   
   ### Launch mpi commands.
   if (!same.str(get.os(), "windows"))
