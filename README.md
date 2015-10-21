@@ -27,6 +27,16 @@ connect to it.
 
 ## Installation
 
+You should probably first install the development version of
+pbdZMQ, on which this package relies (there is a version on CRAN,
+but it is out of date):
+
+```r
+devtools::install_github("snoweye/pbdZMQ")
+```
+
+To install remoter:
+
 ```r
 devtools::install_github("wrathematics/remoter")
 ```
