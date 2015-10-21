@@ -1,9 +1,0 @@
-OBJECTS=getip.o
-
-all: $(SHLIB)
-
-$(SHLIB): $(OBJECTS)
-
-clean:
-	@rm -rf *.o *.d *.rc *.so* *.dll *.dylib *.a *.lib \
-                Makedeps Makevars $(SHLIB) $(OBJECTS)
