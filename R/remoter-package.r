@@ -1,15 +1,14 @@
-#'  pbdR Client/Server Utilities
+#'  Remote R
 #'
-#' @name pbdCS-package
+#' @name remoter-package
 #' 
 #' @import methods
-#' @import pbdMPI
 #' @import pbdZMQ
 #' 
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables
 #'
-#' @useDynLib pbdCS
+#' @useDynLib remoter
 #' 
 #' @docType package
 #' @author Drew Schmidt and Wei-Chen Chen

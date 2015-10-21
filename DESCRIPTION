@@ -1,25 +1,13 @@
-Package: pbdCS
+Package: remoter
 Type: Package
-Title: 'pbdR' Client/Server Utilities
+Title: Remote R
 Version: 0.1-0
-Description: A set of utilities for interactively using the 'pbdR' set
-  of packages.  By design, 'pbdR' uses the Single Program/Multiple Data
-  or 'SPMD' paradigm, which is inherently batch (non-interactive).
-  The client/server allows for the use of interactively controlling
-  batch 'SPMD' servers as one would a regular R session.  The
-  communication between client and server is handled by 'ZeroMQ',
-  and 'intra-server' communication of commands can be handled by 'ZeroMQ'
-  or MPI (see vignette for details).
+Description: TODO
 License: BSD 2-clause License + file LICENSE
 Depends: R (>= 3.0.0), 
-  methods,
-  pbdZMQ (>= 0.1-0), 
-  pbdMPI (>= 0.2-6)
+  pbdZMQ (>= 0.1-0)
 Imports: stats,
   utils
-Enhances: pbdSLAP, pbdBASE, pbdDMAT
-Suggests: knitr, rmarkdown
-VignetteBuilder: knitr
 SystemRequirements: Linux, Mac OSX, or Windows.
 NeedsCompilation: yes
 ByteCompile: yes

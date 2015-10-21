@@ -1,6 +1,3 @@
 Release 0.1-0:
-  * Added vignette.
-  * Fixed to work on Windows (wcc).
-  * Develop basic client/server over ZMQ.
-  * Rename pbdinline to pbdCS.
+  * Imported functionality from pbdCS.
 

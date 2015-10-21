@@ -1,5 +1,5 @@
 ### For R CMD check
-utils::globalVariables(c("continuation", "lasterror", "visible", "should_exit", "pbd_prompt_active", "ret", "lasterror"))
+utils::globalVariables(c("continuation", "lasterror", "visible", "should_exit", "remoter_prompt_active", "ret", "lasterror"))
 
 
 #' State management for the pbdR Client/Server
@@ -13,7 +13,6 @@ pbdenv$port <- 55555
 pbdenv$remote_addr <- "localhost"
 pbdenv$remote_port <- 55556
 pbdenv$bcast_method <- "zmq"
-pbdenv$get_remote_addr <- TRUE
 
 
 # internals
@@ -34,7 +33,7 @@ pbdenv$status <- list(
   shouldwarn        = FALSE,
   num_warnings      = 0,
   warnings          = NULL,
-  pbd_prompt_active = FALSE,
+  remoter_prompt_active = FALSE,
   should_exit       = FALSE,
   continuation      = FALSE
 )
@@ -64,7 +63,7 @@ set.status <- function(var, val)
 
 
 ### ------------------------------------------------
-pbd_readline <- function(input)
+remoter_readline <- function(input)
 {
   if (get.status(continuation))
     symb <- "+ "
@@ -76,7 +75,7 @@ pbd_readline <- function(input)
   if (pbdenv$whoami == "local")
   {
     ret <- c(input, readline(prompt=prompt))
-    ret <- pbd_sanitize(inputs=ret)
+    ret <- remoter_sanitize(inputs=ret)
   }
   else
     ret <- NULL
@@ -86,7 +85,7 @@ pbd_readline <- function(input)
 
 
 
-pbd_client_stop <- function(msg)
+remoter_client_stop <- function(msg)
 {
   pbdenv$client_lasterror <- msg
   cat("Error: ", msg, "\n")
@@ -96,29 +95,29 @@ pbd_client_stop <- function(msg)
 
 
 
-pbd_sanitize <- function(inputs)
+remoter_sanitize <- function(inputs)
 {
   for (i in 1:length(inputs))
   {
     input <- inputs[i]
     if (grepl(x=input, pattern="^(q\\(|quit\\()", perl=TRUE)) 
-      inputs[i] <- "pbd_exit()"
+      inputs[i] <- "remoter_exit()"
     else if (grepl(x=input, pattern="^geterrmessage\\(", perl=TRUE))
       inputs[i] <- pbdenv$client_lasterror
     else if (grepl(x=input, pattern="^(\\?|\\?\\?|help\\()", perl=TRUE))
     {
-      pbd_client_stop("Reading help files from the server is currently not supported.")
+      remoter_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^warnings\\(", perl=TRUE))
     {
       pbdenv$status$shouldwarn <- TRUE
-      pbd_show_warnings()
+      remoter_show_warnings()
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^finalize\\(", perl=TRUE))
     {
-      inputs[i] <- "pbd_exit()"
+      inputs[i] <- "remoter_exit()"
     }
     else if (input == "")
       inputs[i] <- "invisible()"
@@ -139,7 +138,7 @@ is.error <- function(obj)
 
 
 
-pbd_repl_printer <- function()
+remoter_repl_printer <- function()
 {
   if (pbdenv$whoami == "remote")
   {
@@ -150,24 +149,24 @@ pbd_repl_printer <- function()
   if (get.status(visible))
     cat(paste(get.status(ret), collapse="\n"), "\n")
   
-  pbd_show_errors()
-  pbd_show_warnings()
+  remoter_show_errors()
+  remoter_show_warnings()
   
   return(invisible())
 }
 
 
 
-pbd_interrupt <- function(x)
+remoter_interrupt <- function(x)
 {
-#  pbdenv$status$pbd_prompt_active <- TRUE
+#  pbdenv$status$remoter_prompt_active <- TRUE
   cat("interrupt\n")
   print(x)
 }
 
 
 
-pbd_warning <- function(warn)
+remoter_warning <- function(warn)
 {
   pbdenv$status$shouldwarn <- TRUE
   pbdenv$status$num_warnings <- pbdenv$status$num_warnings + 1
@@ -179,7 +178,7 @@ pbd_warning <- function(warn)
 
 
 
-pbd_error <- function(err)
+remoter_error <- function(err)
 {
   msg <- err$message
   set.status(continuation, grepl(msg, pattern="unexpected end of input"))
@@ -195,7 +194,7 @@ pbd_error <- function(err)
 
 
 
-pbd_show_errors <- function()
+remoter_show_errors <- function()
 {
   if (!is.null(get.status(lasterror)))
     cat(get.status(lasterror))
@@ -205,7 +204,7 @@ pbd_show_errors <- function()
 
 
 
-pbd_show_warnings <- function()
+remoter_show_warnings <- function()
 {
   warnings <- get.status(warnings)
   nwarnings <- length(warnings)
@@ -240,10 +239,10 @@ pbd_show_warnings <- function()
 
 
 
-# pbd_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
-pbd_bcast_mpi <- function(msg) spmd.bcast.message(msg, rank.source = 0)
+# remoter_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
+remoter_bcast_mpi <- function(msg) spmd.bcast.message(msg, rank.source = 0)
 
-pbd_bcast_zmq <- function(msg)
+remoter_bcast_zmq <- function(msg)
 {
   if (comm.size() > 1)
   {
@@ -261,20 +260,20 @@ pbd_bcast_zmq <- function(msg)
   msg
 }
 
-pbd_bcast <- function(msg)
+remoter_bcast <- function(msg)
 {
   if (pbdenv$bcast_method == "mpi")
-    msg <- pbd_bcast_mpi(msg=msg)
+    msg <- remoter_bcast_mpi(msg=msg)
   else if (pbdenv$bcast_method == "zmq")
-    msg <- pbd_bcast_zmq(msg=msg)
+    msg <- remoter_bcast_zmq(msg=msg)
   
   return(msg)
 }
 
 
 
-### TODO FIXME integrate with pbd_sanitize()
-pbd_eval_filter_server <- function(msg)
+### TODO FIXME integrate with remoter_sanitize()
+remoter_eval_filter_server <- function(msg)
 {
   if (all(grepl(x=msg, pattern="^library\\(", perl=TRUE)))
   {
@@ -300,7 +299,7 @@ pbd_eval_filter_server <- function(msg)
 
 
 
-pbd_eval <- function(input, whoami, env)
+remoter_eval <- function(input, whoami, env)
 {
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
@@ -310,7 +309,7 @@ pbd_eval <- function(input, whoami, env)
     send.socket(pbdenv$socket, data=input)
     
     ### Special cases
-    if (all(grepl(x=input, pattern="^pbd_localize\\(", perl=TRUE)))
+    if (all(grepl(x=input, pattern="^remoter_localize\\(", perl=TRUE)))
       eval(parse(text=input))
     else if (all(grepl(x=input, pattern="^ls.local\\(", perl=TRUE)))
       eval(parse(text=input))
@@ -321,8 +320,8 @@ pbd_eval <- function(input, whoami, env)
     
     pbdenv$status <- receive.socket(pbdenv$socket)
     
-#    pbd_show_errors()
-#    pbd_show_warnings()
+#    remoter_show_errors()
+#    remoter_show_warnings()
   }
   else if (whoami == "remote")
   {
@@ -339,17 +338,17 @@ pbd_eval <- function(input, whoami, env)
     else
       msg <- NULL
     
-    msg <- pbd_bcast(msg)
+    msg <- remoter_bcast(msg)
     barrier() # just in case ...
     
-    msg <- pbd_eval_filter_server(msg=msg)
+    msg <- remoter_eval_filter_server(msg=msg)
     
     ret <- 
     withCallingHandlers(
       tryCatch({
           pbdenv$visible <- withVisible(eval(parse(text=msg), envir=env))
-        }, interrupt=pbd_interrupt, error=pbd_error
-      ), warning=pbd_warning
+        }, interrupt=remoter_interrupt, error=remoter_error
+      ), warning=remoter_warning
     )
     
     
@@ -375,7 +374,7 @@ pbd_eval <- function(input, whoami, env)
 
 
 
-#' pbd_exit
+#' remoter_exit
 #' 
 #' Exit the pbdR client/server.
 #' 
@@ -386,7 +385,7 @@ pbd_eval <- function(input, whoami, env)
 #' results.
 #' 
 #' @export
-pbd_exit <- function()
+remoter_exit <- function()
 {
   set.status(should_exit, TRUE)
   
@@ -395,42 +394,10 @@ pbd_exit <- function()
 
 
 
-pbd_get_remote_addr <- function()
+remoter_repl_init <- function()
 {
-  if (pbdenv$whoami == "local")
-  {
-    context <- zmq$Context()
-    socket <- context$socket("ZMQ_REP")
-    socket$bind(address("*", pbdenv$port))
-    pbdenv$remote_addr <- socket$receive()
-    socket$send("got it")
-    
-    ### TODO store address and port in ~/.pbdR/remote
-    socket$close()
-    rm(socket);rm(context)
-    invisible(gc())
-  }
-  else if (pbdenv$whoami == "remote"  &&  comm.rank() == 0)
-  {
-    context <- zmq$Context()
-    socket <- context$socket("ZMQ_REQ")
-    socket$connect(address("localhost", pbdenv$port))
-    socket$send(getip())
-    socket$receive()
-    socket$disconnect()
-    rm(socket);rm(context)
-    invisible(gc())
-  }
-  
-  invisible()
-}
-
-
-
-pbd_repl_init <- function()
-{
-  if (!get.status(pbd_prompt_active))
-    set.status(pbd_prompt_active, TRUE)
+  if (!get.status(remoter_prompt_active))
+    set.status(remoter_prompt_active, TRUE)
   else
   {
     cat("The pbd repl is already running!\n")
@@ -439,9 +406,6 @@ pbd_repl_init <- function()
   
   if (pbdenv$whoami == "local")
     cat("please wait a moment for the servers to spin up...\n")
-  
-  if (pbdenv$get_remote_addr)
-    pbd_get_remote_addr()
   
   ### Initialize zmq
   if (pbdenv$whoami == "local")
@@ -457,47 +421,15 @@ pbd_repl_init <- function()
   {
     ### Order very much matters!
     if (pbdenv$debug)
-    {
-      if (comm.size() == 1)
-        cat("WARNING:  You should restart with mpirun and more than 1 MPI rank.\n")
-      
-      if (comm.rank() == 0)
-        cat("Hello! This is the server; please don't type things here!\n\n")
-    }
+      cat("Hello! This is the server; please don't type things here!\n\n")
     
-    if (comm.rank() == 0)
-    {
-      serverip <- getip()
-      invisible(bcast(serverip, rank.source=0))
-      
-      ### client/server
-      pbdenv$context <- init.context()
-      pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
-      bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
-    }
-    else
-      serverip <- bcast()
+    serverip <- getip()
+    invisible(bcast(serverip, rank.source=0))
     
-    if (pbdenv$bcast_method == "zmq")
-    {
-      if (comm.size() > 1)
-      {
-        if (comm.rank() == 0)
-        {
-          ### rank 0 setup for talking to other ranks
-          pbdenv$remote_context <- init.context()
-          pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PUSH")
-          bind.socket(pbdenv$remote_socket, paste0("tcp://*:", pbdenv$remote_port))
-        }
-        else
-        {
-          ### other ranks
-          pbdenv$remote_context <- init.context()
-          pbdenv$remote_socket <- init.socket(pbdenv$remote_context, "ZMQ_PULL")
-          connect.socket(pbdenv$remote_socket, paste0("tcp://", serverip, ":", pbdenv$remote_port))
-        }
-      }
-    }
+    ### client/server
+    pbdenv$context <- init.context()
+    pbdenv$socket <- init.socket(pbdenv$context, "ZMQ_REP")
+    bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
   }
   
   
@@ -506,7 +438,7 @@ pbd_repl_init <- function()
 
 
 
-#' pbd_repl
+#' remoter_repl
 #' 
 #' The REPL for the client/server.
 #' 
@@ -518,13 +450,13 @@ pbd_repl_init <- function()
 #' Environment where repl evaluations will take place.
 #'
 #' @export
-pbd_repl <- function(env=sys.parent())
+remoter_repl <- function(env=sys.parent())
 {
   ### FIXME needed?
   if (!interactive() && pbdenv$whoami == "local")
     stop("You should only use this interactively")
   
-  if (!pbd_repl_init())
+  if (!remoter_repl_init())
     return(invisible())
   
   
@@ -538,18 +470,18 @@ pbd_repl <- function(env=sys.parent())
     while (TRUE)
     {
       pbdenv$visible <- withVisible(invisible())
-      input <- pbd_readline(input=input)
+      input <- remoter_readline(input=input)
       
-      pbd_eval(input=input, whoami=pbdenv$whoami, env=env)
+      remoter_eval(input=input, whoami=pbdenv$whoami, env=env)
       
       if (get.status(continuation)) next
       
-      pbd_repl_printer()
+      remoter_repl_printer()
       
       ### Should go after all other evals and handlers
       if (get.status(should_exit))
       {
-        set.status(pbd_prompt_active, FALSE)
+        set.status(remoter_prompt_active, FALSE)
         set.status(should_exit, FALSE)
         return(invisible())
       }
@@ -558,7 +490,7 @@ pbd_repl <- function(env=sys.parent())
     }
   }
   
-  set.status(pbd_prompt_active, FALSE)
+  set.status(remoter_prompt_active, FALSE)
   set.status(should_exit, FALSE)
   
   return(invisible())
@@ -566,7 +498,7 @@ pbd_repl <- function(env=sys.parent())
 
 
 
-#' pbd_localize
+#' remoter_localize
 #' 
 #' Localize R objects.
 #' 
@@ -589,23 +521,23 @@ pbd_repl <- function(env=sys.parent())
 #' > library(pbdCS)
 #' > y
 #' ###  Error: object 'y' not found
-#' > pbd_launch_servers()
-#' > pbd_launch_client()
+#' > remoter_launch_servers()
+#' > remoter_launch_client()
 #' pbdR> x
 #' ### Error: object 'x' not found
 #' pbdR> x <- "some data"
 #' pbdR> x
 #' ###  [1] "some data" 
-#' pbdR> pbd_localize(x, "y")
-#' pbdR> pbd_exit()
+#' pbdR> remoter_localize(x, "y")
+#' pbdR> remoter_exit()
 #' > y
 #' ###  [1] "some data"
 #' }
 #' 
 #' @export
-pbd_localize <- function(object, newname, env=.GlobalEnv)
+remoter_localize <- function(object, newname, env=.GlobalEnv)
 {
-  err <- ".__pbd_localize_failure"
+  err <- ".__remoter_localize_failure"
   
   if (pbdenv$whoami == "local")
   {
