@@ -1,6 +1,7 @@
 ### For R CMD check
 utils::globalVariables(c("continuation", "lasterror", "visible", "should_exit", "remoter_prompt_active", "ret", "lasterror"))
 
+magicmsg_checkfor_pw <- "68638009903952479362"
 
 #' State management for the pbdR Client/Server
 #' 
@@ -290,6 +291,12 @@ remoter_eval <- function(input, whoami, env)
     if (pbdenv$debug)
       cat(msg, "\n")
     
+    if (msg == magicmsg_checkfor_pw)
+    {
+      remoter_check_password()
+      return(invisible())
+    }
+    
     msg <- remoter_eval_filter_server(msg=msg)
     
     ret <- 
@@ -312,7 +319,6 @@ remoter_eval <- function(input, whoami, env)
     }
     
     send.socket(pbdenv$socket, pbdenv$status)
-    
   }
   else
     stop("bad 'whoami'")
@@ -344,10 +350,10 @@ remoter_check_password <- function()
 {
   if (pbdenv$whoami == "local")
   {
-    send.socket(pbdenv$socket, "")
+    send.socket(pbdenv$socket, magicmsg_checkfor_pw)
     needpw <- receive.socket(pbdenv$socket)
     
-    while (TRUE)
+    while (needpw)
     {
       pw <- readline("enter the password:  ")
       send.socket(pbdenv$socket, pw)
@@ -363,8 +369,6 @@ remoter_check_password <- function()
   }
   else if (pbdenv$whoami == "remote")
   {
-    receive.socket(pbdenv$socket)
-    
     if (is.null(pbdenv$password))
       send.socket(pbdenv$socket, FALSE)
     else
@@ -415,6 +419,8 @@ remoter_repl_init <- function()
     connect.socket(pbdenv$socket, addr)
     
     cat("\n")
+    remoter_check_password()
+    cat("\n")
   }
   else if (pbdenv$whoami == "remote")
   {
@@ -428,8 +434,6 @@ remoter_repl_init <- function()
     bind.socket(pbdenv$socket, paste0("tcp://*:", pbdenv$port))
   }
   
-  
-  remoter_check_password()
   
   return(TRUE)
 }
