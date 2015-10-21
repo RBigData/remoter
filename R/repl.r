@@ -8,7 +8,7 @@ utils::globalVariables(c("continuation", "lasterror", "visible", "should_exit", 
 pbdenv <- new.env()
 
 # options
-pbdenv$prompt <- "pbdR"
+pbdenv$prompt <- "remoteR"
 pbdenv$port <- 55555
 pbdenv$remote_addr <- "localhost"
 pbdenv$remote_port <- 55556
@@ -239,59 +239,21 @@ remoter_show_warnings <- function()
 
 
 
-# remoter_bcast_mpi <- function(msg) bcast(msg, rank.source=0)
-remoter_bcast_mpi <- function(msg) spmd.bcast.message(msg, rank.source = 0)
-
-remoter_bcast_zmq <- function(msg)
-{
-  if (comm.size() > 1)
-  {
-    if (comm.rank() == 0)
-    {
-      for (rnk in 1:(comm.size()-1))
-        send.socket(pbdenv$remote_socket, data=msg)
-    }
-    else
-    {
-      msg <- receive.socket(pbdenv$remote_socket)
-    }
-  }
-  
-  msg
-}
-
-remoter_bcast <- function(msg)
-{
-  if (pbdenv$bcast_method == "mpi")
-    msg <- remoter_bcast_mpi(msg=msg)
-  else if (pbdenv$bcast_method == "zmq")
-    msg <- remoter_bcast_zmq(msg=msg)
-  
-  return(msg)
-}
-
-
-
 ### TODO FIXME integrate with remoter_sanitize()
 remoter_eval_filter_server <- function(msg)
 {
   if (all(grepl(x=msg, pattern="^library\\(", perl=TRUE)))
   {
-    if (comm.rank() == 0)
-    {
-      msg <- paste0("
-        tmp <- file(tempfile())
-        sink(tmp, append=TRUE)
-        sink(tmp, append=TRUE, type='message')\n", 
-        msg, "\n
-        sink()
-        sink(type='message')
-        cat(paste(readLines(tmp), collapse='\n'))
-        unlink(tmp)
-      ")
-    }
-    else
-      msg <- paste0("suppressPackageStartupMessages(", msg, ")")
+    msg <- paste0("
+      tmp <- file(tempfile())
+      sink(tmp, append=TRUE)
+      sink(tmp, append=TRUE, type='message')\n", 
+      msg, "\n
+      sink()
+      sink(type='message')
+      cat(paste(readLines(tmp), collapse='\n'))
+      unlink(tmp)
+    ")
   }
   
   msg
@@ -325,21 +287,13 @@ remoter_eval <- function(input, whoami, env)
   }
   else if (whoami == "remote")
   {
-    if (comm.rank() == 0)
-    {
-      if (pbdenv$debug)
-        cat("Awaiting message:  ")
-      
-      msg <- receive.socket(pbdenv$socket)
-      
-      if (pbdenv$debug)
-        cat(msg, "\n")
-    }
-    else
-      msg <- NULL
+    if (pbdenv$debug)
+      cat("Awaiting message:  ")
     
-    msg <- remoter_bcast(msg)
-    barrier() # just in case ...
+    msg <- receive.socket(pbdenv$socket)
+    
+    if (pbdenv$debug)
+      cat(msg, "\n")
     
     msg <- remoter_eval_filter_server(msg=msg)
     
@@ -352,20 +306,17 @@ remoter_eval <- function(input, whoami, env)
     )
     
     
-    if (comm.rank() == 0)
+    if (!is.null(ret))
     {
-      if (!is.null(ret))
-      {
-        set.status(visible, ret$visible)
-        
-        if (!ret$visible)
-          set.status(ret, NULL)
-        else
-          set.status(ret, utils::capture.output(ret$value))
-      }
+      set.status(visible, ret$visible)
       
-      send.socket(pbdenv$socket, pbdenv$status)
+      if (!ret$visible)
+        set.status(ret, NULL)
+      else
+        set.status(ret, utils::capture.output(ret$value))
     }
+    
+    send.socket(pbdenv$socket, pbdenv$status)
     
   }
   else
@@ -404,9 +355,6 @@ remoter_repl_init <- function()
     return(FALSE)
   }
   
-  if (pbdenv$whoami == "local")
-    cat("please wait a moment for the servers to spin up...\n")
-  
   ### Initialize zmq
   if (pbdenv$whoami == "local")
   {
@@ -422,9 +370,6 @@ remoter_repl_init <- function()
     ### Order very much matters!
     if (pbdenv$debug)
       cat("Hello! This is the server; please don't type things here!\n\n")
-    
-    serverip <- getip()
-    invisible(bcast(serverip, rank.source=0))
     
     ### client/server
     pbdenv$context <- init.context()
@@ -559,14 +504,10 @@ remoter_localize <- function(object, newname, env=.GlobalEnv)
   }
   else if (pbdenv$whoami == "remote")
   {
-    if (comm.rank() == 0)
-    {
-      if (!exists(deparse(substitute(object))))
-        ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
-      else
-        ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
-    }
-
+    if (!exists(deparse(substitute(object))))
+      ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
+    else
+      ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
   }
   
   return(invisible(ret))

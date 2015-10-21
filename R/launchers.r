@@ -1,8 +1,9 @@
 #' @export
-server <- function(port=55555)
+server <- function(port=55555, showmsg=FALSE)
 {
   pbdenv$whoami <- 'remote'
   pbdenv$port <- port
+  pbdenv$debug <- showmsg
   remoter_repl()
   
   invisible(TRUE)
