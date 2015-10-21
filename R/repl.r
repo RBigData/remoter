@@ -11,8 +11,8 @@ pbdenv <- new.env()
 pbdenv$prompt <- "remoteR"
 pbdenv$port <- 55555
 pbdenv$remote_addr <- "localhost"
-pbdenv$remote_port <- 55556
-pbdenv$bcast_method <- "zmq"
+pbdenv$password <- NULL
+pbdenv$maxattempts <- 5
 
 
 # internals
@@ -38,13 +38,7 @@ pbdenv$status <- list(
   continuation      = FALSE
 )
 
-pbdenv_checker <- function()
-{
-  if (pbdenv$bcast_method != "mpi" && pbdenv$bcast_method != "zmq")
-    stop("'bcast_method' must be one of 'mpi' or 'zmq'")
-  
-  return(TRUE)
-}
+
 
 ### just a pinch of sugar
 get.status <- function(var)
@@ -345,15 +339,71 @@ remoter_exit <- function()
 
 
 
+remoter_check_password <- function()
+{
+  if (pbdenv$whoami == "local")
+  {
+    send.socket(pbdenv$socket, "")
+    needpw <- receive.socket(pbdenv$socket)
+    
+    while (TRUE)
+    {
+      pw <- readline("enter the password:  ")
+      send.socket(pbdenv$socket, pw)
+      check <- receive.socket(pbdenv$socket)
+      
+      if (isTRUE(check))
+        break
+      else if (is.null(check))
+        stop("Max attempts reached; killing server...")
+      
+      cat("Sorry, try again.\n")
+    }
+  }
+  else if (pbdenv$whoami == "remote")
+  {
+    receive.socket(pbdenv$socket)
+    
+    if (is.null(pbdenv$password))
+      send.socket(pbdenv$socket, FALSE)
+    else
+    {
+      send.socket(pbdenv$socket, TRUE)
+      
+      attempts <- 2L
+      while (TRUE)
+      {
+        pw <- receive.socket(pbdenv$socket)
+        if (pw == pbdenv$password)
+        {
+          send.socket(pbdenv$socket, TRUE)
+          break
+        }
+        else if (attempts <= pbdenv$maxattempts)
+          send.socket(pbdenv$socket, FALSE)
+        else
+        {
+          send.socket(pbdenv$socket, NULL)
+          stop("Max attempts reached; killing self.")
+        }
+        
+        attempts <- attempts + 1L
+      }
+    }
+  }
+}
+
+
+
 remoter_repl_init <- function()
 {
-  if (!get.status(remoter_prompt_active))
-    set.status(remoter_prompt_active, TRUE)
-  else
-  {
-    cat("The pbd repl is already running!\n")
-    return(FALSE)
-  }
+###  if (!get.status(remoter_prompt_active))
+###    set.status(remoter_prompt_active, TRUE)
+###  else
+###  {
+###    cat("The pbd repl is already running!\n")
+###    return(FALSE)
+###  }
   
   ### Initialize zmq
   if (pbdenv$whoami == "local")
@@ -378,23 +428,13 @@ remoter_repl_init <- function()
   }
   
   
+  remoter_check_password()
+  
   return(TRUE)
 }
 
 
 
-#' remoter_repl
-#' 
-#' The REPL for the client/server.
-#' 
-#' @description
-#' This is exported for clean access reasons; you shoud not directly
-#' use this function.
-#' 
-#' @param env 
-#' Environment where repl evaluations will take place.
-#'
-#' @export
 remoter_repl <- function(env=sys.parent())
 {
   ### FIXME needed?
@@ -439,166 +479,6 @@ remoter_repl <- function(env=sys.parent())
   set.status(should_exit, FALSE)
   
   return(invisible())
-}
-
-
-
-#' remoter_localize
-#' 
-#' Localize R objects.
-#' 
-#' @description
-#' This function allows you to pass an object from MPI rank 0 of 
-#' the servers to the local R session behind the client.
-#' 
-#' @param object 
-#' A remote R object.
-#' @param newname
-#' The name the object should take when it becomes local. If left blank,
-#' the local name will have the original (remote) object's name.
-#' @param env
-#' The environment into which the assignment will take place. The
-#' default is the global environment.
-#' 
-#' @examples
-#' \dontrun{
-#' ### Prompts are listed to clarify when something is eval'd locally vs remotely
-#' > library(pbdCS)
-#' > y
-#' ###  Error: object 'y' not found
-#' > remoter_launch_servers()
-#' > remoter_launch_client()
-#' pbdR> x
-#' ### Error: object 'x' not found
-#' pbdR> x <- "some data"
-#' pbdR> x
-#' ###  [1] "some data" 
-#' pbdR> remoter_localize(x, "y")
-#' pbdR> remoter_exit()
-#' > y
-#' ###  [1] "some data"
-#' }
-#' 
-#' @export
-remoter_localize <- function(object, newname, env=.GlobalEnv)
-{
-  err <- ".__remoter_localize_failure"
-  
-  if (pbdenv$whoami == "local")
-  {
-    value <- receive.socket(pbdenv$socket)
-    name <- as.character(substitute(object))
-    
-    if (value == err)
-    {
-      cat(paste0("Error: object '", name, "' not found\n"))
-      return(invisible(FALSE))
-    }
-    
-    if (!missing(newname))
-      name <- newname
-    
-    assign(x=name, value=value, envir=env)
-    
-    ret <- TRUE
-  }
-  else if (pbdenv$whoami == "remote")
-  {
-    if (!exists(deparse(substitute(object))))
-      ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
-    else
-      ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
-  }
-  
-  return(invisible(ret))
-}
-
-
-
-#' ls.local
-#' 
-#' View objects on the client.
-#' 
-#' @description
-#' A function to view environments on the client's R session.  To
-#' view objects on the server, use \code{ls()}.
-#' 
-#' @param envir
-#' Environment (as in \code{ls()}).
-#' @param all.names
-#' Logical that determines if all names are returned or those beginning
-#' with a '.' are omitted (as in \code{ls()}).
-#' @param pattern
-#' Optional regular expression (as in \code{ls()}).
-#'
-#' @export
-ls.local <- function(envir, all.names=FALSE, pattern)
-{
-  if (missing(envir))
-    envir <- .GlobalEnv
-  
-  if (pbdenv$whoami == "local")
-    print(ls(envir=envir, all.names=all.names, pattern=pattern))
-  
-  return(invisible())
-}
-
-
-
-#' rm.local
-#' 
-#' View objects on the client.
-#' 
-#' @description
-#' A function to remove objects from the client's R session.  To
-#' remove objects on the server, use \code{rm()}.
-#' 
-#' @param ...
-#' Objects to be removed from the client's R session.
-#' @param list
-#' Character vector naming objects to be removed (as in \code{rm()}).
-#' @param envir
-#' Environment (as in \code{rm()}).
-#'
-#' @export
-rm.local <- function(..., list=character(), envir)
-{
-  ### TODO error checking
-  if (pbdenv$whoami == "local")
-  {
-    if (missing(envir))
-      envir <- .GlobalEnv
-    
-    ### FIXME this is disgusting
-    objs <- match.call(expand.dots=TRUE)
-    objs[[1]] <- NULL
-    
-    rm(list=as.character(objs), envir=envir)
-  }
-  
-  return(invisible())
-}
-
-
-
-#' eval.local
-#' 
-#' Evaluate expressions on the client.
-#' 
-#' @description
-#' A function to evaluate expressions on the client's R session.
-#' 
-#' @param expr
-#' Expression to be evaluated on the client.
-#'
-#' @export
-eval.local <- function(expr)
-{
-  ### TODO basically everything
-  if (pbdenv$whoami == "local")
-    print(eval(expr=expr))
-  
-  return(invisible)
 }
 
 
