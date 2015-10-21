@@ -1,7 +1,15 @@
 # remoter
 
-Control a remote R session.  Uses pbdZMQ to handle communication.
-The custom REPL is based off of pbdCS.
+* **Version:** 0.1-0
+* **Status:** [![Build Status](https://travis-ci.org/wrathematics/remoter.png)](https://travis-ci.org/remoter/ngram)
+* **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
+* **Author:** Drew Schmidt and Wei-Chen Chen
+
+
+Control a remote R session from your local R session.  Uses 
+[pbdZMQ](https://github.com/snoweye/pbdZMQ)
+to handle the communication and networking. The custom REPL is 
+based off of [pbdCS](https://github.com/wrathematics/pbdCS).
 
 
 ## Usage
