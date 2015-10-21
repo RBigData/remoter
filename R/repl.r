@@ -96,6 +96,11 @@ remoter_sanitize <- function(inputs)
     input <- inputs[i]
     if (grepl(x=input, pattern="^(q\\(|quit\\()", perl=TRUE)) 
       inputs[i] <- "remoter_exit()"
+    else if (grepl(x=input, pattern="pbdenv"))
+    {
+      remoter_client_stop("I can't do that.")
+      inputs[i] <- "invisible()"
+    }
     else if (grepl(x=input, pattern="^geterrmessage\\(", perl=TRUE))
       inputs[i] <- pbdenv$client_lasterror
     else if (grepl(x=input, pattern="^(\\?|\\?\\?|help\\()", perl=TRUE))
@@ -108,10 +113,6 @@ remoter_sanitize <- function(inputs)
       pbdenv$status$shouldwarn <- TRUE
       remoter_show_warnings()
       inputs[i] <- "invisible()"
-    }
-    else if (grepl(x=input, pattern="^finalize\\(", perl=TRUE))
-    {
-      inputs[i] <- "remoter_exit()"
     }
     else if (input == "")
       inputs[i] <- "invisible()"
