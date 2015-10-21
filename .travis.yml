@@ -7,10 +7,10 @@
 language: c
 
 before_install:
+  - sudo apt-get install -qq libzmq3-dev
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
   - chmod 755 ./travis-tool.sh
   - ./travis-tool.sh bootstrap
-  - sudo apt-get install -qq libzmq-dev
 
 install:
   - ./travis-tool.sh install_github snoweye/pbdZMQ
