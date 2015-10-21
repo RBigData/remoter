@@ -8,7 +8,8 @@
 #' must agree.
 #' @param password
 #' A password the client must enter before the user can process
-#' commands on the server.
+#' commands on the server.  If the value is \code{NULL}, then no
+#' password checking takes place.
 #' @param maxretry
 #' The maximum number of retries for passwords before shutting
 #' everything down.

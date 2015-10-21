@@ -12,7 +12,8 @@ the client and server.  The port value for the client and server
 must agree.}
 
 \item{password}{A password the client must enter before the user can process
-commands on the server.}
+commands on the server.  If the value is \code{NULL}, then no
+password checking takes place.}
 
 \item{maxretry}{The maximum number of retries for passwords before shutting
 everything down.}
