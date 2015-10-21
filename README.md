@@ -12,7 +12,7 @@ instance.  To do this:
 1. ssh to your remote (you only need to do this once!)
 2. Start a tmux session
 3. Start R
-4. `remoter::server()`
+4. `remoter::server()` (optionally, specify a custom port, or `showmsg=TRUE` to see messages in the server terminal)
 5. Detach your tmux session and log out.
 
 Once that's ready, you can connect to your remote via:
@@ -21,8 +21,17 @@ Once that's ready, you can connect to your remote via:
 remoter::client("my.remote.address")
 ```
 
+So for example, say I have set up a server (as described above)
+on EC2 with address "ec2-1-2-3-4.compute-1.amazonaws.com",
+listening on port 56789. Then I would run:
+
+```r
+remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
+```
+
 Make sure you forward your port on the server-side before trying to
 connect to it.
+
 
 
 ## Installation
