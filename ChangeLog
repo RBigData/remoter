@@ -1,3 +1,5 @@
 Release 0.1-0:
+  * Added s2c() and c2s().
+  * Added lsc(), rmc(), and evalc().
   * Imported functionality from pbdCS.
 
