@@ -53,7 +53,7 @@ There are a few utility functions available that have to do with
 handling execution of things locally or moving data between client
 and server.
 
-By default, all commands executed inside of the client are executed
+By default, all commands entered inside of the client are executed
 on the server.  If you need to do some things in the local R session,
 you can kill the client and just reconnect when you're ready.
 Alternatively, you can use the `lsc()`, `rmc()`, and
