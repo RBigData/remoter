@@ -254,7 +254,6 @@ remoter_eval <- function(input, whoami, env)
       ), warning=remoter_warning
     )
     
-    
     if (!is.null(ret))
     {
       set.status(visible, ret$visible)

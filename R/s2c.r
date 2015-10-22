@@ -54,14 +54,11 @@ s2c <- function(object, newname, env=.GlobalEnv)
       name <- newname
     
     assign(x=name, value=value, envir=env)
-    
-    ret <- TRUE
   }
   else if (pbdenv$whoami == "remote")
   {
     val <- get0(name, envir=sys.frame(-1), ifnotfound=err)
-    
-    ret <- send.socket(pbdenv$socket, data=val, send.more=TRUE)
+    send.socket(pbdenv$socket, data=val, send.more=TRUE)
   }
   
   return(invisible(TRUE))
