@@ -1,82 +1,12 @@
-#' remoter_localize
-#' 
-#' Localize R objects.
-#' 
-#' @description
-#' This function allows you to pass an object from MPI rank 0 of 
-#' the servers to the local R session behind the client.
-#' 
-#' @param object 
-#' A remote R object.
-#' @param newname
-#' The name the object should take when it becomes local. If left blank,
-#' the local name will have the original (remote) object's name.
-#' @param env
-#' The environment into which the assignment will take place. The
-#' default is the global environment.
-#' 
-#' @examples
-#' \dontrun{
-#' ### Prompts are listed to clarify when something is eval'd locally vs remotely
-#' > library(pbdCS)
-#' > y
-#' ###  Error: object 'y' not found
-#' > remoter_launch_servers()
-#' > remoter_launch_client()
-#' pbdR> x
-#' ### Error: object 'x' not found
-#' pbdR> x <- "some data"
-#' pbdR> x
-#' ###  [1] "some data" 
-#' pbdR> remoter_localize(x, "y")
-#' pbdR> remoter_exit()
-#' > y
-#' ###  [1] "some data"
-#' }
-#' 
-#' @export
-remoter_localize <- function(object, newname, env=.GlobalEnv)
-{
-  err <- ".__remoter_localize_failure"
-  
-  if (pbdenv$whoami == "local")
-  {
-    value <- receive.socket(pbdenv$socket)
-    name <- as.character(substitute(object))
-    
-    if (value == err)
-    {
-      cat(paste0("Error: object '", name, "' not found\n"))
-      return(invisible(FALSE))
-    }
-    
-    if (!missing(newname))
-      name <- newname
-    
-    assign(x=name, value=value, envir=env)
-    
-    ret <- TRUE
-  }
-  else if (pbdenv$whoami == "remote")
-  {
-    if (!exists(deparse(substitute(object))))
-      ret <- send.socket(pbdenv$socket, data=err, send.more=TRUE)
-    else
-      ret <- send.socket(pbdenv$socket, data=object, send.more=TRUE)
-  }
-  
-  return(invisible(ret))
-}
-
-
-
-#' ls.local
+#' ls on Client
 #' 
 #' View objects on the client.
 #' 
 #' @description
 #' A function to view environments on the client's R session.  To
-#' view objects on the server, use \code{ls()}.
+#' view objects on the server, just use \code{ls()}.  Instead of
+#' using this function, you could also just kill the client, do your
+#' local operations, then re-run your \code{client()} command.
 #' 
 #' @param envir
 #' Environment (as in \code{ls()}).
@@ -87,7 +17,7 @@ remoter_localize <- function(object, newname, env=.GlobalEnv)
 #' Optional regular expression (as in \code{ls()}).
 #'
 #' @export
-ls.local <- function(envir, all.names=FALSE, pattern)
+lsc <- function(envir, all.names=FALSE, pattern)
 {
   if (missing(envir))
     envir <- .GlobalEnv
@@ -100,13 +30,15 @@ ls.local <- function(envir, all.names=FALSE, pattern)
 
 
 
-#' rm.local
+#' rmc
 #' 
-#' View objects on the client.
+#' Remove objects on the client.
 #' 
 #' @description
 #' A function to remove objects from the client's R session.  To
-#' remove objects on the server, use \code{rm()}.
+#' remove objects on the server, just use \code{rm()}.  Instead of
+#' using this function, you could also just kill the client, do your
+#' local operations, then re-run your \code{client()} command.
 #' 
 #' @param ...
 #' Objects to be removed from the client's R session.
@@ -116,7 +48,7 @@ ls.local <- function(envir, all.names=FALSE, pattern)
 #' Environment (as in \code{rm()}).
 #'
 #' @export
-rm.local <- function(..., list=character(), envir)
+rmc <- function(..., list=character(), envir)
 {
   ### TODO error checking
   if (pbdenv$whoami == "local")
@@ -136,18 +68,21 @@ rm.local <- function(..., list=character(), envir)
 
 
 
-#' eval.local
+#' evalc
 #' 
 #' Evaluate expressions on the client.
 #' 
 #' @description
-#' A function to evaluate expressions on the client's R session.
+#' A function to evaluate expressions on the client's R session.  To
+#' eval expressions on the server, just use \code{eval()}.  Instead of
+#' using this function, you could also just kill the client, do your
+#' local operations, then re-run your \code{client()} command.
 #' 
 #' @param expr
 #' Expression to be evaluated on the client.
 #'
 #' @export
-eval.local <- function(expr)
+evalc <- function(expr)
 {
   ### TODO basically everything
   if (pbdenv$whoami == "local")

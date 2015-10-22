@@ -211,14 +211,16 @@ remoter_eval <- function(input, whoami, env)
   {
     send.socket(pbdenv$socket, data=input)
     
-    ### Special cases
-    if (all(grepl(x=input, pattern="^remoter_localize\\(", perl=TRUE)))
+    ### Special cases that need to be eval'd locally
+    if (all(grepl(x=input, pattern="^s2c\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^ls.local\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^c2s\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^rm.local\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^lsc\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^eval.local\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^rmc\\(", perl=TRUE)))
+      eval(parse(text=input))
+    else if (all(grepl(x=input, pattern="^evalc\\(", perl=TRUE)))
       eval(parse(text=input))
     
     pbdenv$status <- receive.socket(pbdenv$socket)

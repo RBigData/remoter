@@ -33,6 +33,7 @@ client <- function(remote_addr, port=55555, prompt="remoteR")
   pbdenv$prompt <- prompt
   pbdenv$port <- port
   pbdenv$remote_addr <- remote_addr
+  
   remoter_repl()
   
   invisible(TRUE)
