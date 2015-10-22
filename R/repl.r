@@ -40,21 +40,21 @@ remoter_sanitize <- function(inputs)
   for (i in 1:length(inputs))
   {
     input <- inputs[i]
-    if (grepl(x=input, pattern="^(q\\(|quit\\()", perl=TRUE)) 
+    if (grepl(x=input, pattern="^(\\s+)?(q|quit)\\(", perl=TRUE)) 
       inputs[i] <- "remoter_exit()"
     else if (grepl(x=input, pattern="pbdenv"))
     {
       remoter_client_stop("I can't do that.")
       inputs[i] <- "invisible()"
     }
-    else if (grepl(x=input, pattern="^geterrmessage\\(", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?geterrmessage\\(", perl=TRUE))
       inputs[i] <- pbdenv$client_lasterror
-    else if (grepl(x=input, pattern="^(\\?|\\?\\?|help\\()", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
     {
       remoter_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
     }
-    else if (grepl(x=input, pattern="^warnings\\(", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?warnings\\(", perl=TRUE))
     {
       pbdenv$status$shouldwarn <- TRUE
       remoter_show_warnings()
@@ -183,7 +183,7 @@ remoter_show_warnings <- function()
 ### TODO FIXME integrate with remoter_sanitize()
 remoter_eval_filter_server <- function(msg)
 {
-  if (all(grepl(x=msg, pattern="^library\\(", perl=TRUE)))
+  if (all(grepl(x=msg, pattern="^(\\s+)?library\\(", perl=TRUE)))
   {
     msg <- paste0("
       tmp <- file(tempfile())
@@ -212,15 +212,15 @@ remoter_eval <- function(input, whoami, env)
     send.socket(pbdenv$socket, data=input)
     
     ### Special cases that need to be eval'd locally
-    if (all(grepl(x=input, pattern="^s2c\\(", perl=TRUE)))
+    if (all(grepl(x=input, pattern="^(\\s+)?s2c\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^c2s\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^(\\s+)?c2s\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^lsc\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^(\\s+)?lsc\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^rmc\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^(\\s+)?rmc\\(", perl=TRUE)))
       eval(parse(text=input))
-    else if (all(grepl(x=input, pattern="^evalc\\(", perl=TRUE)))
+    else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
       eval(parse(text=input))
     
     pbdenv$status <- receive.socket(pbdenv$socket)
