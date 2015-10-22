@@ -27,6 +27,8 @@
 #' @export
 client <- function(remote_addr, port=55555, prompt="remoteR")
 {
+  reset_state()
+  
   pbdenv$whoami <- "local"
   pbdenv$prompt <- prompt
   pbdenv$port <- port

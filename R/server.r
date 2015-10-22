@@ -20,6 +20,8 @@
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, showmsg=FALSE)
 {
+  reset_state()
+  
   pbdenv$whoami <- "remote"
   pbdenv$port <- port
   pbdenv$debug <- showmsg
