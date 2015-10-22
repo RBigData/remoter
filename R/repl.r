@@ -236,7 +236,14 @@ remoter_eval <- function(input, whoami, env)
     msg <- receive.socket(pbdenv$socket)
     
     if (pbdenv$debug)
-      cat(msg, "\n")
+    {
+      if (msg != magicmsg_checkfor_pw)
+        cat(msg)
+      else
+        cat("\r", paste0(rep(" ", 20), collapse=""))
+      
+      cat("\n")
+    }
     
     if (msg == magicmsg_checkfor_pw)
     {
