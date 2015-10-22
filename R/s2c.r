@@ -9,8 +9,9 @@
 #' @param object 
 #' A remote R object.
 #' @param newname
-#' The name the object should take when it becomes local. If left blank,
-#' the local name will have the original (remote) object's name.
+#' The name the object should take when it is stored on the local
+#' client's R session. If left blank, the local name will be the
+#' same as the original (remote) object's name.
 #' @param env
 #' The environment into which the assignment will take place. The
 #' default is the global environment.
