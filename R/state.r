@@ -1,8 +1,5 @@
 magicmsg_checkfor_pw <- "68638009903952479362"
 
-#' State management for the pbdR Client/Server
-#' 
-#' @export
 pbdenv <- new.env()
 
 reset_state <- function()
