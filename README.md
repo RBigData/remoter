@@ -15,6 +15,8 @@ based off of [**pbdCS**](https://github.com/wrathematics/pbdCS).
 
 ## Usage
 
+#### Basics
+
 For now, you have to manually set up the server on your remote
 instance.  To do this:
 
@@ -43,6 +45,24 @@ remote address `"localhost"`.
 If you're using an actually remote machine though, make sure
 you forward your port on the server-side before trying to
 connect to it.
+
+
+#### Utility Functions
+
+There are a few utility functions available that have to do with
+handling execution of things locally or moving data between client
+and server.
+
+By default, all commands executed inside of the client are executed
+on the server.  If you need to do some things in the local R session,
+you can kill the client and just reconnect when you're ready.
+Alternatively, you can use the `lsc()`, `rmc()`, and
+`evalc()` functions.  These are client versions of `ls()`, 
+`rm()`, and `eval()`.  
+
+For moving data between client and server, there are the
+`s2c()` and `c2s()` commands which transfer from server to
+client and from client to server, respectively.
 
 
 
