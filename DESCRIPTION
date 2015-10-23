@@ -4,7 +4,7 @@ Title: Remote R
 Version: 0.1-0
 Description: A set of utilities for controlling a remote R session
   in a client/server pattern.  Network communication is handled
-  by the ZeroMQ library.  The client is a custom REPL.
+  by the 'ZeroMQ' library.  The client is a custom 'REPL'.
 License: BSD 2-clause License + file LICENSE
 Depends: R (>= 3.2.0), 
   pbdZMQ (>= 0.2-0)
