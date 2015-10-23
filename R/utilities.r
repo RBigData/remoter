@@ -22,7 +22,7 @@ lsc <- function(envir, all.names=FALSE, pattern)
   if (missing(envir))
     envir <- .GlobalEnv
   
-  if (pbdenv$whoami == "local")
+  if (.pbdenv$whoami == "local")
     print(ls(envir=envir, all.names=all.names, pattern=pattern))
   
   return(invisible())
@@ -51,7 +51,7 @@ lsc <- function(envir, all.names=FALSE, pattern)
 rmc <- function(..., list=character(), envir)
 {
   ### TODO error checking
-  if (pbdenv$whoami == "local")
+  if (.pbdenv$whoami == "local")
   {
     if (missing(envir))
       envir <- .GlobalEnv
@@ -85,7 +85,7 @@ rmc <- function(..., list=character(), envir)
 evalc <- function(expr)
 {
   ### TODO basically everything
-  if (pbdenv$whoami == "local")
+  if (.pbdenv$whoami == "local")
     print(eval(expr=expr))
   
   return(invisible)

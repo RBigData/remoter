@@ -35,12 +35,12 @@ c2s <- function(object, newname, env)
   err <- ".__remoter_c2s_failure"
   name <- as.character(substitute(object))
   
-  if (pbdenv$whoami == "local")
+  if (.pbdenv$whoami == "local")
   {
-    receive.socket(pbdenv$socket)
+    receive.socket(.pbdenv$socket)
     
     value <- get0(name, ifnotfound=err)
-    send.socket(pbdenv$socket, data=value)
+    send.socket(.pbdenv$socket, data=value)
     
     if (identical(value, err))
     {
@@ -48,15 +48,15 @@ c2s <- function(object, newname, env)
       return(invisible(FALSE))
     }
   }
-  else if (pbdenv$whoami == "remote")
+  else if (.pbdenv$whoami == "remote")
   {
-    send.socket(pbdenv$socket, "")
+    send.socket(.pbdenv$socket, "")
     
-    value <- receive.socket(pbdenv$socket)
+    value <- receive.socket(.pbdenv$socket)
     
     if (identical(value, err))
     {
-      send.socket(pbdenv$socket, FALSE)
+      send.socket(.pbdenv$socket, FALSE)
       return(invisible(FALSE))
     }
     

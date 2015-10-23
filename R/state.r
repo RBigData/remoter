@@ -1,29 +1,29 @@
 magicmsg_checkfor_pw <- "68638009903952479362"
 
-pbdenv <- new.env()
+.pbdenv <- new.env()
 
 reset_state <- function()
 {
   # options
-  pbdenv$prompt <- "remoteR"
-  pbdenv$port <- 55555
-  pbdenv$remote_addr <- "localhost"
-  pbdenv$password <- NULL
-  pbdenv$maxattempts <- 5
+  .pbdenv$prompt <- "remoteR"
+  .pbdenv$port <- 55555
+  .pbdenv$remote_addr <- "localhost"
+  .pbdenv$password <- NULL
+  .pbdenv$maxattempts <- 5
   
   
   # internals
-  pbdenv$context <- NULL
-  pbdenv$socket <- NULL
-  pbdenv$debug <- FALSE
-  pbdenv$verbose <- TRUE
-  pbdenv$client_lasterror <- ""
+  .pbdenv$context <- NULL
+  .pbdenv$socket <- NULL
+  .pbdenv$debug <- FALSE
+  .pbdenv$verbose <- TRUE
+  .pbdenv$client_lasterror <- ""
   
-  pbdenv$remote_context <- NULL
-  pbdenv$remote_socket <- NULL
+  .pbdenv$remote_context <- NULL
+  .pbdenv$remote_socket <- NULL
   
   # C/S state
-  pbdenv$status <- list(
+  .pbdenv$status <- list(
     ret               = invisible(),
     visible           = FALSE,
     lasterror         = NULL,
@@ -44,13 +44,13 @@ reset_state <- function()
 get.status <- function(var)
 {
   name <- as.character(substitute(var))
-  pbdenv$status[[name]]
+  .pbdenv$status[[name]]
 }
 
 set.status <- function(var, val)
 {
   name <- as.character(substitute(var))
-  pbdenv$status[[name]] <- val
+  .pbdenv$status[[name]] <- val
   invisible()
 }
 
