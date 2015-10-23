@@ -237,7 +237,7 @@ remoter_eval <- function(input, whoami, env)
     
     if (.pbdenv$debug)
     {
-      if (msg != magicmsg_checkfor_pw)
+      if (length(msg)==1 && msg != magicmsg_checkfor_pw)
         cat(msg)
       else
         cat("\r", paste0(rep(" ", 20), collapse=""))
@@ -245,7 +245,7 @@ remoter_eval <- function(input, whoami, env)
       cat("\n")
     }
     
-    if (msg == magicmsg_checkfor_pw)
+    if (length(msg)==1 && msg == magicmsg_checkfor_pw)
     {
       remoter_check_password()
       return(invisible())
