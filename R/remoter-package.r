@@ -6,6 +6,7 @@
 #' 
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables
+#' @import assertthat
 #'
 #' @docType package
 #' @author Drew Schmidt and Wei-Chen Chen

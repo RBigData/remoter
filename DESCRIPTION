@@ -9,7 +9,8 @@ License: BSD 2-clause License + file LICENSE
 Depends: R (>= 3.2.0), 
   pbdZMQ (>= 0.2-0)
 Imports: stats,
-  utils
+  utils,
+  assertthat (>= 0.1)
 SystemRequirements: Linux, Mac OSX, or Windows.
 NeedsCompilation: yes
 ByteCompile: yes
