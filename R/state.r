@@ -1,4 +1,4 @@
-magicmsg_checkfor_pw <- "68638009903952479362"
+magicmsg_checkfor_pw <-      ".__remoter_checkfor_pw"
 
 .pbdenv <- new.env()
 
