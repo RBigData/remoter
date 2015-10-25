@@ -16,9 +16,11 @@
 #' @param showmsg
 #' Logical; if TRUE, turns on the "debug mode" for the server,
 #' and prints messages in the server terminal.
+#' @param checkversions
+#' Logical; should a version check (pbdZMQ and remoter) be enforced?
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, showmsg=FALSE)
+server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
 {
   validate_port(port)
   if (port < 49152)
@@ -26,6 +28,7 @@ server <- function(port=55555, password=NULL, maxretry=5, showmsg=FALSE)
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
   assert_that(is.logical(showmsg))
+  assert_that(is.logical(checkversions))
   
   reset_state()
   
@@ -33,6 +36,7 @@ server <- function(port=55555, password=NULL, maxretry=5, showmsg=FALSE)
   .pbdenv$port <- port
   .pbdenv$debug <- showmsg
   .pbdenv$password <- password
+  .pbdenv$checkversion <- checkversion
   
   rm("port", "password", "maxretry", "showmsg")
   invisible(gc())

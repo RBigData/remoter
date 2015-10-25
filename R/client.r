@@ -31,7 +31,6 @@ client <- function(remote_addr, port=55555, prompt="remoteR")
   validate_port(port)
   assert_that(is.string(prompt))
   
-  
   reset_state()
   
   .pbdenv$whoami <- "local"

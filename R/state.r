@@ -1,4 +1,5 @@
 magicmsg_checkfor_pw <-      ".__remoter_checkfor_pw"
+magicmsg_checkfor_version <- ".__remoter_checkfor_version"
 
 .pbdenv <- new.env()
 
@@ -10,6 +11,7 @@ reset_state <- function()
   .pbdenv$remote_addr <- "localhost"
   .pbdenv$password <- NULL
   .pbdenv$maxattempts <- 5
+  .pbdenv$checkversion <- TRUE
   
   
   # internals
