@@ -5,7 +5,7 @@
 #' @import pbdZMQ
 #' 
 #' @importFrom stats runif
-#' @importFrom utils capture.output globalVariables
+#' @importFrom utils capture.output globalVariables packageVersion
 #' @import assertthat
 #'
 #' @docType package

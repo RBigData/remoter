@@ -1,5 +1,4 @@
-magicmsg_checkfor_pw <-      ".__remoter_checkfor_pw"
-magicmsg_checkfor_version <- ".__remoter_checkfor_version"
+magicmsg_first_connection <- ".__remoter_first_connection"
 
 .pbdenv <- new.env()
 

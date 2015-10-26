@@ -4,7 +4,8 @@
 \alias{server}
 \title{Server Launcher}
 \usage{
-server(port = 55555, password = NULL, maxretry = 5, showmsg = FALSE)
+server(port = 55555, password = NULL, maxretry = 5,
+  checkversions = TRUE, showmsg = FALSE)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between
@@ -17,6 +18,8 @@ password checking takes place.}
 
 \item{maxretry}{The maximum number of retries for passwords before shutting
 everything down.}
+
+\item{checkversions}{Logical; should a version check (pbdZMQ and remoter) be enforced?}
 
 \item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
 and prints messages in the server terminal.}

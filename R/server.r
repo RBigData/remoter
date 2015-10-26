@@ -36,7 +36,7 @@ server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, sh
   .pbdenv$port <- port
   .pbdenv$debug <- showmsg
   .pbdenv$password <- password
-  .pbdenv$checkversion <- checkversion
+  .pbdenv$checkversion <- checkversions
   
   rm("port", "password", "maxretry", "showmsg")
   invisible(gc())

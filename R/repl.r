@@ -237,7 +237,7 @@ remoter_eval <- function(input, whoami, env)
     
     if (.pbdenv$debug)
     {
-      if (length(msg)==1 && msg != magicmsg_checkfor_pw)
+      if (length(msg)==1 && msg != magicmsg_first_connection)
         cat(msg)
       else
         cat("\r", paste0(rep(" ", 20), collapse=""))
@@ -245,9 +245,11 @@ remoter_eval <- function(input, whoami, env)
       cat("\n")
     }
     
-    if (length(msg)==1 && msg == magicmsg_checkfor_pw)
+    ### Run first-time checks
+    if (length(msg)==1 && msg == magicmsg_first_connection)
     {
       remoter_check_password()
+      remoter_check_version()
       return(invisible())
     }
     
@@ -303,7 +305,7 @@ remoter_check_password <- function()
 {
   if (.pbdenv$whoami == "local")
   {
-    send.socket(.pbdenv$socket, magicmsg_checkfor_pw)
+    send.socket(.pbdenv$socket, magicmsg_first_connection)
     needpw <- receive.socket(.pbdenv$socket)
     
     while (needpw)
@@ -353,6 +355,36 @@ remoter_check_password <- function()
 
 
 
+remoter_check_version <- function()
+{
+  if (.pbdenv$whoami == "local")
+  {
+    send.socket(.pbdenv$socket, "")
+    versions_server <- receive.socket(.pbdenv$socket)
+    
+    if (!isTRUE(versions_server))
+    {
+      versions_client <- get_versions()
+      if (!compare_versions(versions_client, versions_server))
+        stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
+    }
+  }
+  else if (.pbdenv$whoami == "remote")
+  {
+    receive.socket(.pbdenv$socket)
+    
+    if (!.pbdenv$checkversion)
+      send.socket(.pbdenv$socket, FALSE)
+    else
+    {
+      versions <- get_versions()
+      send.socket(.pbdenv$socket, versions)
+    }
+  }
+}
+
+
+
 remoter_repl_init <- function()
 {
 ###  if (!get.status(remoter_prompt_active))
@@ -371,8 +403,8 @@ remoter_repl_init <- function()
     addr <- pbdZMQ::address(.pbdenv$remote_addr, .pbdenv$port)
     connect.socket(.pbdenv$socket, addr)
     
-    cat("\n")
     remoter_check_password()
+    remoter_check_version()
     cat("\n")
   }
   else if (.pbdenv$whoami == "remote")
