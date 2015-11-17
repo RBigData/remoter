@@ -1,7 +1,7 @@
 Package: remoter
 Type: Package
 Title: Remote R
-Version: 0.1-0
+Version: 0.1-1
 Description: A set of utilities for controlling a remote R session
   in a client/server pattern.  Network communication is handled
   by the 'ZeroMQ' library.  The client is a custom 'REPL'.
