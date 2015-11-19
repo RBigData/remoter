@@ -6,6 +6,10 @@
 
 language: c
 
+env: 
+  global:
+    - CRAN: https://cran.rstudio.com
+
 before_install:
   - sudo apt-get install -qq libzmq3-dev
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
