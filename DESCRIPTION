@@ -3,15 +3,16 @@ Type: Package
 Title: Remote R
 Version: 0.1-1
 Description: A set of utilities for controlling a remote R session
-  in a client/server pattern.  Network communication is handled
-  by the 'ZeroMQ' library.  The client is a custom 'REPL'.
+    in a client/server pattern.  Network communication is handled
+    by the 'ZeroMQ' library.  The client is a custom 'REPL'.
 License: BSD 2-clause License + file LICENSE
-Depends: R (>= 3.2.0), 
-  pbdZMQ (>= 0.2-0)
-Imports: 
-  stats,
-  utils,
-  assertthat (>= 0.1)
+Depends:
+    R (>= 3.2.0),
+    pbdZMQ (>= 0.2-0)
+Imports:
+    stats,
+    utils,
+    assertthat (>= 0.1)
 SystemRequirements: Linux, Mac OSX, or Windows.
 NeedsCompilation: yes
 ByteCompile: yes
@@ -19,3 +20,4 @@ Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
   email="schmidt@math.utk.edu"),
   person("Wei-Chen", "Chen", role="aut"))
 Maintainer: Drew Schmidt <schmidt@math.utk.edu>
+RoxygenNote: 5.0.1
