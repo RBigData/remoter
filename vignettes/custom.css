@@ -1,0 +1,190 @@
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 15px;
+}
+
+body {
+  max-width: 1000px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+
+h1 {
+   font-size:2.2em;
+   border-bottom: 2px solid #ccc;
+   margin-top: 5ex;
+}
+
+h1.title { margin-top: 0px; }
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+
+.centerfig {
+	position:relative;
+	padding: 20px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.rightfig {
+	position:relative;
+	float:right;
+	padding: 20px;
+}
+.leftfig {
+	position:relative;
+	float:left;
+	padding: 20px;
+}
+.caption {
+	font: normal 1em/1.3em arial;
+	background:#fff;
+	color:#000;
+	position:absolute;
+	bottom:0;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 20px;
+	left:0;
+	text-align:center;
+	width:100%;
+	opacity:.75;
+	filter:alpha(opacity=85);
+}
+
+
+
+
+pre, img {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 90%;
+  display: block;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0;
+}
+
+
+caption {
+  caption-side: bottom;
+  margin-left: auto;
+  margin-right: auto;
+} 
+
+
+img {
+  background:#ffffff;
+  padding:5px;
+  border:1px solid #999999; 
+}
+
+code {
+  font-size: 92%;
+  border: 0px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:20px;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+
+
