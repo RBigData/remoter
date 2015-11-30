@@ -19,7 +19,7 @@ vignette: >
 
 # Introduction
 
-The **remoter** package [[@remoter]] allows you to control a remote R session from a local one.  The local R session can be in a terminal, GUI, or IDE such as RStudio.
+The **remoter** package [[@remoter]] allows you to control a remote R session from a local one.  The local R session can be in a terminal, GUI, or IDE such as RStudio.  The remote R session should be run in the background as, well, a server.
 
 The package uses **ZeroMQ** [[@zeromq]] by way of the R package **pbdZMQ** [[@Chen2015pbdZMQpackage]] to handle communication.  Our use of pbdZMQ is specialized to client/server communications, but the package is very general.  For more details about **pbdZMQ** see the **pbdZMQ** package vignette [[@Chen2015pbdZMQvignette]].
 
@@ -43,72 +43,64 @@ devtools::install_github("wrathematics/remoter")
 
 
 
-# Philosophy
+## Philosophy
 
-By default, all code entered to the client is executed on the batch SPMD servers.  
-
-
+By default, all code entered to the client is executed on the batch SPMD servers.  There are several utility functions to help executing code on the local R session (see section below).  But you should assume that anything entered into the client session, *unless you explicitly specify to the contrary*, is executed only on the server.
 
 
-# Usage
 
-## Basics
 
-For now, you have to manually set up the server on your remote
-instance.  To do this:
+
+# Example Usage
+
+## Setup
+
+Before beginning, you need to create your server.  To do this, you can:
 
 1. ssh to your remote (you only need to do this once!)
 2. Start a tmux session
 3. Start R and run `remoter::server()` (see `?server` for additional options).  Or even better, run `Rscript -e remoter::server()` so the server dies if something goes wrong.
 5. Detach your tmux session and log out.
 
-Once that's ready, you can connect to your remote via:
+Alternatively, you can run the R session in the background via something like:
+
+```r
+Rscript -e "remoter::server()" &
+```
+
+
+
+## Connecting to a Server
+
+Once the server's ready, you can connect to it via:
 
 ```r
 remoter::client("my.remote.address")
 ```
 
-So for example, say I have set up a server (as described above)
-on EC2 with address `"ec2-1-2-3-4.compute-1.amazonaws.com"`,
-listening on port `56789`. Then I would run:
+So for example, say you have set up a server (as described above) on EC2 with address `"ec2-1-2-3-4.compute-1.amazonaws.com"`, listening on port `56789`. Then you would run:
 
 ```r
 remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
 ```
 
-Alternatively, you can set up the server on your local machine
-just to see how it works.  In that case, you can use the 
-remote address `"localhost"`.
-If you're using an actually remote machine though, make sure
-you forward your port on the server-side before trying to
-connect to it.
+Alternatively, you can set up the server on your local machine just to see how it works.  In that case, you can use the "remote"" address `"localhost"`. If you're using an actually remote machine though, make sure  you forward your port on the server-side before trying to connect to it.
+
 
 
 ## Utility Functions
 
-There are a few utility functions available that have to do with
-handling execution of things locally or moving data between client
-and server.
+There are a few utility functions available that have to do with handling execution of things locally or moving data between client and server.
 
-By default, all commands entered inside of the client are executed
-on the server.  If you need to do some things in the local R session,
-you can kill the client and just reconnect when you're ready.
-Alternatively, you can use the `lsc()`, `rmc()`, and
-`evalc()` functions.  These are client versions of `ls()`, 
-`rm()`, and `eval()`.  
+By default, all commands entered inside of the client are executed on the server.  If you need to do some things in the local R session, you can kill the client and just reconnect when you're ready. Alternatively, you can use the `lsc()`, `rmc()`, and `evalc()` functions.  These are client versions of `ls()`, `rm()`, and `eval()`.  
 
-For moving data between client and server, there are the
-`s2c()` and `c2s()` commands which transfer from server to
-client and from client to server, respectively.
+For moving data between client and server, there are the `s2c()` and `c2s()` commands which transfer from server to client and from client to server, respectively.  These functions transfer data that resides in the memory of the client/server.  To transfer a file in chunks (without reading all of it into memory), see `?pbdZMQ::zmq.sendfile` or `?pbdZMQ::zmq.recvfile`.
+
 
 
 ## Shutting Everything Down
 
-From the client, enter the command `q()`.  Doing so will terminate the remote server, as well as close the client REPL.  This will not shut down the interactive R session that was hosting the client.
-
-
-
-
+From the client, enter the command `q()`.  Doing so will terminate the remote server, as well as close the client REPL.  This will not shut down the interactive R session that was hosting the client.  You can also disconnect the client from the server without shutting down the server by killing the client R session or executing `Ctrl-c` in the client.
 
 
 
@@ -159,9 +151,13 @@ source_code()
 
 Is licensed under the permissive [BSD 2-clause license](https://opensource.org/licenses/BSD-2-Clause).
 
+
+
 ## Acknowledgements
 
 This package is heavily derived from the **pbdCS** package, the development for which was supported by the project *Harnessing Scalable Libraries for Statistical Computing on Modern Architectures and Bringing Statistics to Large Scale Computing* funded by the National Science Foundation Division of Mathematical Sciences under Grant No. 1418195.
+
+
 
 ## Disclaimer
 
