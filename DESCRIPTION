@@ -13,6 +13,10 @@ Imports:
     stats,
     utils,
     assertthat (>= 0.1)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
 SystemRequirements: Linux, Mac OSX, or Windows.
 NeedsCompilation: yes
 ByteCompile: yes
