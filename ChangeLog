@@ -1,4 +1,5 @@
 Release 0.1-1:
+  * Changed behavior of exit(); added "client.only" option.
   * Rearrange internals.
   * Add vignette.
   * Use pbdZMQ 0.2-1.
