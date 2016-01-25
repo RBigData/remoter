@@ -28,8 +28,8 @@ server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, sh
   validate_port(port)
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.logical(showmsg))
-  assert_that(is.logical(checkversions))
+  assert_that(is.flag(showmsg))
+  assert_that(is.flag(checkversions))
   
   reset_state()
   
