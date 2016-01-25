@@ -31,3 +31,19 @@ compare_versions <- function(client, server)
   
   TRUE
 }
+
+
+
+assert_nostop <- function(..., env = parent.frame())
+{
+  test <- tryCatch(assert_that(env=env, ...), error=identity)
+  if (!is.logical(test))
+  {
+    if (.pbdenv$whoami == "local" || .pbdenv$debug)
+    cat(gsub(test, pattern="(^<assert|>$)", replacement=""))
+    
+    return(FALSE)
+  }
+  else
+    TRUE
+}

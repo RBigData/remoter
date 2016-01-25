@@ -41,8 +41,8 @@ remoter_sanitize <- function(inputs)
   {
     input <- inputs[i]
     if (grepl(x=input, pattern="^(\\s+)?(q|quit)\\(", perl=TRUE)) 
-      inputs[i] <- "remoter_exit()"
-    else if (grepl(x=input, pattern=".pbdenv"))
+      inputs[i] <- "remoter_exit(client.only=TRUE)"
+    else if (grepl(x=input, pattern=".pbdenv") && !.pbdenv$debug)
     {
       remoter_client_stop("I can't do that.")
       inputs[i] <- "invisible()"
@@ -225,6 +225,11 @@ remoter_eval <- function(input, whoami, env)
     
     .pbdenv$status <- receive.socket(.pbdenv$socket)
     
+    ### Must come last! If client only wants to quit, server doesn't know 
+    ### about it, and resets the status on receive.socket()
+    if (all(grepl(x=input, pattern="^(\\s+)?exit\\(", perl=TRUE)))
+      eval(parse(text=input))
+    
 #    remoter_show_errors()
 #    remoter_show_warnings()
   }
@@ -277,26 +282,6 @@ remoter_eval <- function(input, whoami, env)
   }
   else
     stop("bad 'whoami'")
-}
-
-
-
-#' remoter_exit
-#' 
-#' Exit the pbdR client/server.
-#' 
-#' @description
-#' This function cleanly shuts down any pbdR servers which have been
-#' spawned, as well as shutting down the client.  Failing to use
-#' this function to shut down the client/server may cause unexpected
-#' results.
-#' 
-#' @export
-remoter_exit <- function()
-{
-  set.status(should_exit, TRUE)
-  
-  return(invisible())
 }
 
 
@@ -470,5 +455,3 @@ remoter_repl <- function(env=sys.parent())
   
   return(invisible())
 }
-
-
