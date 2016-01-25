@@ -14,6 +14,9 @@ with a '.' are omitted (as in \code{ls()}).}
 
 \item{pattern}{Optional regular expression (as in \code{ls()}).}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 A function to view environments on the client's R session.  To
 view objects on the server, just use \code{ls()}.  Instead of

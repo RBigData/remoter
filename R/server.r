@@ -19,6 +19,9 @@
 #' @param checkversions
 #' Logical; should a version check (pbdZMQ and remoter) be enforced?
 #' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
+#' 
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
 {
@@ -45,4 +48,3 @@ server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, sh
   
   invisible(TRUE)
 }
-

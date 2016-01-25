@@ -15,6 +15,9 @@
 #' with a '.' are omitted (as in \code{ls()}).
 #' @param pattern
 #' Optional regular expression (as in \code{ls()}).
+#' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
 #'
 #' @export
 lsc <- function(envir, all.names=FALSE, pattern)
@@ -25,7 +28,7 @@ lsc <- function(envir, all.names=FALSE, pattern)
   if (.pbdenv$whoami == "local")
     print(ls(envir=envir, all.names=all.names, pattern=pattern))
   
-  return(invisible())
+  return(invisible(TRUE))
 }
 
 
@@ -46,6 +49,9 @@ lsc <- function(envir, all.names=FALSE, pattern)
 #' Character vector naming objects to be removed (as in \code{rm()}).
 #' @param envir
 #' Environment (as in \code{rm()}).
+#' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
 #'
 #' @export
 rmc <- function(..., list=character(), envir)
@@ -63,7 +69,7 @@ rmc <- function(..., list=character(), envir)
     rm(list=as.character(objs), envir=envir)
   }
   
-  return(invisible())
+  return(invisible(TRUE))
 }
 
 
@@ -80,6 +86,9 @@ rmc <- function(..., list=character(), envir)
 #' 
 #' @param expr
 #' Expression to be evaluated on the client.
+#' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
 #'
 #' @export
 evalc <- function(expr)
@@ -88,7 +97,5 @@ evalc <- function(expr)
   if (.pbdenv$whoami == "local")
     print(eval(expr=expr))
   
-  return(invisible)
+  return(invisible(TRUE))
 }
-
-

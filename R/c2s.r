@@ -16,6 +16,9 @@
 #' The environment into which the assignment will take place. The
 #' default is the remoter "working environment".
 #' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
+#' 
 #' @examples
 #' \dontrun{
 #' ### Prompts are listed to clarify when something is eval'd locally vs remotely
@@ -71,4 +74,3 @@ c2s <- function(object, newname, env)
   
   return(invisible(TRUE))
 }
-

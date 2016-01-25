@@ -9,6 +9,9 @@ evalc(expr)
 \arguments{
 \item{expr}{Expression to be evaluated on the client.}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 A function to evaluate expressions on the client's R session.  To
 eval expressions on the server, just use \code{eval()}.  Instead of

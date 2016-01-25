@@ -16,6 +16,9 @@
 #' The environment into which the assignment will take place. The
 #' default is the global environment.
 #' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
+#' 
 #' @examples
 #' \dontrun{
 #' ### Prompts are listed to clarify when something is eval'd locally vs remotely
@@ -63,4 +66,3 @@ s2c <- function(object, newname, env=.GlobalEnv)
   
   return(invisible(TRUE))
 }
-

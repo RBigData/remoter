@@ -11,6 +11,9 @@
 #' @param prompt
 #' The prompt to use to delineate the client from the normal R REPL.
 #' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
+#' 
 #' @details
 #' The \code{port} values between the client and server \emph{MUST}
 #' agree.  If they do not, this can cause the client to hang.
@@ -42,4 +45,3 @@ client <- function(remote_addr, port=55555, prompt="remoteR")
   
   invisible(TRUE)
 }
-

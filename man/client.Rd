@@ -15,6 +15,9 @@ must agree.}
 
 \item{prompt}{The prompt to use to delineate the client from the normal R REPL.}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 Launchers for the remoter client/server.
 }

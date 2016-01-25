@@ -13,6 +13,9 @@ rmc(..., list = character(), envir)
 
 \item{envir}{Environment (as in \code{rm()}).}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 A function to remove objects from the client's R session.  To
 remove objects on the server, just use \code{rm()}.  Instead of
