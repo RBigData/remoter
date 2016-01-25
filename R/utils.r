@@ -2,6 +2,11 @@ validate_port <- function(port)
 {
   assert_that(is.count(port))
   assert_that(port < 65536)
+  
+  if (port < 49152)
+    warning("You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
+  
+  TRUE
 }
 
 

@@ -26,8 +26,6 @@
 server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
 {
   validate_port(port)
-  if (port < 49152)
-    warning("See '?pbdZMQ::random_port'")
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
   assert_that(is.logical(showmsg))
