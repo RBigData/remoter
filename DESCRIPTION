@@ -2,9 +2,12 @@ Package: remoter
 Type: Package
 Title: Remote R: Control a Remote R Session from a Local One
 Version: 0.1-1
-Description: A set of utilities for controlling a remote R session
-    in a client/server pattern.  Network communication is handled
-    by the 'ZeroMQ' library.  The client is a custom 'REPL'.
+Description: A set of utilities for controlling a remote R session.
+    Simply set up a server (see 'README.md' or the package vignette
+    for more details) and connect to it from your local R session,
+    including RStudio.  Network communication is handled
+    by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The 
+    client/server framework is a custom 'REPL'.
 License: BSD 2-clause License + file LICENSE
 Depends:
     R (>= 3.2.0),
@@ -17,8 +20,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-SystemRequirements: Linux, Mac OSX, or Windows.
-NeedsCompilation: yes
+NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
   email="schmidt@math.utk.edu"),
