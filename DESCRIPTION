@@ -23,7 +23,7 @@ VignetteBuilder: knitr
 NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
-  email="schmidt@math.utk.edu"),
+  email="wrathematics@gmail.com"),
   person("Wei-Chen", "Chen", role="aut"))
-Maintainer: Drew Schmidt <schmidt@math.utk.edu>
+Maintainer: Drew Schmidt <wrathematics@gmail.com>
 RoxygenNote: 5.0.1
