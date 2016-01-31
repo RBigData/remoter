@@ -19,7 +19,7 @@ must agree.}
 Returns \code{TRUE} invisibly on successful exit.
 }
 \description{
-Launchers for the remoter client/server.
+Connect to a remote server (launch the client).
 }
 \details{
 The \code{port} values between the client and server \emph{MUST}

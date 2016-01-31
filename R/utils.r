@@ -1,3 +1,25 @@
+validate_address <- function(addr)
+{
+  assert_that(is.string(addr))
+  
+  if (grepl(addr, pattern="^.*://"))
+    stop("Remote address should not include a protocol.")
+  else if (grepl(addr, pattern=":"))
+    stop("Remote address should not include ports.")
+  
+  addr
+}
+
+
+
+scrub_addr <- function(addr)
+{
+  if (grepl(addr, pattern="/$"))
+    addr <- substr(addr, 1L, nchar(addr)-1L)
+}
+
+
+
 validate_port <- function(port)
 {
   assert_that(is.count(port))

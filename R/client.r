@@ -1,6 +1,6 @@
 #' Client Launcher
 #' 
-#' Launchers for the remoter client/server.
+#' Connect to a remote server (launch the client).
 #' 
 #' @param remote_addr
 #' The remote host/address/endpoint.
@@ -30,7 +30,8 @@
 #' @export
 client <- function(remote_addr, port=55555, prompt="remoteR")
 {
-  assert_that(is.string(remote_addr))
+  validate_address(remote_addr)
+  remote_addr <- scrub_addr(remote_addr)
   validate_port(port)
   assert_that(is.string(prompt))
   
