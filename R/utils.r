@@ -16,6 +16,8 @@ scrub_addr <- function(addr)
 {
   if (grepl(addr, pattern="/$"))
     addr <- substr(addr, 1L, nchar(addr)-1L)
+  
+  addr
 }
 
 
