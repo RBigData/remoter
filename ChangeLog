@@ -1,3 +1,6 @@
+Release 0.1-2:
+  * 
+
 Release 0.1-1:
   * Add some remote checks, address validation in client.
   * Changed behavior of exit(); added "client.only" option.
