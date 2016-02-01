@@ -16,6 +16,9 @@ same as the original (remote) object's name.}
 \item{env}{The environment into which the assignment will take place. The
 default is the global environment.}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 This function allows you to pass an object from the server to
 the local R session behind the client.

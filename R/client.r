@@ -1,6 +1,6 @@
 #' Client Launcher
 #' 
-#' Launchers for the remoter client/server.
+#' Connect to a remote server (launch the client).
 #' 
 #' @param remote_addr
 #' The remote host/address/endpoint.
@@ -10,6 +10,9 @@
 #' must agree.
 #' @param prompt
 #' The prompt to use to delineate the client from the normal R REPL.
+#' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @details
 #' The \code{port} values between the client and server \emph{MUST}
@@ -27,7 +30,8 @@
 #' @export
 client <- function(remote_addr, port=55555, prompt="remoteR")
 {
-  assert_that(is.string(remote_addr))
+  validate_address(remote_addr)
+  remote_addr <- scrub_addr(remote_addr)
   validate_port(port)
   assert_that(is.string(prompt))
   
@@ -42,4 +46,3 @@ client <- function(remote_addr, port=55555, prompt="remoteR")
   
   invisible(TRUE)
 }
-

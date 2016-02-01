@@ -1,5 +1,11 @@
+Release 0.1-1:
+  * Add some remote checks, address validation in client.
+  * Changed behavior of exit(); added "client.only" option.
+  * Rearrange internals.
+  * Add vignette.
+  * Use pbdZMQ 0.2-1.
+
 Release 0.1-0:
   * Added s2c() and c2s().
   * Added lsc(), rmc(), and evalc().
   * Imported functionality from pbdCS.
-

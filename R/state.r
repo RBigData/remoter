@@ -54,5 +54,3 @@ set.status <- function(var, val)
   .pbdenv$status[[name]] <- val
   invisible()
 }
-
-

@@ -24,6 +24,9 @@ everything down.}
 \item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
 and prints messages in the server terminal.}
 }
+\value{
+Returns \code{TRUE} invisibly on successful exit.
+}
 \description{
 Launcher for the remoter server.
 }

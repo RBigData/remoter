@@ -19,16 +19,17 @@
 #' @param checkversions
 #' Logical; should a version check (pbdZMQ and remoter) be enforced?
 #' 
+#' @return
+#' Returns \code{TRUE} invisibly on successful exit.
+#' 
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
 {
   validate_port(port)
-  if (port < 49152)
-    warning("See '?pbdZMQ::random_port'")
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.logical(showmsg))
-  assert_that(is.logical(checkversions))
+  assert_that(is.flag(showmsg))
+  assert_that(is.flag(checkversions))
   
   reset_state()
   
@@ -45,4 +46,3 @@ server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, sh
   
   invisible(TRUE)
 }
-

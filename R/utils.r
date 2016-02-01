@@ -1,7 +1,34 @@
+validate_address <- function(addr)
+{
+  assert_that(is.string(addr))
+  
+  if (grepl(addr, pattern="^.*://"))
+    stop("Remote address should not include a protocol.")
+  else if (grepl(addr, pattern=":"))
+    stop("Remote address should not include ports.")
+  
+  addr
+}
+
+
+
+scrub_addr <- function(addr)
+{
+  if (grepl(addr, pattern="/$"))
+    addr <- substr(addr, 1L, nchar(addr)-1L)
+}
+
+
+
 validate_port <- function(port)
 {
   assert_that(is.count(port))
   assert_that(port < 65536)
+  
+  if (port < 49152)
+    warning("You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
+  
+  TRUE
 }
 
 
@@ -25,4 +52,20 @@ compare_versions <- function(client, server)
     return(FALSE)
   
   TRUE
+}
+
+
+
+assert_nostop <- function(..., env = parent.frame())
+{
+  test <- tryCatch(assert_that(env=env, ...), error=identity)
+  if (!is.logical(test))
+  {
+    if (.pbdenv$whoami == "local" || .pbdenv$debug)
+    cat(gsub(test, pattern="(^<assert|>$)", replacement=""))
+    
+    return(FALSE)
+  }
+  else
+    TRUE
 }
