@@ -12,7 +12,6 @@ reset_state <- function()
   .pbdenv$maxattempts <- 5
   .pbdenv$checkversion <- TRUE
   
-  
   # internals
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL

@@ -1,5 +1,5 @@
 Release 0.1-2:
-  * 
+  * Change param "remote_addr" to "addr" in client().
 
 Release 0.1-1:
   * Add some remote checks, address validation in client.

@@ -2,7 +2,7 @@
 #' 
 #' Connect to a remote server (launch the client).
 #' 
-#' @param remote_addr
+#' @param addr
 #' The remote host/address/endpoint.
 #' @param port
 #' The port (number) that will be used for communication between 
@@ -28,10 +28,10 @@
 #' To shut down the server and the client, use the command \code{q()}.
 #' 
 #' @export
-client <- function(remote_addr, port=55555, prompt="remoteR")
+client <- function(addr="localhost", port=55555, prompt="remoteR")
 {
-  validate_address(remote_addr)
-  remote_addr <- scrub_addr(remote_addr)
+  validate_address(addr)
+  addr <- scrub_addr(addr)
   validate_port(port)
   assert_that(is.string(prompt))
   
@@ -40,7 +40,7 @@ client <- function(remote_addr, port=55555, prompt="remoteR")
   .pbdenv$whoami <- "local"
   .pbdenv$prompt <- prompt
   .pbdenv$port <- port
-  .pbdenv$remote_addr <- remote_addr
+  .pbdenv$remote_addr <- addr
   
   remoter_repl()
   

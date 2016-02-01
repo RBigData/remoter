@@ -4,10 +4,10 @@
 \alias{client}
 \title{Client Launcher}
 \usage{
-client(remote_addr, port = 55555, prompt = "remoteR")
+client(addr = "localhost", port = 55555, prompt = "remoteR")
 }
 \arguments{
-\item{remote_addr}{The remote host/address/endpoint.}
+\item{addr}{The remote host/address/endpoint.}
 
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
