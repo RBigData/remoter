@@ -15,8 +15,8 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @details
-#' The \code{port} values between the client and server \emph{MUST}
-#' agree.  If they do not, this can cause the client to hang.
+#' The \code{port} values between the client and server must agree.
+#' If they do not, this can cause the client to hang.
 #' 
 #' The client is a specialized REPL that intercepts commands sent
 #' through the R interpreter.  These commands are then sent from the
@@ -25,7 +25,7 @@
 #' Both commands (from client to server) and returns (from server
 #' to client) are handled in this way.
 #' 
-#' To shut down the server and the client, use the command \code{q()}.
+#' To shut down the server and the client, see \code{exit()}.
 #' 
 #' @export
 client <- function(addr="localhost", port=55555, prompt="remoteR")
@@ -34,6 +34,8 @@ client <- function(addr="localhost", port=55555, prompt="remoteR")
   addr <- scrub_addr(addr)
   validate_port(port)
   assert_that(is.string(prompt))
+  
+  test_connection(addr, port)
   
   reset_state()
   

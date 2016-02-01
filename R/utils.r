@@ -1,3 +1,35 @@
+test_connection <- function(addr, port, ntries=10, sleeptime=1)
+{
+  ctx <- init.context()
+  socket <- init.socket(ctx, "ZMQ_REQ")
+  addr <- pbdZMQ::address(addr, port)
+  
+  
+  for (i in ntries)
+  {
+    test <- tryCatch(connect.socket(socket, addr), error=identity, warning=identity, message=identity)
+    if (inherits(test, "simpleWarning"))
+      Sys.sleep(sleeptime)
+    else
+      break
+  }
+  
+  rm(socket)
+  rm(ctx)
+  invisible(gc())
+  
+  if (inherits(test, "simpleWarning"))
+    stop(
+"Unable to connect to remote address.  Make sure that 
+* the server is running and able to accept connections (e.g. forwarding ports), 
+* the port argument is correct, 
+* the remote address is correct.")
+  
+  invisible(TRUE)
+}
+
+
+
 validate_address <- function(addr)
 {
   assert_that(is.string(addr))
