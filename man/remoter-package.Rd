@@ -12,5 +12,8 @@ commands on an R session running on, for example, Amazon's EC2.
 \author{
 Drew Schmidt and Wei-Chen Chen
 }
+\references{
+Project URL: \url{https://github.com/wrathematics/remoter}
+}
 \keyword{package}
 
