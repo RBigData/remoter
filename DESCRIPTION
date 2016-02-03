@@ -3,7 +3,7 @@ Type: Package
 Title: Remote R: Control a Remote R Session from a Local One
 Version: 0.2-0
 Description: A set of utilities for controlling a remote R session.
-    Simply set up a server (see 'README.md' or the package vignette
+    from a local one.  Simply set up a server (see package vignette
     for more details) and connect to it from your local R session,
     including 'RStudio'.  Network communication is handled
     by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The 
