@@ -201,7 +201,7 @@ Any opinions, findings, and conclusions or recommendations expressed in  this ma
 
 This manual may be incorrect or out-of-date.  The authors assume no responsibility for errors or omissions, or for damages resulting from the use of the information contained herein.
 
-The **remoter** logo comes from the image "Trådtelefon-illustration". Licensed under Public Domain via Commons - https://commons.wikimedia.org/wiki/File:Tr%C3%A5dtelefon-illustration.png#/media/File:Tr%C3%A5dtelefon-illustration.png
+The **remoter** logo comes from the image "Tradtelefon-illustration". Licensed under Public Domain via [Commons](https://commons.wikimedia.org/wiki/File:Tr%C3%A5dtelefon-illustration.png#/media/File:Tr%C3%A5dtelefon-illustration.png).
 
 
 
