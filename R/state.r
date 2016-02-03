@@ -23,6 +23,10 @@ reset_state <- function()
   .pbdenv$remote_context <- NULL
   .pbdenv$remote_socket <- NULL
   
+  # Crypto
+  .pbdenv$keys$secret <- NULL
+  .pbdenv$keys$public <- NULL
+  
   # C/S state
   .pbdenv$status <- list(
     ret               = invisible(),
@@ -42,6 +46,13 @@ reset_state <- function()
 
 
 ### just a pinch of sugar
+set <- function(var, val)
+{
+  name <- as.character(substitute(var))
+  .pbdenv[[name]] <- val
+  invisible()
+}
+
 get.status <- function(var)
 {
   name <- as.character(substitute(var))
@@ -53,6 +64,11 @@ set.status <- function(var, val)
   name <- as.character(substitute(var))
   .pbdenv$status[[name]] <- val
   invisible()
+}
+
+iam <- function(name)
+{
+  .pbdenv$whoami == name
 }
 
 logprint <- function(msg)

@@ -1,6 +1,9 @@
 Release 0.2-0:
+  * Large rewrite of internal state system.
   * Vignette rewrite.
-  * Add connect/disconnect information to the server log.
+  * Add basic logger for server.
+  * Disallow privileged ports.
+  * Better documentation and help.
 
 Release 0.1-2:
   * Change param "remote_addr" to "addr" in client().

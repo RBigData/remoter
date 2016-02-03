@@ -12,7 +12,7 @@ remoter_readline <- function(input)
   
   prompt <- paste0(.pbdenv$prompt, symb)
   
-  if (.pbdenv$whoami == "local")
+  if (iam("local"))
   {
     ret <- c(input, readline(prompt=prompt))
     ret <- remoter_sanitize(inputs=ret)
@@ -81,7 +81,7 @@ is.error <- function(obj)
 
 remoter_repl_printer <- function()
 {
-  if (.pbdenv$whoami == "remote")
+  if (iam("remote"))
   {
     .pbdenv$status$shouldwarn <- FALSE
     return(invisible())
@@ -209,7 +209,7 @@ remoter_eval <- function(input, whoami, env)
   
   if (whoami == "local")
   {
-    send.socket(.pbdenv$socket, data=input)
+    send(data=input)
     
     ### Special cases that need to be eval'd locally
     if (all(grepl(x=input, pattern="^(\\s+)?s2c\\(", perl=TRUE)))
@@ -223,7 +223,7 @@ remoter_eval <- function(input, whoami, env)
     else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
       eval(parse(text=input))
     
-    .pbdenv$status <- receive.socket(.pbdenv$socket)
+    .pbdenv$status <- receive()
     
     ### Must come last! If client only wants to quit, server doesn't know 
     ### about it, and resets the status on receive.socket()
@@ -238,7 +238,7 @@ remoter_eval <- function(input, whoami, env)
     if (.pbdenv$debug)
       cat("Awaiting message:  ")
     
-    msg <- receive.socket(.pbdenv$socket)
+    msg <- receive()
     
     if (.pbdenv$debug)
     {
@@ -278,7 +278,7 @@ remoter_eval <- function(input, whoami, env)
         set.status(ret, utils::capture.output(ret$value))
     }
     
-    send.socket(.pbdenv$socket, .pbdenv$status)
+    send(.pbdenv$status)
   }
   else
     stop("bad 'whoami'")
@@ -288,16 +288,16 @@ remoter_eval <- function(input, whoami, env)
 
 remoter_check_password <- function()
 {
-  if (.pbdenv$whoami == "local")
+  if (iam("local"))
   {
-    send.socket(.pbdenv$socket, magicmsg_first_connection)
-    needpw <- receive.socket(.pbdenv$socket)
+    send(magicmsg_first_connection)
+    needpw <- receive()
     
     while (needpw)
     {
       pw <- readline("enter the password:  ")
-      send.socket(.pbdenv$socket, pw)
-      check <- receive.socket(.pbdenv$socket)
+      send(pw)
+      check <- receive()
       
       if (isTRUE(check))
         break
@@ -307,33 +307,33 @@ remoter_check_password <- function()
       cat("Sorry, try again.\n")
     }
   }
-  else if (.pbdenv$whoami == "remote")
+  else if (iam("remote"))
   {
     if (is.null(.pbdenv$password))
     {
       logprint("client connected")
-      send.socket(.pbdenv$socket, FALSE)
+      send(FALSE)
     }
     else
     {
       logprint("client attempting to connect...")
-      send.socket(.pbdenv$socket, TRUE)
+      send(TRUE)
       
       attempts <- 2L
       while (TRUE)
       {
-        pw <- receive.socket(.pbdenv$socket)
+        pw <- receive()
         if (pw == .pbdenv$password)
         {
           logprint("client connected")
-          send.socket(.pbdenv$socket, TRUE)
+          send(TRUE)
           break
         }
         else if (attempts <= .pbdenv$maxattempts)
-          send.socket(.pbdenv$socket, FALSE)
+          send(FALSE)
         else
         {
-          send.socket(.pbdenv$socket, NULL)
+          send(NULL)
           stop("Max attempts reached; killing self.")
         }
         
@@ -347,10 +347,10 @@ remoter_check_password <- function()
 
 remoter_check_version <- function()
 {
-  if (.pbdenv$whoami == "local")
+  if (iam("local"))
   {
-    send.socket(.pbdenv$socket, "")
-    versions_server <- receive.socket(.pbdenv$socket)
+    send("")
+    versions_server <- receive()
     
     if (!isTRUE(versions_server))
     {
@@ -359,16 +359,16 @@ remoter_check_version <- function()
         stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
     }
   }
-  else if (.pbdenv$whoami == "remote")
+  else if (iam("remote"))
   {
-    receive.socket(.pbdenv$socket)
+    receive()
     
     if (!.pbdenv$checkversion)
-      send.socket(.pbdenv$socket, FALSE)
+      send(FALSE)
     else
     {
       versions <- get_versions()
-      send.socket(.pbdenv$socket, versions)
+      send(versions)
     }
   }
 }
@@ -378,7 +378,7 @@ remoter_check_version <- function()
 remoter_repl_init <- function()
 {
   ### Initialize zmq
-  if (.pbdenv$whoami == "local")
+  if (iam("local"))
   {
     .pbdenv$context <- init.context()
     .pbdenv$socket <- init.socket(.pbdenv$context, "ZMQ_REQ")
@@ -389,7 +389,7 @@ remoter_repl_init <- function()
     remoter_check_version()
     cat("\n")
   }
-  else if (.pbdenv$whoami == "remote")
+  else if (iam("remote"))
   {
     ### Order very much matters!
     if (.pbdenv$debug)
@@ -409,7 +409,7 @@ remoter_repl_init <- function()
 
 remoter_repl <- function(env=sys.parent())
 {
-  if (!interactive() && .pbdenv$whoami == "local")
+  if (!interactive() && iam("local"))
     stop("You should only use this interactively")
   
   remoter_repl_init()

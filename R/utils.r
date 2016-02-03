@@ -96,7 +96,7 @@ assert_nostop <- function(..., env = parent.frame())
   test <- tryCatch(assert_that(env=env, ...), error=identity)
   if (!is.logical(test))
   {
-    if (.pbdenv$whoami == "local" || .pbdenv$debug)
+    if (iam("local") || .pbdenv$debug)
     cat(gsub(test, pattern="(^<assert|>$)", replacement=""))
     
     return(FALSE)

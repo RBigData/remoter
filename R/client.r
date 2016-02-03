@@ -39,10 +39,10 @@ client <- function(addr="localhost", port=55555, prompt="remoteR")
   
   reset_state()
   
-  .pbdenv$whoami <- "local"
-  .pbdenv$prompt <- prompt
-  .pbdenv$port <- port
-  .pbdenv$remote_addr <- addr
+  set(whoami, "local")
+  set(prompt, prompt)
+  set(port, port)
+  set(remote_addr, addr)
   
   remoter_repl()
   

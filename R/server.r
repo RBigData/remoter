@@ -36,12 +36,13 @@ server <- function(port=55555, log=TRUE, password=NULL, maxretry=5, checkversion
   
   reset_state()
   
-  .pbdenv$whoami <- "remote"
-  .pbdenv$serverlog <- log
-  .pbdenv$port <- port
-  .pbdenv$debug <- showmsg
-  .pbdenv$password <- password
-  .pbdenv$checkversion <- checkversions
+  set(whoami, "remote")
+  set(whoami, "remote")
+  set(serverlog, log)
+  set(port, port)
+  set(debug, showmsg)
+  set(password, password)
+  set(checkversion, checkversions)
   
   rm("port", "password", "maxretry", "showmsg")
   invisible(gc())
