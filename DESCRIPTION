@@ -25,5 +25,7 @@ ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
   email="wrathematics@gmail.com"),
   person("Wei-Chen", "Chen", role="aut"))
+URL: https://github.com/wrathematics/remoter
+BugReports: https://github.com/wrathematics/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
 RoxygenNote: 5.0.1
