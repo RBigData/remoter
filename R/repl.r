@@ -310,9 +310,13 @@ remoter_check_password <- function()
   else if (.pbdenv$whoami == "remote")
   {
     if (is.null(.pbdenv$password))
+    {
+      logprint("client connected")
       send.socket(.pbdenv$socket, FALSE)
+    }
     else
     {
+      logprint("client attempting to connect...")
       send.socket(.pbdenv$socket, TRUE)
       
       attempts <- 2L
@@ -321,6 +325,7 @@ remoter_check_password <- function()
         pw <- receive.socket(.pbdenv$socket)
         if (pw == .pbdenv$password)
         {
+          logprint("client connected")
           send.socket(.pbdenv$socket, TRUE)
           break
         }

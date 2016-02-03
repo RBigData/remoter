@@ -6,6 +6,8 @@
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
 #' must agree.
+#' @param log
+#' Logical; enables some basic logging in the server.
 #' @param password
 #' A password the client must enter before the user can process
 #' commands on the server.  If the value is \code{NULL}, then no
@@ -23,9 +25,10 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
+server <- function(port=55555, log=TRUE, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
 {
   validate_port(port)
+  assert_that(is.flag(log))
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
   assert_that(is.flag(showmsg))
@@ -34,6 +37,7 @@ server <- function(port=55555, password=NULL, maxretry=5, checkversions=TRUE, sh
   reset_state()
   
   .pbdenv$whoami <- "remote"
+  .pbdenv$serverlog <- log
   .pbdenv$port <- port
   .pbdenv$debug <- showmsg
   .pbdenv$password <- password

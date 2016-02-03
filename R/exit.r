@@ -23,7 +23,14 @@ exit <- function(client.only=TRUE)
   if (!assert_nostop(is.flag(client.only))) return(invisible(FALSE))
   
   if (!client.only || .pbdenv$whoami == "local")
+  {
     set.status(should_exit, TRUE)
+    
+    if (.pbdenv$whoami == "remote")
+      logprint("client killed server")
+  }
+  else
+    logprint("client disconnected with call to exit()")
   
   return(invisible(TRUE))
 }

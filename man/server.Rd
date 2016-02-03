@@ -4,13 +4,15 @@
 \alias{server}
 \title{Server Launcher}
 \usage{
-server(port = 55555, password = NULL, maxretry = 5,
+server(port = 55555, log = TRUE, password = NULL, maxretry = 5,
   checkversions = TRUE, showmsg = FALSE)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
 must agree.}
+
+\item{log}{Logical; enables some basic logging in the server.}
 
 \item{password}{A password the client must enter before the user can process
 commands on the server.  If the value is \code{NULL}, then no

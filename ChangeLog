@@ -1,5 +1,6 @@
 Release 0.2-0:
   * Vignette rewrite.
+  * Add connect/disconnect information to the server log.
 
 Release 0.1-2:
   * Change param "remote_addr" to "addr" in client().

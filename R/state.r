@@ -13,6 +13,7 @@ reset_state <- function()
   .pbdenv$checkversion <- TRUE
   
   # internals
+  .pbdenv$serverlog <- TRUE
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
   .pbdenv$debug <- FALSE
@@ -51,5 +52,13 @@ set.status <- function(var, val)
 {
   name <- as.character(substitute(var))
   .pbdenv$status[[name]] <- val
+  invisible()
+}
+
+logprint <- function(msg)
+{
+  if (.pbdenv$serverlog)
+    cat(paste0("[", Sys.time(), "]: ", msg, "\n"))
+  
   invisible()
 }
