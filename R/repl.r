@@ -41,7 +41,7 @@ remoter_sanitize <- function(inputs)
   {
     input <- inputs[i]
     if (grepl(x=input, pattern="^(\\s+)?(q|quit)\\(", perl=TRUE)) 
-      inputs[i] <- "remoter_exit(client.only=TRUE)"
+      inputs[i] <- "exit(client.only=TRUE)"
     else if (grepl(x=input, pattern=".pbdenv") && !.pbdenv$debug)
     {
       remoter_client_stop("I can't do that.")
@@ -372,14 +372,6 @@ remoter_check_version <- function()
 
 remoter_repl_init <- function()
 {
-###  if (!get.status(remoter_prompt_active))
-###    set.status(remoter_prompt_active, TRUE)
-###  else
-###  {
-###    cat("The pbd repl is already running!\n")
-###    return(FALSE)
-###  }
-  
   ### Initialize zmq
   if (.pbdenv$whoami == "local")
   {
@@ -412,12 +404,10 @@ remoter_repl_init <- function()
 
 remoter_repl <- function(env=sys.parent())
 {
-  ### FIXME needed?
   if (!interactive() && .pbdenv$whoami == "local")
     stop("You should only use this interactively")
   
-  if (!remoter_repl_init())
-    return(invisible())
+  remoter_repl_init()
   
   
   ### the repl
