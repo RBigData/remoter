@@ -15,7 +15,8 @@ Depends:
 Imports:
     stats,
     utils,
-    assertthat (>= 0.1)
+    assertthat (>= 0.1),
+    sodium (>= 0.2)
 Suggests: 
     knitr,
     rmarkdown

@@ -202,12 +202,12 @@ remoter_eval_filter_server <- function(msg)
 
 
 
-remoter_eval <- function(input, whoami, env)
+remoter_eval <- function(input, env)
 {
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   
-  if (whoami == "local")
+  if (iam("local"))
   {
     send(data=input)
     
@@ -233,7 +233,7 @@ remoter_eval <- function(input, whoami, env)
 #    remoter_show_errors()
 #    remoter_show_warnings()
   }
-  else if (whoami == "remote")
+  else if (iam("remote"))
   {
     if (.pbdenv$debug)
       cat("Awaiting message:  ")
@@ -290,7 +290,7 @@ remoter_check_password <- function()
 {
   if (iam("local"))
   {
-    send(magicmsg_first_connection)
+    first_connect()
     needpw <- receive()
     
     while (needpw)
@@ -377,6 +377,9 @@ remoter_check_version <- function()
 
 remoter_repl_init <- function()
 {
+  generate_keypair()
+  
+  
   ### Initialize zmq
   if (iam("local"))
   {
@@ -401,7 +404,6 @@ remoter_repl_init <- function()
     bind.socket(.pbdenv$socket, paste0("tcp://*:", .pbdenv$port))
   }
   
-  
   return(TRUE)
 }
 
@@ -411,6 +413,7 @@ remoter_repl <- function(env=sys.parent())
 {
   if (!interactive() && iam("local"))
     stop("You should only use this interactively")
+  
   
   remoter_repl_init()
   
@@ -427,7 +430,7 @@ remoter_repl <- function(env=sys.parent())
       .pbdenv$visible <- withVisible(invisible())
       input <- remoter_readline(input=input)
       
-      remoter_eval(input=input, whoami=.pbdenv$whoami, env=env)
+      remoter_eval(input=input, env=env)
       
       if (get.status(continuation)) next
       

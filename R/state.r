@@ -24,8 +24,9 @@ reset_state <- function()
   .pbdenv$remote_socket <- NULL
   
   # Crypto
-  .pbdenv$keys$secret <- NULL
+  .pbdenv$keys$private <- NULL
   .pbdenv$keys$public <- NULL
+  .pbdenv$keys$theirs <- NULL
   
   # C/S state
   .pbdenv$status <- list(
@@ -41,6 +42,26 @@ reset_state <- function()
   )
   
   invisible()
+}
+
+
+
+### Crypto
+generate_keypair <- function()
+{
+  .pbdenv$keys$private <- sodium::keygen()
+  .pbdenv$keys$public <- sodium::pubkey(.pbdenv$keys$private)
+  
+  invisible()
+}
+
+
+
+getkey <- function(type)
+{
+  name <- as.character(substitute(type))
+  stopifnot(name == "private" || name == "public" || name == "theirs")
+  .pbdenv$keys[[name]]
 }
 
 

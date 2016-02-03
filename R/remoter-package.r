@@ -13,6 +13,7 @@
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion
 #' @import assertthat
+#' @importFrom sodium keygen pubkey diffie_hellman
 #'
 #' @docType package
 #' @keywords package
