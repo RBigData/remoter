@@ -7,10 +7,10 @@ output:
     fig_caption: true
     toc: true
     number_sections: true
-    css: custom.css
+    css: include/custom.css
     highlight: kate
-bibliography: remoter.bib
-csl: "ieee.csl"
+bibliography: include/remoter.bib
+csl: "include/ieee.csl"
 vignette: >
   %\VignetteIndexEntry{Guide to the remoter Package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -151,4 +151,4 @@ This manual may be incorrect or out-of-date.  The authors assume no responsibili
 
 
 # References
-<script language="JavaScript" src="headers.js"></script>
+<script language="JavaScript" src="include/headers.js"></script>
