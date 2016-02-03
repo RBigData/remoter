@@ -5,7 +5,7 @@ Version: 0.2-0
 Description: A set of utilities for controlling a remote R session.
     Simply set up a server (see 'README.md' or the package vignette
     for more details) and connect to it from your local R session,
-    including RStudio.  Network communication is handled
+    including 'RStudio'.  Network communication is handled
     by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The 
     client/server framework is a custom 'REPL'.
 License: BSD 2-clause License + file LICENSE
