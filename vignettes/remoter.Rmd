@@ -178,7 +178,7 @@ The package should basically be useable, but there are some issues you might wan
 
 **Problem**: There's no security!
 
-**Explanation**: There's currently an idiot's (i.e. mine) version of a password system available.  However, there is currently no encryption.  I'm not sure how important that is really, but if there is high demand, we may add CurveZMQ support to pbdZMQ.
+**Explanation**: Currently there is a password system that works by simple string comparison, and communication is encryption via the **sodium** [[@sodium]] package.  It is possible I messed this up though, so if you believe that ot be the case, I'd really like to know about it.  We are also considering adding CurveZMQ support to pbdZMQ in the future.
 <br><br>
 
 
