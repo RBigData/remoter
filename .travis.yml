@@ -6,7 +6,7 @@ env:
   global:
     - CRAN: https://cran.rstudio.com
 
-before_script:
+before_install:
   - sudo apt-get install -qq libzmq3-dev libsodium-dev
 
 r_packages:
