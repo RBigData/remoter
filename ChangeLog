@@ -1,4 +1,5 @@
 Release 0.2-0:
+  * Encrypt communications via sodium.
   * Large rewrite of internal state system.
   * Vignette rewrite.
   * Add basic logger for server.
