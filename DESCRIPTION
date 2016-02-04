@@ -15,6 +15,7 @@ Depends:
 Imports:
     stats,
     utils,
+    tcltk,
     assertthat (>= 0.1),
     sodium (>= 0.2)
 Suggests: 
