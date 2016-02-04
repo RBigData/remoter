@@ -1,6 +1,5 @@
 Release 0.2-0:
   * Encrypt communications via sodium.
-  * Password masking via tcltk.
   * Large rewrite of internal state system.
   * Vignette rewrite.
   * Add basic logger for server.

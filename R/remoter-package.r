@@ -11,7 +11,6 @@
 #' 
 #' @import pbdZMQ
 #' @import assertthat
-#' @import tcltk
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion
 #' @importFrom sodium keygen pubkey diffie_hellman
