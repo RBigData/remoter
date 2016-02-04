@@ -7,7 +7,11 @@ env:
     - CRAN: https://cran.rstudio.com
 
 before_install:
-  - sudo apt-get install -qq libzmq3-dev libsodium-dev
+  - sudo apt-get install -qq libzmq3-dev
+  # libsodium
+  - git clone git://github.com/jedisct1/libsodium.git
+  - ( cd libsodium; ./autogen.sh; ./configure; make check; sudo make install; sudo ldconfig )
+
 
 r_packages:
   - assertthat
