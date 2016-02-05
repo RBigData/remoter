@@ -119,7 +119,7 @@ An address should not include any protocols, like `tcp://` or `http://`.  The ad
 
 A port is a non-negative integer.  The minimum value for a valid port is 1024 (values 1-1023 are privileged), and the maximum value is 65535.  That said, you are strongly encouraged to use port values between 49152 and 65535. See `?pbdZMQ::random_port` for details.
 
-Of course, all the usual issues apply.  The server should be able to accept communications on the desired port.  Opening ports is very standard stuff, but dependent on the system you are using, so consult relevant documentation if you aren't sure what to do.
+Of course, all the usual issues apply.  The server should be able to accept communications on the desired port.  One way to handle this is by opening the desired port.  Opening ports is very standard stuff, but dependent on the system you are using, so consult relevant documentation if you aren't sure what to do.  Another way is by tunnelling over ssh, which we mention at the conclusion of this section.
 
 
 ## Creating a Remote Server
@@ -155,6 +155,40 @@ remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
 ```
 
 That's it.  Everything else should work just as when you were running the server locally.
+
+
+## Tunnelling Over ssh
+
+If you can't or don't want to open up a port, you can always tunnel over ssh (assuming of course you actually have legitimate access to the machine...).
+
+Say you have user account `user` on remote with address `my.remote.machine`.  Suppose your remote machine is running a **remoter** server, listening on port 55555 (more on this later).  Then you can run:
+
+```
+ssh user@my.remote.machine -L 55556:localhost:55555 -N
+```
+
+To be totally unambiguous:
+
+* server port (running on remote): 55555
+* client port (running on your laptop): 55556
+
+This will allow you to connect to the remote machine as follows:
+
+```r
+remoter::client("localhost", port=55556)
+```
+
+You can also spawn the server in the ssh tunnel itself.  For example, you might run:
+
+```
+ssh user@my.remote.machine -L 55556:localhost:55555 'Rscript -e "remoter::server(port=55555)"'
+```
+
+Or if you are working on a managed system, like a cluster or supercomputer, you might need to run something like `module load R` first:
+
+```
+ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e "remoter::server(port=55555)"'
+```
 
 
 
