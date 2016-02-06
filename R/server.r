@@ -2,6 +2,9 @@
 #' 
 #' Launcher for the remoter server.
 #' 
+#' @description
+#' TODO
+#' 
 #' @param port
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
@@ -20,19 +23,22 @@
 #' and prints messages in the server terminal.
 #' @param checkversions
 #' Logical; should a version check (pbdZMQ and remoter) be enforced?
+#' @param secure
+#' Logical; TODO FIXME
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, log=TRUE, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE)
+server <- function(port=55555, log=TRUE, password=NULL, maxretry=5, checkversions=TRUE, showmsg=FALSE, secure=has.sodium())
 {
   validate_port(port)
   assert_that(is.flag(log))
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.flag(showmsg))
   assert_that(is.flag(checkversions))
+  assert_that(is.flag(showmsg))
+  assert_that(is.flag(secure))
   
   reset_state()
   
@@ -44,7 +50,13 @@ server <- function(port=55555, log=TRUE, password=NULL, maxretry=5, checkversion
   set(password, password)
   set(checkversion, checkversions)
   
-  rm("port", "password", "maxretry", "showmsg")
+  set(secure, secure)
+  if (!.pbdenv$withsodium && secure)
+    stop("need salt")
+  
+  logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***\n"))
+  
+  rm("port", "password", "maxretry", "showmsg", "secure")
   invisible(gc())
   
   remoter_repl()

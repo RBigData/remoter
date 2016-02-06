@@ -5,7 +5,7 @@
 \title{Server Launcher}
 \usage{
 server(port = 55555, log = TRUE, password = NULL, maxretry = 5,
-  checkversions = TRUE, showmsg = FALSE)
+  checkversions = TRUE, showmsg = FALSE, secure = has.sodium())
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
@@ -25,11 +25,16 @@ everything down.}
 
 \item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
 and prints messages in the server terminal.}
+
+\item{secure}{Logical; TODO FIXME}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.
 }
 \description{
+TODO
+}
+\details{
 Launcher for the remoter server.
 }
 

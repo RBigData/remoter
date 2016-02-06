@@ -398,9 +398,6 @@ remoter_check_version <- function()
 
 remoter_repl_init <- function()
 {
-  generate_keypair()
-  
-  
   ### Initialize zmq
   if (iam("local"))
   {

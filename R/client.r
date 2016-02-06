@@ -2,6 +2,18 @@
 #' 
 #' Connect to a remote server (launch the client).
 #' 
+#' @details
+#' The \code{port} values between the client and server must agree.
+#' If they do not, this can cause the client to hang.
+#' The client is a specialized REPL that intercepts commands sent
+#' through the R interpreter.  These commands are then sent from the
+#' client to and evaluated on the server.
+#' The client communicates over ZeroMQ with the server using a REQ/REP pattern.
+#' Both commands (from client to server) and returns (from server
+#' to client) are handled in this way.
+#' 
+#' To shut down the server and the client, see \code{exit()}.
+#' 
 #' @param addr
 #' The remote host/address/endpoint.
 #' @param port
@@ -13,19 +25,6 @@
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
-#' 
-#' @details
-#' The \code{port} values between the client and server must agree.
-#' If they do not, this can cause the client to hang.
-#' 
-#' The client is a specialized REPL that intercepts commands sent
-#' through the R interpreter.  These commands are then sent from the
-#' client to and evaluated on the server.
-#' The client communicates over ZeroMQ with the server using a REQ/REP pattern.
-#' Both commands (from client to server) and returns (from server
-#' to client) are handled in this way.
-#' 
-#' To shut down the server and the client, see \code{exit()}.
 #' 
 #' @export
 client <- function(addr="localhost", port=55555, prompt="remoteR")
