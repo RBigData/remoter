@@ -5,6 +5,7 @@ warnings_are_errors: true
 env: 
   global:
     - CRAN: https://cran.rstudio.com
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 before_install:
   - sudo apt-get install -qq libzmq3-dev
