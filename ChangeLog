@@ -1,3 +1,7 @@
+Release 0.2-1:
+  * Make encryption/secure servers/sodium optional.
+  * Add note about ssh tunneling to vignette.
+
 Release 0.2-0:
   * Encrypt communications via sodium.
   * Large rewrite of internal state system.
