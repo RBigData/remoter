@@ -98,12 +98,27 @@ By default, all commands entered inside of the client are executed on the server
 For moving data between client and server, there are the `s2c()` and `c2s()` commands which transfer from server to client and from client to server, respectively.  These functions transfer data that resides in the memory of the client/server.  To transfer a file in chunks (without reading all of it into memory), see `?pbdZMQ::zmq.sendfile` or `?pbdZMQ::zmq.recvfile`.
 
 
-
 ## Shutting Things Down
 
 To terminate the client, enter the command `exit()`.  By default, this will terminate the local client only, and leave the server running.  If you wish to also shut down the server with the client, you can run `exit(client.only=FALSE)`.  For hopefully obvious reasons, you can not terminate the server and leave the client running.
 
 From the client side, running `exit()` will not shut down the interactive R session that was hosting the client.  You can also disconnect the client from the server without shutting down the server by killing the client R session or executing `Ctrl-c` in the client.
+
+
+## Security
+
+Security in **remoter** comes in two forms currently:
+
+1. password credentialing
+2. public key encryption
+
+The password is declared when the server is spawned as a launch option in `remoter::server()`.  Without the use of encryption, it will be transmitted from client to server unsecurely.
+
+Encryption is optional, and disabled by default.  This is because encryption is handled by the **sodium** package [[@sodium]], which uses the **libsodium** [[@libsodium]] library, which can be difficult to build on some platforms.  
+
+If you have the **sodium** package installed *on both the client and the server*, start the server with the option `secure=TRUE`, and your client will automatically connect securely.  If the server was launched (by necessity or optionally) with `secure=FALSE`, then the client can not connect securely, even if the client machine has the **sodium** package installed.
+
+If ever in any doubt, use the `is.secure()` command from the client to see if communications are encrypted.
 
 
 
@@ -119,7 +134,7 @@ An address should not include any protocols, like `tcp://` or `http://`.  The ad
 
 A port is a non-negative integer.  The minimum value for a valid port is 1024 (values 1-1023 are privileged), and the maximum value is 65535.  That said, you are strongly encouraged to use port values between 49152 and 65535. See `?pbdZMQ::random_port` for details.
 
-Of course, all the usual issues apply.  The server should be able to accept communications on the desired port.  One way to handle this is by opening the desired port.  Opening ports is very standard stuff, but dependent on the system you are using, so consult relevant documentation if you aren't sure what to do.  Another way is by tunnelling over ssh, which we mention at the conclusion of this section.
+Of course, all the usual issues apply.  The server should be able to accept communications on the desired port.  One way to handle this is by opening the desired port.  Opening ports is very standard stuff, but dependent on the system you are using, so consult relevant documentation if you aren't sure what to do.  Another way is by tunneling over ssh, which we mention at the conclusion of this section.
 
 
 ## Creating a Remote Server
@@ -157,11 +172,11 @@ remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
 That's it.  Everything else should work just as when you were running the server locally.
 
 
-## Tunnelling Over ssh
+## tunneling Over ssh
 
-If you can't or don't want to open up a port, you can always tunnel over ssh (assuming of course you actually have legitimate access to the machine...).
+If you can't or don't want to open up a port on a remote system, you can always tunnel over ssh (assuming of course you actually have legitimate access to the machine...).
 
-Say you have user account `user` on remote with address `my.remote.machine`.  Suppose your remote machine is running a **remoter** server, listening on port 55555 (more on this later).  Then you can run:
+Say you have user account `user` on remote with address `my.remote.machine`.  Suppose your remote machine is running a **remoter** server, listening on port 55555.  Then you can run:
 
 ```
 ssh user@my.remote.machine -L 55556:localhost:55555 -N
@@ -178,13 +193,13 @@ This will allow you to connect to the remote machine as follows:
 remoter::client("localhost", port=55556)
 ```
 
-You can also spawn the server in the ssh tunnel itself.  For example, you might run:
+You can also spawn the server in the ssh tunnel call.  For example, you might run:
 
 ```
 ssh user@my.remote.machine -L 55556:localhost:55555 'Rscript -e "remoter::server(port=55555)"'
 ```
 
-Or if you are working on a managed system, like a cluster or supercomputer, you might need to run something like `module load R` first:
+This will automatically launch a **remoter** server listening on port 55555, tunneled over `localhost:55566`.  If you are working on a managed system, like a cluster or supercomputer, you might need to run something like `module load R` first:
 
 ```
 ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e "remoter::server(port=55555)"'
@@ -200,25 +215,25 @@ The package should basically be useable, but there are some issues you might wan
 
 **Problem**: I lost my internet connection and the client is no longer sending messages.
 
-**Solution**: Just `Ctrl+c` and re-run the `remoter::client()` call and you should be good to go.  The server should still be running.  You can therefore also have multiple clients connect to the same server, and they will share the same data (though they will not see each other's commands).  I actually consider this a feature, but I'm not married to it and I could probably be convinced to change it.
+**Solution**: Just `Ctrl+c` the client and re-run the `remoter::client()` call and you should be good to go.  The server should still be running.  You can therefore also have multiple clients connect to the same server, and they will share the same data (though they will not see each other's commands).  I actually consider this a feature, but I'm not married to it and I could probably be convinced to change it.
 <br><br>
 
 
-**Problem**: The up/down arrow keys don't work right when using the client.
+**Problem**: The up/down arrow keys don't work right in the R terminal when using the client.
 
-**Explanation**: That's because the client is just some R code sitting on top of the R REPL.  This shouldn't be a problem if you're using an IDE like RStudio or the like, where you pass commands from an editor window to the R session.
+**Explanation**: That's because the client is just some R code sitting on top of the R REPL.  This shouldn't be a problem if you're using an IDE like RStudio or the like, where you pass commands from an editor window to the R session.  But as far as I am aware, this can not be fixed.
 <br><br>
 
 
 **Problem**: There's no security!
 
-**Explanation**: Currently there is a password system that works by simple string comparison, and communication is encryption via the **sodium** [[@sodium]] package.  It is possible I messed this up though, so if you believe that ot be the case, I'd really like to know about it.  We are also considering adding CurveZMQ support to pbdZMQ in the future.
+**Explanation**: Currently there is a password system that works by simple string comparison, and communication can be encrypted via the **sodium** package.  You must have **sodium** installed on both the client and server machine, and start the server with the option `secure=TRUE` to use this, however.  Additionally, it is possible I messed the public key part up, so if you believe that ot be the case, I'd really like to know about it.  We are also considering adding CurveZMQ support directly to pbdZMQ in the future.
 <br><br>
 
 
 **Problem**: Something else is wrong!
 
-**Explanation**: I'm not surprised.  Please be so kind as to [file an issue](https://github.com/wrathematics/remoter/issues) describing the problem.
+**Explanation**: Please be so kind as to [file an issue](https://github.com/wrathematics/remoter/issues) describing the problem.  Be as descriptive as possible.
 
 
 
