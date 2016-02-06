@@ -11,5 +11,4 @@ before_install:
   
 r_packages:
   - assertthat
-  - sodium
   - pbdZMQ
