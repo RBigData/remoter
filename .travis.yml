@@ -5,12 +5,11 @@ warnings_are_errors: true
 env: 
   global:
     - CRAN: https://cran.rstudio.com
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
-before_script:
+before_install:
   - sudo apt-get install -qq libzmq3-dev
-
+  
 r_packages:
   - assertthat
-
-r_github_packages:
-  - snoweye/pbdZMQ
+  - pbdZMQ

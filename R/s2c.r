@@ -43,9 +43,9 @@ s2c <- function(object, newname, env=.GlobalEnv)
   err <- ".__remoter_s2c_failure"
   name <- as.character(substitute(object))
   
-  if (.pbdenv$whoami == "local")
+  if (iam("local"))
   {
-    value <- receive.socket(.pbdenv$socket)
+    value <- receive()
     
     if (value == err)
     {
@@ -58,10 +58,10 @@ s2c <- function(object, newname, env=.GlobalEnv)
     
     assign(x=name, value=value, envir=env)
   }
-  else if (.pbdenv$whoami == "remote")
+  else if (iam("remote"))
   {
     val <- get0(name, envir=sys.frame(-1), ifnotfound=err)
-    send.socket(.pbdenv$socket, data=val, send.more=TRUE)
+    send(data=val, send.more=TRUE)
   }
   
   return(invisible(TRUE))

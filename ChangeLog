@@ -1,3 +1,20 @@
+Release 0.2-1:
+  * Make encryption/secure servers/sodium optional.
+  * Add note about ssh tunneling to vignette.
+
+Release 0.2-0:
+  * Encrypt communications via sodium.
+  * Large rewrite of internal state system.
+  * Vignette rewrite.
+  * Add basic logger for server.
+  * Disallow privileged ports.
+  * Better documentation and help.
+
+Release 0.1-2:
+  * Change param "remote_addr" to "addr" in client().
+  * Minor improvements to the repl.
+  * Better error checking and handling for addresses.
+
 Release 0.1-1:
   * Add some remote checks, address validation in client.
   * Changed behavior of exit(); added "client.only" option.

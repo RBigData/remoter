@@ -1,3 +1,35 @@
+test_connection <- function(addr, port, ntries=10, sleeptime=1)
+{
+  ctx <- init.context()
+  socket <- init.socket(ctx, "ZMQ_REQ")
+  addr <- pbdZMQ::address(addr, port)
+  
+  
+  for (i in ntries)
+  {
+    test <- tryCatch(connect.socket(socket, addr), error=identity, warning=identity, message=identity)
+    if (inherits(test, "simpleWarning"))
+      Sys.sleep(sleeptime)
+    else
+      break
+  }
+  
+  rm(socket)
+  rm(ctx)
+  invisible(gc())
+  
+  if (inherits(test, "simpleWarning"))
+    stop(
+"Unable to connect to remote address.  Make sure that 
+* the server is running and able to accept connections (e.g. forwarding ports), 
+* the port argument is correct, 
+* the remote address is correct.")
+  
+  invisible(TRUE)
+}
+
+
+
 validate_address <- function(addr)
 {
   assert_that(is.string(addr))
@@ -16,6 +48,8 @@ scrub_addr <- function(addr)
 {
   if (grepl(addr, pattern="/$"))
     addr <- substr(addr, 1L, nchar(addr)-1L)
+  
+  addr
 }
 
 
@@ -23,6 +57,7 @@ scrub_addr <- function(addr)
 validate_port <- function(port)
 {
   assert_that(is.count(port))
+  assert_that(port > 1023)
   assert_that(port < 65536)
   
   if (port < 49152)
@@ -61,7 +96,7 @@ assert_nostop <- function(..., env = parent.frame())
   test <- tryCatch(assert_that(env=env, ...), error=identity)
   if (!is.logical(test))
   {
-    if (.pbdenv$whoami == "local" || .pbdenv$debug)
+    if (iam("local") || .pbdenv$debug)
     cat(gsub(test, pattern="(^<assert|>$)", replacement=""))
     
     return(FALSE)
