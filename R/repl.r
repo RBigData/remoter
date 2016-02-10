@@ -253,8 +253,8 @@ remoter_eval <- function(input, env)
     ### Run first-time checks
     if (length(msg)==1 && msg == magicmsg_first_connection)
     {
-      remoter_check_password()
-      remoter_check_version()
+      remoter_check_password_remote()
+      remoter_check_version_remote()
       return(invisible())
     }
     
@@ -280,118 +280,6 @@ remoter_eval <- function(input, env)
     
     send(.pbdenv$status)
   }
-  else
-    stop("bad 'whoami'")
-}
-
-
-
-remoter_read_password <- function()
-{
-  # tt <- tktoplevel() 
-  # pw <- tclVar("") 
-  # 
-  # label <- tklabel(tt, text="enter the password") 
-  # textbox <- tkentry(tt, show="*", textvariable=pw) 
-  # tkbind(textbox, "<Return>", function() tkdestroy(tt)) 
-  # button <- tkbutton(tt,text="ok", default="active", command=function() tkdestroy(tt)) 
-  # tkpack(label, textbox, button) 
-  # 
-  # tkwait.window(tt) 
-  # 
-  # return(tclvalue(pw)) 
-  pw <- readline("enter the password:  ") 
-  
-  pw
-}
-
-
-
-remoter_check_password <- function()
-{
-  if (iam("local"))
-  {
-    first_connect()
-    needpw <- receive()
-    
-    while (needpw)
-    {
-      pw <- remoter_read_password()
-      send(pw)
-      check <- receive()
-      
-      if (isTRUE(check))
-        break
-      else if (is.null(check))
-        stop("Max attempts reached; killing server...")
-      
-      cat("Sorry, try again.\n")
-    }
-  }
-  else if (iam("remote"))
-  {
-    if (is.null(.pbdenv$password))
-    {
-      logprint("client connected")
-      send(FALSE)
-    }
-    else
-    {
-      logprint("client attempting to connect...")
-      send(TRUE)
-      
-      attempts <- 2L
-      while (TRUE)
-      {
-        pw <- receive()
-        if (pw == .pbdenv$password)
-        {
-          logprint("client connected")
-          send(TRUE)
-          break
-        }
-        else if (attempts <= .pbdenv$maxattempts)
-          send(FALSE)
-        else
-        {
-          send(NULL)
-          stop("Max attempts reached; killing self.")
-        }
-        
-        attempts <- attempts + 1L
-      }
-    }
-  }
-}
-
-
-
-remoter_check_version <- function()
-{
-  if (iam("local"))
-  {
-    send("")
-    versions_server <- receive()
-    
-    if (!isTRUE(versions_server))
-    {
-      versions_client <- get_versions()
-      if (!compare_versions(versions_client, versions_server))
-        stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
-    }
-  }
-  else if (iam("remote"))
-  {
-    receive()
-    
-    if (!.pbdenv$checkversion)
-      send(FALSE)
-    else
-    {
-      versions <- get_versions()
-      send(versions)
-    }
-  }
 }
 
 
@@ -406,8 +294,8 @@ remoter_repl_init <- function()
     addr <- pbdZMQ::address(.pbdenv$remote_addr, .pbdenv$port)
     connect.socket(.pbdenv$socket, addr)
     
-    remoter_check_password()
-    remoter_check_version()
+    remoter_check_password_local()
+    remoter_check_version_local()
     cat("\n")
   }
   else if (iam("remote"))

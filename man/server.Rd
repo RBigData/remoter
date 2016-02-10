@@ -4,8 +4,8 @@
 \alias{server}
 \title{Server Launcher}
 \usage{
-server(port = 55555, log = TRUE, password = NULL, maxretry = 5,
-  checkversions = TRUE, showmsg = FALSE, secure = has.sodium())
+server(port = 55555, log = TRUE, verbose = FALSE, password = NULL,
+  maxretry = 5, showmsg = FALSE, secure = has.sodium())
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
@@ -14,14 +14,14 @@ must agree.}
 
 \item{log}{Logical; enables some basic logging in the server.}
 
+\item{verbose}{Logical; enables the verbose logger.}
+
 \item{password}{A password the client must enter before the user can process
 commands on the server.  If the value is \code{NULL}, then no
 password checking takes place.}
 
 \item{maxretry}{The maximum number of retries for passwords before shutting
 everything down.}
-
-\item{checkversions}{Logical; should a version check (pbdZMQ and remoter) be enforced?}
 
 \item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
 and prints messages in the server terminal.}
@@ -32,9 +32,9 @@ and prints messages in the server terminal.}
 Returns \code{TRUE} invisibly on successful exit.
 }
 \description{
-TODO
+Launcher for the remoter server.
 }
 \details{
-Launcher for the remoter server.
+TODO
 }
 

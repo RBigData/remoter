@@ -17,7 +17,7 @@ reset_state <- function()
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
   .pbdenv$debug <- FALSE
-  .pbdenv$verbose <- TRUE
+  .pbdenv$verbose <- FALSE
   .pbdenv$client_lasterror <- ""
   
   .pbdenv$remote_context <- NULL
@@ -74,10 +74,13 @@ iam <- function(name)
   .pbdenv$whoami == name
 }
 
-logprint <- function(msg)
+logprint <- function(msg, checkverbose=FALSE)
 {
   if (.pbdenv$serverlog)
-    cat(paste0("[", Sys.time(), "]: ", msg, "\n"))
+  {
+    if (!checkverbose || .pbdenv$verbose)
+      cat(paste0("[", Sys.time(), "]: ", msg, "\n"))
+  }
   
   invisible()
 }
