@@ -73,14 +73,3 @@ iam <- function(name)
 {
   .pbdenv$whoami == name
 }
-
-logprint <- function(msg, checkverbose=FALSE)
-{
-  if (.pbdenv$serverlog)
-  {
-    if (!checkverbose || .pbdenv$verbose)
-      cat(paste0("[", Sys.time(), "]: ", msg, "\n"))
-  }
-  
-  invisible()
-}

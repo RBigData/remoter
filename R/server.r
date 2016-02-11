@@ -54,7 +54,7 @@ server <- function(port=55555, log=TRUE, verbose=FALSE, password=NULL, maxretry=
   if (!.pbdenv$withsodium && secure)
     stop("need salt")
   
-  logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***\n"))
+  logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   
   rm("port", "password", "maxretry", "showmsg", "secure")
   invisible(gc())

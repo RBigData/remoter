@@ -15,6 +15,7 @@ Depends:
 Imports:
     stats,
     utils,
+    tools,
     assertthat (>= 0.1)
 Suggests: 
     knitr,
