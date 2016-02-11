@@ -58,6 +58,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(port, port)
   set(password, password)
   set(secure, secure)
+  set(logfile, logfile_init())
   
   logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   
