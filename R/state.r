@@ -12,11 +12,14 @@ reset_state <- function()
   .pbdenv$maxattempts <- 5
   .pbdenv$checkversion <- TRUE
   
-  # internals
+  # logs
   .pbdenv$serverlog <- TRUE
+  .pbdenv$logfile <- NULL
+  .pbdenv$debug <- FALSE
+  
+  # internals
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
-  .pbdenv$debug <- FALSE
   .pbdenv$verbose <- FALSE
   .pbdenv$client_lasterror <- ""
   

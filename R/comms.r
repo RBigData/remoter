@@ -10,8 +10,6 @@
 # * client always goes send/recv (unless send.more=TRUE)
 # * server always goes recv/send
 
-# TODO verbose logger ^^^^^
-
 send_unsecure <- function(data, send.more=FALSE)
 {
   send.socket(.pbdenv$socket, data=data, send.more=send.more)
@@ -115,9 +113,9 @@ first_receive <- function()
   if (.pbdenv$secure)
   {
     receive_unsecure()
-    logprint("INIT: sending server public key", checkverbose=TRUE)
+    logprint("AUTH: sending server public key", checkverbose=TRUE)
     send_unsecure(getkey(public))
-    logprint("INIT: receiving client public key", checkverbose=TRUE)
+    logprint("AUTH: receiving client public key", checkverbose=TRUE)
     .pbdenv$keys$theirs <- receive_unsecure()
   }
   else

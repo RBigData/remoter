@@ -17,7 +17,14 @@ logprint <- function(msg, checkverbose=FALSE, preprint="")
 
 logfile <- function(logmsg)
 {
-  log <- paste0(tools::file_path_as_absolute("~"), "/.remoterserverlog")
+  if (is.null(.pbdenv$logfile))
+  {
+    log <- paste0(tools::file_path_as_absolute("~"), "/.remoterserverlog")
+    .pbdenv$logfile <- log
+  }
+  else
+    log <- .pbdenv$logfile
+  
   cat(logmsg, file=log, append=file.exists(log))
   invisible()
 }
