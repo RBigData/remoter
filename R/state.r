@@ -13,14 +13,14 @@ reset_state <- function()
   
   # logs
   .pbdenv$serverlog <- TRUE
-  .pbdenv$logfile <- NULL
+  .pbdenv$verbose <- FALSE
   .pbdenv$showmsg <- FALSE
+  .pbdenv$logfile <- NULL
   
   # internals
   .pbdenv$debug <- FALSE
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
-  .pbdenv$verbose <- FALSE
   .pbdenv$client_lasterror <- ""
   
   .pbdenv$remote_context <- NULL

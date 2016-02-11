@@ -14,7 +14,20 @@ remoter_readline <- function(input)
   
   if (iam("local"))
   {
-    ret <- c(input, readline(prompt=prompt))
+    Cc_check <- ".__cantstopwontstop"
+    
+    repeat
+    {
+      check <- tryCatch(read <- readline(prompt=prompt), interrupt=function(.) Cc_check)
+      if (check != Cc_check)
+        break
+      else
+      {
+        cat("C-c\n")
+      }
+    }
+    
+    ret <- c(input, read)
     ret <- remoter_sanitize(inputs=ret)
   }
   else
@@ -100,7 +113,6 @@ remoter_repl_printer <- function()
 
 remoter_interrupt <- function(x)
 {
-#  .pbdenv$status$remoter_prompt_active <- TRUE
   cat("interrupt\n")
   print(x)
 }

@@ -54,8 +54,8 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(whoami, "remote")
   set(serverlog, log)
   set(verbose, verbose)
-  set(port, port)
   set(showmsg, showmsg)
+  set(port, port)
   set(password, password)
   set(secure, secure)
   

@@ -3,14 +3,11 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
   if (identical(msg, magicmsg_first_connection))
     return(invisible())
   
-  if (.pbdenv$serverlog || (.pbdenv$showmsg && checkshowmsg))
+  if ((.pbdenv$serverlog && !checkverbose && !checkshowmsg) || (.pbdenv$verbose && checkverbose) || (.pbdenv$showmsg && checkshowmsg))
   {
-    if (!checkverbose || !checkshowmsg || .pbdenv$verbose)
-    {
-      logmsg <- paste0(preprint, "[", Sys.time(), "]: ", level, ifelse(level=="", "", ": "), msg, "\n")
-      cat(logmsg)
-      # logprint_file(logmsg)
-    }
+    logmsg <- paste0(preprint, "[", Sys.time(), "]: ", level, ifelse(level=="", "", ": "), msg, "\n")
+    cat(logmsg)
+    # logprint_file(logmsg)
   }
   
   invisible()

@@ -105,7 +105,7 @@ first_send <- function()
 
 first_receive <- function()
 {
-  logprint("Receiving first connection from client...", checkverbose=TRUE)
+  logprint(level="INIT", "Receiving first connection from client...", checkverbose=TRUE)
   logprint(level="INIT", paste("alerting that server", ifelse(.pbdenv$secure, "is", "isn't"), "secure"), checkverbose=TRUE)
   send_unsecure(.pbdenv$secure)
   
