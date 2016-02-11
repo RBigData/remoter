@@ -1,6 +1,6 @@
 # remoter
 
-* **Version:** 0.2-1
+* **Version:** 0.2-2
 * **URL**: https://github.com/wrathematics/remoter
 * **Status:** [![Build Status](https://travis-ci.org/wrathematics/remoter.png)](https://travis-ci.org/wrathematics/remoter)
 * **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
