@@ -51,8 +51,8 @@ server <- function(port=55555, log=TRUE, verbose=FALSE, password=NULL, maxretry=
   set(checkversion, TRUE)
   
   set(secure, secure)
-  if (!.pbdenv$withsodium && secure)
-    stop("need salt")
+  if (!has.sodium() && secure)
+    stop("secure servers can only be launched if the 'sodium' package is installed")
   
   logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   
