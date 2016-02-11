@@ -12,26 +12,21 @@ remoter_readline <- function(input)
   
   prompt <- paste0(.pbdenv$prompt, symb)
   
-  if (iam("local"))
+  Cc_check <- ".__cantstopwontstop"
+  
+  repeat
   {
-    Cc_check <- ".__cantstopwontstop"
-    
-    repeat
+    check <- tryCatch(read <- readline(prompt=prompt), interrupt=function(.) Cc_check)
+    if (check != Cc_check)
+      break
+    else
     {
-      check <- tryCatch(read <- readline(prompt=prompt), interrupt=function(.) Cc_check)
-      if (check != Cc_check)
-        break
-      else
-      {
-        cat("C-c\n")
-      }
+      cat("C-c\n")
     }
-    
-    ret <- c(input, read)
-    ret <- remoter_sanitize(inputs=ret)
   }
-  else
-    ret <- NULL
+  
+  ret <- c(input, read)
+  ret <- remoter_sanitize(inputs=ret)
   
   return(ret)
 }
@@ -312,16 +307,13 @@ remoter_repl_init <- function()
 
 
 
-remoter_repl <- function(env=sys.parent())
+remoter_repl_client <- function(env=sys.parent())
 {
-  if (!interactive() && iam("local"))
-    stop("You should only use this interactively")
-  
+  if (!interactive())
+    stop("You should only use the client interactively at this time")
   
   remoter_repl_init()
   
-  
-  ### the repl
   while (TRUE)
   {
     input <- character(0)
@@ -334,6 +326,45 @@ remoter_repl <- function(env=sys.parent())
       input <- remoter_readline(input=input)
       
       remoter_eval(input=input, env=env)
+      
+      if (get.status(continuation)) next
+      
+      remoter_repl_printer()
+      
+      ### Should go after all other evals and handlers
+      if (get.status(should_exit))
+      {
+        set.status(remoter_prompt_active, FALSE)
+        set.status(should_exit, FALSE)
+        return(invisible())
+      }
+      
+      break
+    }
+  }
+  
+  set.status(remoter_prompt_active, FALSE)
+  set.status(should_exit, FALSE)
+  
+  return(invisible())
+}
+
+
+
+remoter_repl_server <- function(env=sys.parent())
+{
+  remoter_repl_init()
+  
+  while (TRUE)
+  {
+    set.status(continuation, FALSE)
+    set.status(visible, FALSE)
+    
+    while (TRUE)
+    {
+      .pbdenv$visible <- withVisible(invisible())
+      
+      remoter_eval(input=NULL, env=env) # TODO break up
       
       if (get.status(continuation)) next
       

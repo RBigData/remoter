@@ -73,7 +73,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   rm("port", "password", "maxretry", "showmsg", "secure")
   invisible(gc())
   
-  remoter_repl()
+  remoter_repl_server()
   
   invisible(TRUE)
 }

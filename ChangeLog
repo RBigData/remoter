@@ -1,5 +1,8 @@
-Release 0.2-2: 
+Release 0.3-0:
+  * Dump log output to file.
   * Add showlog().
+  * Massive refactoring of internals.
+  * Better separation and clarity in client/server code.
 
 Release 0.2-1:
   * Make encryption/secure servers/sodium optional.
