@@ -47,7 +47,6 @@ remoter_check_password_remote <- function()
   {
     logprint("PASS: alerting client no password required", checkverbose=TRUE)
     send(FALSE)
-    logprint("client connected")
   }
   else
   {
@@ -62,7 +61,7 @@ remoter_check_password_remote <- function()
       pw <- receive()
       if (pw == .pbdenv$password)
       {
-        logprint("client connected")
+        logprint("client password authenticated")
         send(TRUE)
         break
       }
@@ -85,15 +84,11 @@ remoter_check_password_remote <- function()
 
 remoter_check_version_local <- function()
 {
-  send(NULL)
-  versions_server <- receive()
+  send(get_versions())
+  check <- receive()
   
-  if (!isTRUE(versions_server))
-  {
-    versions_client <- get_versions()
-    if (!compare_versions(versions_client, versions_server))
-      stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
-  }
+  if (!check)
+    stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
   
   invisible(TRUE)
 }
@@ -102,19 +97,21 @@ remoter_check_version_local <- function()
 
 remoter_check_version_remote <- function()
 {
-  receive()
+  logprint("VERS: checking client package versions", checkverbose=TRUE)
+  versions_client <- receive()
+  versions_server <- get_versions()
+  check <- compare_versions(versions_client, versions_server)
   
-  if (!.pbdenv$checkversion)
+  logprint("VERS: send version check result to client", checkverbose=TRUE)
+  send(check)
+  
+  if (check)
   {
-    logprint("VERS: alerting client no version checking should occur", checkverbose=TRUE)
-    send(FALSE)
+    logprint("VERS: client version passes version check", checkverbose=TRUE)
+    logprint("client connected")
   }
   else
-  {
-    versions <- get_versions()
-    logprint("VERS: sending package versions to client", checkverbose=TRUE)
-    send(versions)
-  }
+    logprint("client/server version mismatch; client kicked.")
   
   invisible(TRUE)
 }

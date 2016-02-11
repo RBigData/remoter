@@ -235,20 +235,9 @@ remoter_eval <- function(input, env)
   }
   else if (iam("remote"))
   {
-    if (.pbdenv$debug)
-      cat("Awaiting message:  ")
-    
     msg <- receive()
     
-    if (.pbdenv$debug)
-    {
-      if (length(msg)==1 && msg != magicmsg_first_connection)
-        cat(msg)
-      else
-        cat("\r", paste0(rep(" ", 20), collapse=""))
-      
-      cat("\n")
-    }
+    logprint(paste("RMSG:", msg[length(msg)]), checkshowmsg=TRUE)
     
     ### Run first-time checks
     if (length(msg)==1 && msg == magicmsg_first_connection)
@@ -300,10 +289,6 @@ remoter_repl_init <- function()
   }
   else if (iam("remote"))
   {
-    ### Order very much matters!
-    if (.pbdenv$debug)
-      cat("Hello! This is the server; please don't type things here!\n\n")
-    
     ### client/server
     .pbdenv$context <- init.context()
     .pbdenv$socket <- init.socket(.pbdenv$context, "ZMQ_REP")

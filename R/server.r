@@ -21,8 +21,7 @@
 #' The maximum number of retries for passwords before shutting
 #' everything down.
 #' @param showmsg
-#' Logical; if TRUE, turns on the "debug mode" for the server,
-#' and prints messages in the server terminal.
+#' Logical; if TRUE, messages from the client are logged
 #' @param secure
 #' Logical; TODO FIXME
 #' 
@@ -46,9 +45,8 @@ server <- function(port=55555, log=TRUE, verbose=FALSE, password=NULL, maxretry=
   set(serverlog, log)
   set(verbose, verbose)
   set(port, port)
-  set(debug, showmsg)
+  set(showmsg, showmsg)
   set(password, password)
-  set(checkversion, TRUE)
   
   set(secure, secure)
   if (!has.sodium() && secure)

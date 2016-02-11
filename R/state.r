@@ -10,14 +10,14 @@ reset_state <- function()
   .pbdenv$remote_addr <- "localhost"
   .pbdenv$password <- NULL
   .pbdenv$maxattempts <- 5
-  .pbdenv$checkversion <- TRUE
   
   # logs
   .pbdenv$serverlog <- TRUE
   .pbdenv$logfile <- NULL
-  .pbdenv$debug <- FALSE
+  .pbdenv$showmsg <- FALSE
   
   # internals
+  .pbdenv$debug <- FALSE
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
   .pbdenv$verbose <- FALSE

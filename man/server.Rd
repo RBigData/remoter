@@ -23,8 +23,7 @@ password checking takes place.}
 \item{maxretry}{The maximum number of retries for passwords before shutting
 everything down.}
 
-\item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
-and prints messages in the server terminal.}
+\item{showmsg}{Logical; if TRUE, messages from the client are logged}
 
 \item{secure}{Logical; TODO FIXME}
 }

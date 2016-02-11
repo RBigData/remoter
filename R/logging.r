@@ -1,12 +1,12 @@
-logprint <- function(msg, checkverbose=FALSE, preprint="")
+logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="")
 {
   if (.pbdenv$serverlog)
   {
-    if (!checkverbose || .pbdenv$verbose)
+    if (!checkverbose || !checkshowmsg || .pbdenv$verbose)
     {
       logmsg <- paste0(preprint, "[", Sys.time(), "]: ", msg, "\n")
       cat(logmsg)
-      logfile(logmsg)
+      # logprint_file(logmsg)
     }
   }
   
@@ -15,7 +15,7 @@ logprint <- function(msg, checkverbose=FALSE, preprint="")
 
 
 
-logfile <- function(logmsg)
+logfile <- function()
 {
   if (is.null(.pbdenv$logfile))
   {
@@ -24,7 +24,14 @@ logfile <- function(logmsg)
   }
   else
     log <- .pbdenv$logfile
-  
+    
+  log
+}
+
+
+
+logprint_file <- function(logmsg)
+{
   cat(logmsg, file=log, append=file.exists(log))
   invisible()
 }
