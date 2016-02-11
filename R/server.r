@@ -3,7 +3,15 @@
 #' Launcher for the remoter server.
 #' 
 #' @details
-#' TODO
+#' By a 'secure' server, we mean one that encrypts messages it
+#' sends and only accepts encrypted messages.  Encryption uses
+#' public key cryptography, using the 'sodium' package.
+#' 
+#' If the 'sodium' package is available to the server, then by 
+#' default the server will be secure.  If the package is not
+#' available, then you will not be able to start a secure server.
+#' If the server is secure, then a client can only connect if
+#' the client has the 'sodium' package available.
 #' 
 #' @param port
 #' The port (number) that will be used for communication between 

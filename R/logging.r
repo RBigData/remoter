@@ -32,3 +32,15 @@ logprint_file <- function(logmsg)
   cat(logmsg, file=.pbdenv$logfile, append=TRUE)
   invisible()
 }
+
+
+
+#' showlog
+#' 
+#' Show the server log on the client.
+#' 
+#' @export
+showlog <- function()
+{
+  readLines(.pbdenv$logfile)
+}
