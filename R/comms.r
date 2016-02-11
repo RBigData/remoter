@@ -43,7 +43,7 @@ receive_unsecure <- function()
 
 receive_secure <- function()
 {
-  encrypted <- receive_unsecure()
+  encrypted <- receive.socket(.pbdenv$socket)
   
   if (identical(encrypted, magicmsg_first_connection))
   {
