@@ -106,16 +106,16 @@ first_send <- function()
 first_receive <- function()
 {
   logprint("Receiving first connection from client...", checkverbose=TRUE)
-  logprint(paste("INIT: alerting that server", ifelse(.pbdenv$secure, "is", "isn't"), "secure"), checkverbose=TRUE)
+  logprint(level="INIT", paste("alerting that server", ifelse(.pbdenv$secure, "is", "isn't"), "secure"), checkverbose=TRUE)
   send_unsecure(.pbdenv$secure)
   
-  logprint("INIT: receiving security acknowledgement from client", checkverbose=TRUE)
+  logprint(level="INIT", "receiving security acknowledgement from client", checkverbose=TRUE)
   if (.pbdenv$secure)
   {
     receive_unsecure()
-    logprint("AUTH: sending server public key", checkverbose=TRUE)
+    logprint(level="AUTH", "sending server public key", checkverbose=TRUE)
     send_unsecure(getkey(public))
-    logprint("AUTH: receiving client public key", checkverbose=TRUE)
+    logprint(level="AUTH", "receiving client public key", checkverbose=TRUE)
     .pbdenv$keys$theirs <- receive_unsecure()
   }
   else

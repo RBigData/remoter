@@ -237,7 +237,7 @@ remoter_eval <- function(input, env)
   {
     msg <- receive()
     
-    logprint(paste("RMSG:", msg[length(msg)]), checkshowmsg=TRUE)
+    logprint(level="RMSG", msg[length(msg)], checkshowmsg=TRUE)
     
     ### Run first-time checks
     if (length(msg)==1 && msg == magicmsg_first_connection)

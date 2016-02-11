@@ -9,10 +9,6 @@
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
 #' must agree.
-#' @param log
-#' Logical; enables some basic logging in the server.
-#' @param verbose
-#' Logical; enables the verbose logger.
 #' @param password
 #' A password the client must enter before the user can process
 #' commands on the server.  If the value is \code{NULL}, then no
@@ -20,24 +16,38 @@
 #' @param maxretry
 #' The maximum number of retries for passwords before shutting
 #' everything down.
+#' @param secure
+#' Logical; enables encryption via public key cryptography of
+#' the 'sodium' package is available.
+#' @param log
+#' Logical; enables some basic logging in the server.
+#' @param verbose
+#' Logical; enables the verbose logger.
 #' @param showmsg
 #' Logical; if TRUE, messages from the client are logged
-#' @param secure
-#' Logical; TODO FIXME
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, log=TRUE, verbose=FALSE, password=NULL, maxretry=5, showmsg=FALSE, secure=has.sodium())
+server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE)
 {
   validate_port(port)
-  assert_that(is.flag(log))
-  assert_that(is.flag(verbose))
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.flag(showmsg))
   assert_that(is.flag(secure))
+  assert_that(is.flag(log))
+  assert_that(is.flag(verbose))
+  assert_that(is.flag(showmsg))
+  
+  if (!log && verbose)
+  {
+    warning("logging must be enabled for verbose logging! enabling logging...")
+    log <- TRUE
+  }
+  
+  if (!has.sodium() && secure)
+    stop("secure servers can only be launched if the 'sodium' package is installed")
   
   reset_state()
   
@@ -47,10 +57,7 @@ server <- function(port=55555, log=TRUE, verbose=FALSE, password=NULL, maxretry=
   set(port, port)
   set(showmsg, showmsg)
   set(password, password)
-  
   set(secure, secure)
-  if (!has.sodium() && secure)
-    stop("secure servers can only be launched if the 'sodium' package is installed")
   
   logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   

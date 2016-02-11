@@ -45,19 +45,19 @@ remoter_check_password_remote <- function()
 {
   if (is.null(.pbdenv$password))
   {
-    logprint("PASS: alerting client no password required", checkverbose=TRUE)
+    logprint(level="PASS", "alerting client no password required", checkverbose=TRUE)
     send(FALSE)
   }
   else
   {
     logprint("client attempting to connect...")
-    logprint("PASS: alerting client a password is required", checkverbose=TRUE)
+    logprint(level="PASS", "alerting client a password is required", checkverbose=TRUE)
     send(TRUE)
     
     attempts <- 2L
     while (TRUE)
     {
-      logprint("PASS: receiving password attempt", checkverbose=TRUE)
+      logprint(level="PASS", "receiving password attempt", checkverbose=TRUE)
       pw <- receive()
       if (pw == .pbdenv$password)
       {
@@ -66,10 +66,13 @@ remoter_check_password_remote <- function()
         break
       }
       else if (attempts <= .pbdenv$maxattempts)
+      {
+        logprint(level="PASS", "received bad password", checkverbose=TRUE)
         send(FALSE)
+      }
       else
       {
-        logprint("PASS: alert client max password attempts reached", checkverbose=TRUE)
+        logprint(level="PASS", "alert client max password attempts reached", checkverbose=TRUE)
         send(NULL)
         logprint(paste0("received maxretry=", .pbdenv$maxattempts, " bad passwords; terminating self..."))
         stop("Max password attempts reached.")
@@ -102,12 +105,12 @@ remoter_check_version_remote <- function()
   versions_server <- get_versions()
   check <- compare_versions(versions_client, versions_server)
   
-  logprint("VERS: send version check result to client", checkverbose=TRUE)
+  logprint(level="VERS", "send version check result to client", checkverbose=TRUE)
   send(check)
   
   if (check)
   {
-    logprint("VERS: client version passes version check", checkverbose=TRUE)
+    logprint(level="VERS", "client version passes version check", checkverbose=TRUE)
     logprint("client connected")
   }
   else
