@@ -7,10 +7,9 @@
 * **Author:** Drew Schmidt and Wei-Chen Chen
 
 
-Control a remote R session from your local R session.  Uses 
-[**pbdZMQ**](https://github.com/snoweye/pbdZMQ)
-to handle the communication and networking. The custom REPL is 
-based off of [**pbdCS**](https://github.com/wrathematics/pbdCS).
+Control a remote R session from your local R session.  The packages uses [**pbdZMQ**](https://github.com/snoweye/pbdZMQ) to handle the communication and networking. The custom REPL is based off of [**pbdCS**](https://github.com/wrathematics/pbdCS).
+
+Encryption is supported if the **sodium** package is installed.  Details below.
 
 
 
@@ -40,10 +39,22 @@ You can install the stable version from CRAN using the usual `install.packages()
 install.packages("remoter")
 ```
 
-The development version is maintained on GitHub.  You can install this version using the `devtools` package:
+In order to be able to create and connect to secure servers, you should also install the **sodium** package.  You can install it manually with a call to `install.packages("sodium")` or by installing **remoter** via:
 
 ```r
+install.packages("remoter", dependencies=TRUE)
+```
+
+
+#### Development Version
+
+The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
+
+```r
+### Pick your preference
 devtools::install_github("wrathematics/remoter")
+ghit::install_github("wrathematics/remoter")
+remotes::install_github("wrathematics/remoter")
 ```
 
 
