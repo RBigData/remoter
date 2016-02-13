@@ -107,3 +107,10 @@ assert_nostop <- function(..., env = parent.frame())
   else
     TRUE
 }
+
+
+
+isFALSE <- function(x)
+{
+  identical(FALSE, x)
+}
