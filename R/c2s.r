@@ -43,8 +43,34 @@ c2s <- function(object, newname, env)
     return(invisible())
   }
   
-  err <- ".__remoter_c2s_failure"
+  test <- tryCatch(is.environment(env), error=identity)
+  if (isFALSE(test) || inherits(test, "error"))
+  {
+    if (iam("local"))
+    {
+      if (isFALSE(test))
+        remoter_client_stop("invalid environment")
+      else
+        remoter_client_stop(gsub(test, pattern="(.*: |\\n)", replacement=""))
+    }
+    
+    return(invisible())
+  }
+  
+  if (!missing(newname))
+  {
+    if (!identical(make.names(newname), newname))
+    {
+      if (iam("local"))
+        remoter_client_stop("invalid 'newname'")
+      
+      return(invisible())
+    }
+  }
+  
+  
   name <- as.character(substitute(object))
+  err <- ".__remoter_s2c_failure"
   
   if (iam("local"))
   {
@@ -61,7 +87,7 @@ c2s <- function(object, newname, env)
   }
   else if (iam("remote"))
   {
-    send("")
+    send(NULL)
     
     value <- receive()
     
