@@ -40,6 +40,14 @@
 #' @export
 s2c <- function(object, newname, env=.GlobalEnv)
 {
+  if (missing(object))
+  {
+    if (iam("local"))
+      remoter_client_stop("must pass an object")
+    
+    return(invisible())
+  }
+  
   err <- ".__remoter_s2c_failure"
   name <- as.character(substitute(object))
   

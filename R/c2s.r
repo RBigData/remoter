@@ -35,6 +35,14 @@
 #' @export
 c2s <- function(object, newname, env)
 {
+  if (missing(object))
+  {
+    if (iam("local"))
+      remoter_client_stop("must pass an object")
+    
+    return(invisible())
+  }
+  
   err <- ".__remoter_c2s_failure"
   name <- as.character(substitute(object))
   
