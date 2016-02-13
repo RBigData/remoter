@@ -10,14 +10,17 @@ reset_state <- function()
   .pbdenv$remote_addr <- "localhost"
   .pbdenv$password <- NULL
   .pbdenv$maxattempts <- 5
-  .pbdenv$checkversion <- TRUE
+  
+  # logs
+  .pbdenv$serverlog <- TRUE
+  .pbdenv$verbose <- FALSE
+  .pbdenv$showmsg <- FALSE
+  .pbdenv$logfile <- NULL
   
   # internals
-  .pbdenv$serverlog <- TRUE
+  .pbdenv$debug <- FALSE
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
-  .pbdenv$debug <- FALSE
-  .pbdenv$verbose <- TRUE
   .pbdenv$client_lasterror <- ""
   
   .pbdenv$remote_context <- NULL
@@ -72,12 +75,4 @@ set.status <- function(var, val)
 iam <- function(name)
 {
   .pbdenv$whoami == name
-}
-
-logprint <- function(msg)
-{
-  if (.pbdenv$serverlog)
-    cat(paste0("[", Sys.time(), "]: ", msg, "\n"))
-  
-  invisible()
 }

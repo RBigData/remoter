@@ -1,6 +1,14 @@
+Release 0.3-0:
+  * Dump log output to file.
+  * Add showlog().
+  * Massive refactoring of internals.
+  * Better separation and clarity in client/server code.
+
 Release 0.2-1:
   * Make encryption/secure servers/sodium optional.
   * Add note about ssh tunneling to vignette.
+  * Significantly enhance logger.
+  * Fix C-c client bug.
 
 Release 0.2-0:
   * Encrypt communications via sodium.

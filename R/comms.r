@@ -43,7 +43,7 @@ receive_unsecure <- function()
 
 receive_secure <- function()
 {
-  encrypted <- receive_unsecure()
+  encrypted <- receive.socket(.pbdenv$socket)
   
   if (identical(encrypted, magicmsg_first_connection))
   {
@@ -77,15 +77,15 @@ receive <- function()
 
 
 
-first_connect <- function()
+first_send <- function()
 {
   send_unsecure(magicmsg_first_connection)
   security <- receive_unsecure()
   
   if (security && !has.sodium())
-    stop("remoter server communications are encrypted; please install the 'sodium' package, or start an unsecure server.")
+    stop("remoter server communications are encrypted but the 'sodium' package is not detected on the client.  Please install the 'sodium' package, or start an unsecure server.")
   else if (!security && has.sodium())
-    cat("WARNING: server not secure; communications are not encrypted.")
+    cat("WARNING: server not secure; communications are not encrypted.\n")
   
   .pbdenv$secure <- security
   
@@ -105,12 +105,17 @@ first_connect <- function()
 
 first_receive <- function()
 {
+  logprint(level="INIT", "Receiving first connection from client...", checkverbose=TRUE)
+  logprint(level="INIT", paste("alerting that server", ifelse(.pbdenv$secure, "is", "isn't"), "secure"), checkverbose=TRUE)
   send_unsecure(.pbdenv$secure)
   
+  logprint(level="INIT", "receiving security acknowledgement from client", checkverbose=TRUE)
   if (.pbdenv$secure)
   {
     receive_unsecure()
+    logprint(level="AUTH", "sending server public key", checkverbose=TRUE)
     send_unsecure(getkey(public))
+    logprint(level="AUTH", "receiving client public key", checkverbose=TRUE)
     .pbdenv$keys$theirs <- receive_unsecure()
   }
   else

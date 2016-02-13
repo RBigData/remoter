@@ -4,15 +4,13 @@
 \alias{server}
 \title{Server Launcher}
 \usage{
-server(port = 55555, log = TRUE, password = NULL, maxretry = 5,
-  checkversions = TRUE, showmsg = FALSE, secure = has.sodium())
+server(port = 55555, password = NULL, maxretry = 5,
+  secure = has.sodium(), log = TRUE, verbose = FALSE, showmsg = FALSE)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
 must agree.}
-
-\item{log}{Logical; enables some basic logging in the server.}
 
 \item{password}{A password the client must enter before the user can process
 commands on the server.  If the value is \code{NULL}, then no
@@ -21,20 +19,30 @@ password checking takes place.}
 \item{maxretry}{The maximum number of retries for passwords before shutting
 everything down.}
 
-\item{checkversions}{Logical; should a version check (pbdZMQ and remoter) be enforced?}
+\item{secure}{Logical; enables encryption via public key cryptography of
+the 'sodium' package is available.}
 
-\item{showmsg}{Logical; if TRUE, turns on the "debug mode" for the server,
-and prints messages in the server terminal.}
+\item{log}{Logical; enables some basic logging in the server.}
 
-\item{secure}{Logical; TODO FIXME}
+\item{verbose}{Logical; enables the verbose logger.}
+
+\item{showmsg}{Logical; if TRUE, messages from the client are logged}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.
 }
 \description{
-TODO
+Launcher for the remoter server.
 }
 \details{
-Launcher for the remoter server.
+By a 'secure' server, we mean one that encrypts messages it
+sends and only accepts encrypted messages.  Encryption uses
+public key cryptography, using the 'sodium' package.
+
+If the 'sodium' package is available to the server, then by 
+default the server will be secure.  If the package is not
+available, then you will not be able to start a secure server.
+If the server is secure, then a client can only connect if
+the client has the 'sodium' package available.
 }
 

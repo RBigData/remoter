@@ -43,7 +43,7 @@ client <- function(addr="localhost", port=55555, prompt="remoteR")
   set(port, port)
   set(remote_addr, addr)
   
-  remoter_repl()
+  remoter_repl_client()
   
   invisible(TRUE)
 }
