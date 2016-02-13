@@ -98,7 +98,7 @@ assert_nostop <- function(..., env = parent.frame())
   {
     if (iam("local") || .pbdenv$debug)
     {
-      msg <- gsub(test, pattern="(^<assert|>$)", replacement="")
+      msg <- gsub(test, pattern="(^<assert|>$|Error: )", replacement="")
       remoter_client_stop(msg)
     }
     
