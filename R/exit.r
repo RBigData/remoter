@@ -15,21 +15,26 @@
 #' with the client.
 #' @param q.server
 #' Logical; if \code{TRUE}, then the server calls \code{q("no")}
-#' after shuting down with the client.
+#' after shuting down with the client.  This is useful for cases
+#' where the server is running in an interactive R session, and you
+#' wish to shut the entire thing down.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-exit <- function(client.only=TRUE,q.server=FALSE)
+exit <- function(client.only=TRUE, q.server=TRUE)
 {
-  if (!assert_nostop(is.flag(client.only))) return(invisible(FALSE))
+  if (!assert_nostop(is.flag(client.only))) 
+    return(invisible(FALSE))
+  if (!assert_nostop(is.flag(q.server)))
+    return(invisible(FALSE))
   
-  if (!client.only || .pbdenv$whoami == "local")
+  if (!client.only || iam("local"))
   {
     set.status(should_exit, TRUE)
     
-    if (.pbdenv$whoami == "remote")
+    if (iam("remote"))
       logprint("client killed server")
   }
   else
@@ -37,7 +42,7 @@ exit <- function(client.only=TRUE,q.server=FALSE)
   
   if(!client.only && q.server)
   {
-    if (.pbdenv$whoami == "remote" && interactive())
+    if (iam("remote") && interactive())
       set.status(should_exit_interactive_server, TRUE)
   }
 

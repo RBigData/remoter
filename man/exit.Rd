@@ -4,7 +4,7 @@
 \alias{exit}
 \title{exit}
 \usage{
-exit(client.only = TRUE, q.server = FALSE)
+exit(client.only = TRUE, q.server = TRUE)
 }
 \arguments{
 \item{client.only}{Logical; if \code{TRUE}, then the client disconnects from
@@ -12,7 +12,9 @@ the server.  Otherwise, the server is shut down together
 with the client.}
 
 \item{q.server}{Logical; if \code{TRUE}, then the server calls \code{q("no")}
-after shuting down with the client.}
+after shuting down with the client.  This is useful for cases
+where the server is running in an interactive R session, and you
+wish to shut the entire thing down.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

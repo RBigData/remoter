@@ -3,12 +3,15 @@ magicmsg_first_connection <- ".__remoter_first_connection"
 ### Do not do this. This will be sealed at remoter:::.pbdenv.
 # .pbdenv <- new.env()
 ### Call .rropt_init() inside .OnLoad() to make a global one. The rests are ok.
-.rropt_init <- function(envir = .GlobalEnv){
-  if(!exists(".pbdenv", envir = envir)){
+init_state <- function(envir = .GlobalEnv)
+{
+  if(!exists(".pbdenv", envir = envir))
     envir$.pbdenv <- new.env()
-  }
+  
   invisible()
-} # End of .rropt_init().
+}
+
+
 
 reset_state <- function()
 {

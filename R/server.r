@@ -164,10 +164,8 @@ remoter_init_server <- function()
 remoter_exit_server <- function()
 {
   if (get.status(should_exit_interactive_server))
-  {
     q("no")
-  }
-
+  
   return(TRUE)
 }
 
