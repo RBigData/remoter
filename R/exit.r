@@ -13,12 +13,15 @@
 #' Logical; if \code{TRUE}, then the client disconnects from
 #' the server.  Otherwise, the server is shut down together 
 #' with the client.
+#' @param q.server
+#' Logical; if \code{TRUE}, then the server calls \code{q("no")}
+#' after shuting down with the client.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-exit <- function(client.only=TRUE)
+exit <- function(client.only=TRUE,q.server=FALSE)
 {
   if (!assert_nostop(is.flag(client.only))) return(invisible(FALSE))
   
@@ -32,6 +35,12 @@ exit <- function(client.only=TRUE)
   else
     logprint("client disconnected with call to exit()")
   
+  if(!client.only && q.server)
+  {
+    if (.pbdenv$whoami == "remote" && interactive())
+      set.status(should_exit_interactive_server, TRUE)
+  }
+
   return(invisible(TRUE))
 }
 

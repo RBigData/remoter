@@ -4,12 +4,15 @@
 \alias{exit}
 \title{exit}
 \usage{
-exit(client.only = TRUE)
+exit(client.only = TRUE, q.server = FALSE)
 }
 \arguments{
 \item{client.only}{Logical; if \code{TRUE}, then the client disconnects from
 the server.  Otherwise, the server is shut down together 
 with the client.}
+
+\item{q.server}{Logical; if \code{TRUE}, then the server calls \code{q("no")}
+after shuting down with the client.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

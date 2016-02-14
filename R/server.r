@@ -161,6 +161,18 @@ remoter_init_server <- function()
 
 
 
+remoter_exit_server <- function()
+{
+  if (get.status(should_exit_interactive_server))
+  {
+    q("no")
+  }
+
+  return(TRUE)
+}
+
+
+
 remoter_repl_server <- function(env=sys.parent())
 {
   remoter_init_server()
@@ -183,6 +195,10 @@ remoter_repl_server <- function(env=sys.parent())
       {
         set.status(remoter_prompt_active, FALSE)
         set.status(should_exit, FALSE)
+        if (get.status(should_exit_interactive_server))
+        {
+          remoter_exit_server()
+        }
         return(invisible())
       }
       
