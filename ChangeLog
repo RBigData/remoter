@@ -3,6 +3,7 @@ Release 0.3-0:
   * Add showlog().
   * Massive refactoring of internals.
   * Better separation and clarity in client/server code.
+  * Significant improvements to error checking in s2c() and c2s().
 
 Release 0.2-1:
   * Make encryption/secure servers/sodium optional.
