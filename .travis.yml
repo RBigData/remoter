@@ -14,13 +14,10 @@ before_install:
   - git clone git://github.com/jedisct1/libsodium.git
   - cd libsodium
   - ./autogen.sh
-  - ./configure --disable-dependency-tracking --enable-minimal
-  - make
+  - ./configure --disable-dependency-tracking --enable-minimal --enable-shared=no
+  - make -j4
   - sudo make install
-  - sudo /sbin/ldconfig
-  - cd ..
-  - rm -rf libsodium
-  
+
 r_packages:
   - assertthat
   - pbdZMQ
