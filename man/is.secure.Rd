@@ -6,11 +6,14 @@
 \usage{
 is.secure()
 }
+\value{
+Returns \code{TRUE} if messages between client and server are
+currently encrypted, and \code{FALSE} if not.  If the client 
+is not currently running (i.e., if executed from just a regular
+R prompt), then \code{NA} is returned.
+}
 \description{
 Report if communications with the connected server are
 encrypted.
-}
-\details{
-TODO
 }
 

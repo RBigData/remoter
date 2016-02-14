@@ -6,10 +6,11 @@
 \usage{
 has.sodium()
 }
+\value{
+Returns \code{TRUE} if the sodium package is available, and 
+\code{FALSE} otherwise.
+}
 \description{
 Report if the sodium package is availabe for use.
-}
-\details{
-TODO
 }
 
