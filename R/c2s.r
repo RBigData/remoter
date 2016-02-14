@@ -33,7 +33,7 @@
 #' }
 #' 
 #' @export
-c2s <- function(object, newname, env)
+c2s <- function(object, newname, env=.GlobalEnv)
 {
   if (missing(object))
   {
