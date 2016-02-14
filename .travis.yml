@@ -15,3 +15,6 @@ r_packages:
   - assertthat
   - pbdZMQ
   - sodium
+
+r_check_args: --no-build-vignettes --no-manual
+
