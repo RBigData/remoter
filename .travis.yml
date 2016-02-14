@@ -12,6 +12,7 @@ env:
 before_install:
   - sudo apt-get update -y
   - sudo apt-get install -qq libzmq3-dev
+  - sudo apt-cache search sodium
   - sudo apt-get install -qq libsodium-dev
   
 r_packages:
