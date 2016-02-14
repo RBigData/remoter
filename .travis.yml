@@ -5,6 +5,7 @@ warnings_are_errors: true
 env: 
   global:
     - CRAN: https://cran.rstudio.com
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual --no-resave-data"
 
 before_install:
   - sudo add-apt-repository ppa:chris-lea/libsodium -y
