@@ -11,7 +11,18 @@ env:
 
 before_install:
   - sudo apt-get install -qq libzmq3-dev
-  
+  - git clone git://github.com/jedisct1/libsodium.git
+  - cd libsodium
+  - ./autogen.sh
+  - ./configure --disable-dependency-tracking --enable-minimal --enable-shared=no --with-pic=yes --prefix=/usr/local/libsodium
+  - make -j4
+  - sudo make install
+  - cd ../
+  - rm -rf libsodium
+  - git clone git://github.com/jeroenooms/sodium.git
+  - R CMD INSTALL sodium --configure-vars='INCLUDE_DIR=/usr/local/libsodium/include LIB_DIR=/usr/local/libsodium/lib'
+  - rm -rf sodium
+
 r_packages:
   - assertthat
   - pbdZMQ

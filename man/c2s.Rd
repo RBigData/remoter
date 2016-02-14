@@ -4,7 +4,7 @@
 \alias{c2s}
 \title{Client-to-Server Object Transfer}
 \usage{
-c2s(object, newname, env)
+c2s(object, newname, env = .GlobalEnv)
 }
 \arguments{
 \item{object}{A local R object.}
