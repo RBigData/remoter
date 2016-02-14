@@ -108,6 +108,27 @@ remoter_error <- function(err)
 
 
 
+remoter_eval_filter_server <- function(msg)
+{
+  if (all(grepl(x=msg, pattern="^(\\s+)?library\\(", perl=TRUE)))
+  {
+    msg <- paste0("
+      tmp <- file(tempfile())
+      sink(tmp, append=TRUE)
+      sink(tmp, append=TRUE, type='message')\n", 
+      msg, "\n
+      sink()
+      sink(type='message')
+      cat(paste(readLines(tmp), collapse='\n'))
+      unlink(tmp)
+    ")
+  }
+  
+  msg
+}
+
+
+
 remoter_server_eval <- function(env)
 {
   set.status(continuation, FALSE)
@@ -161,6 +182,16 @@ remoter_init_server <- function()
 
 
 
+remoter_exit_server <- function()
+{
+  if (.pbdenv$kill_interactive_server)
+    q("no")
+  
+  return(TRUE)
+}
+
+
+
 remoter_repl_server <- function(env=sys.parent())
 {
   remoter_init_server()
@@ -183,6 +214,9 @@ remoter_repl_server <- function(env=sys.parent())
       {
         set.status(remoter_prompt_active, FALSE)
         set.status(should_exit, FALSE)
+        if (.pbdenv$kill_interactive_server)
+          remoter_exit_server()
+        
         return(invisible())
       }
       

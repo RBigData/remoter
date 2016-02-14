@@ -1,5 +1,9 @@
 .onLoad <- function(libname, pkgname)
 {
+  ### Preload to tlobal environment.
+  invisible(eval(parse(text = "remoter:::init_state()")))
+
+  ### Load and set sodium then generate public/private keys.
   test <- requireNamespace("sodium", quietly=TRUE)
   if (test)
   {

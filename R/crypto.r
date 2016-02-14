@@ -2,8 +2,9 @@
 #' 
 #' Report if the sodium package is availabe for use.
 #' 
-#' @details
-#' TODO
+#' @return
+#' Returns \code{TRUE} if the sodium package is available, and 
+#' \code{FALSE} otherwise.
 #' 
 #' @export
 has.sodium <- function()
@@ -18,13 +19,19 @@ has.sodium <- function()
 #' Report if communications with the connected server are
 #' encrypted.
 #' 
-#' @details
-#' TODO
+#' @return
+#' Returns \code{TRUE} if messages between client and server are
+#' currently encrypted, and \code{FALSE} if not.  If the client 
+#' is not currently running (i.e., if executed from just a regular
+#' R prompt), then \code{NA} is returned.
 #' 
 #' @export
 is.secure <- function()
 {
-  .pbdenv$secure
+  if (iam("local"))
+    NA
+  else
+    .pbdenv$secure
 }
 
 

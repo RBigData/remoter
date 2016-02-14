@@ -1,11 +1,22 @@
 magicmsg_first_connection <- ".__remoter_first_connection"
 
-.pbdenv <- new.env()
+### Do not do this. This will be sealed at remoter:::.pbdenv.
+# .pbdenv <- new.env()
+### Call .rropt_init() inside .OnLoad() to make a global one. The rests are ok.
+init_state <- function(envir = .GlobalEnv)
+{
+  if(!exists(".pbdenv", envir = envir))
+    envir$.pbdenv <- new.env()
+  
+  invisible()
+}
+
+
 
 reset_state <- function()
 {
   # options
-  .pbdenv$prompt <- "remoteR"
+  .pbdenv$prompt <- "remoter"
   .pbdenv$port <- 55555
   .pbdenv$remote_addr <- "localhost"
   .pbdenv$password <- NULL
@@ -22,9 +33,8 @@ reset_state <- function()
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
   .pbdenv$client_lasterror <- ""
+  .pbdenv$kill_interactive_server <- TRUE
   
-  .pbdenv$remote_context <- NULL
-  .pbdenv$remote_socket <- NULL
   
   # Crypto
   # .pbdenv$withsodium <- FALSE
