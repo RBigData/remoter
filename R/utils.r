@@ -97,10 +97,20 @@ assert_nostop <- function(..., env = parent.frame())
   if (!is.logical(test))
   {
     if (iam("local") || .pbdenv$debug)
-    cat(gsub(test, pattern="(^<assert|>$)", replacement=""))
+    {
+      msg <- gsub(test, pattern="(^<assert|>$|Error: )", replacement="")
+      remoter_client_stop(msg)
+    }
     
     return(FALSE)
   }
   else
     TRUE
+}
+
+
+
+isFALSE <- function(x)
+{
+  identical(FALSE, x)
 }

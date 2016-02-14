@@ -77,3 +77,137 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   
   invisible(TRUE)
 }
+
+
+
+remoter_warning <- function(warn)
+{
+  .pbdenv$status$shouldwarn <- TRUE
+  .pbdenv$status$num_warnings <- .pbdenv$status$num_warnings + 1
+  
+  .pbdenv$status$warnings <- append(.pbdenv$status$warnings, conditionMessage(warn))
+  invokeRestart("muffleWarning")
+  print(warn)
+}
+
+
+
+remoter_error <- function(err)
+{
+  msg <- err$message
+  set.status(continuation, grepl(msg, pattern="unexpected end of input"))
+  
+  if (!get.status(continuation))
+  {
+    msg <- sub(x=msg, pattern=" in eval\\(expr, envir, enclos\\) ", replacement="")
+    set.status(lasterror, paste0("Error: ", msg, "\n"))
+  }
+  
+  return(invisible())
+}
+
+
+
+remoter_server_eval <- function(env)
+{
+  set.status(continuation, FALSE)
+  set.status(lasterror, NULL)
+  
+  msg <- receive()
+  
+  logprint(level="RMSG", msg[length(msg)], checkshowmsg=TRUE)
+  
+  ### Run first-time checks
+  if (length(msg)==1 && msg == magicmsg_first_connection)
+  {
+    remoter_check_password_remote()
+    remoter_check_version_remote()
+    return(invisible())
+  }
+  
+  msg <- remoter_eval_filter_server(msg=msg)
+  
+  ret <- 
+  withCallingHandlers(
+    tryCatch({
+        .pbdenv$visible <- withVisible(eval(parse(text=msg), envir=env))
+      }, interrupt=identity, error=remoter_error
+    ), warning=remoter_warning
+  )
+  
+  if (!is.null(ret))
+  {
+    set.status(visible, ret$visible)
+    
+    if (!ret$visible)
+      set.status(ret, NULL)
+    else
+      set.status(ret, utils::capture.output(ret$value))
+  }
+  
+  send(.pbdenv$status)
+}
+
+
+
+remoter_init_server <- function()
+{
+  .pbdenv$context <- init.context()
+  .pbdenv$socket <- init.socket(.pbdenv$context, "ZMQ_REP")
+  bind.socket(.pbdenv$socket, paste0("tcp://*:", .pbdenv$port))
+  
+  return(TRUE)
+}
+
+
+
+remoter_exit_server <- function()
+{
+  if (get.status(should_exit_interactive_server))
+  {
+    q("no")
+  }
+
+  return(TRUE)
+}
+
+
+
+remoter_repl_server <- function(env=sys.parent())
+{
+  remoter_init_server()
+  
+  while (TRUE)
+  {
+    set.status(continuation, FALSE)
+    set.status(visible, FALSE)
+    
+    while (TRUE)
+    {
+      .pbdenv$visible <- withVisible(invisible())
+      
+      remoter_server_eval(env=env)
+      
+      if (get.status(continuation)) next
+      
+      ### Should go after all other evals and handlers
+      if (get.status(should_exit))
+      {
+        set.status(remoter_prompt_active, FALSE)
+        set.status(should_exit, FALSE)
+        if (get.status(should_exit_interactive_server))
+        {
+          remoter_exit_server()
+        }
+        return(invisible())
+      }
+      
+      break
+    }
+  }
+  
+  set.status(remoter_prompt_active, FALSE)
+  set.status(should_exit, FALSE)
+
+  return(invisible())
+}
