@@ -16,7 +16,7 @@ init_state <- function(envir = .GlobalEnv)
 reset_state <- function()
 {
   # options
-  .pbdenv$prompt <- "remoteR"
+  .pbdenv$prompt <- "remoter"
   .pbdenv$port <- 55555
   .pbdenv$remote_addr <- "localhost"
   .pbdenv$password <- NULL
@@ -33,9 +33,8 @@ reset_state <- function()
   .pbdenv$context <- NULL
   .pbdenv$socket <- NULL
   .pbdenv$client_lasterror <- ""
+  .pbdenv$kill_interactive_server <- TRUE
   
-  .pbdenv$remote_context <- NULL
-  .pbdenv$remote_socket <- NULL
   
   # Crypto
   # .pbdenv$withsodium <- FALSE
@@ -54,7 +53,6 @@ reset_state <- function()
     warnings          = NULL,
     remoter_prompt_active = FALSE,
     should_exit       = FALSE,
-    should_exit_interactive_server = FALSE,
     continuation      = FALSE
   )
   

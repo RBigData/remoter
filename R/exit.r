@@ -43,7 +43,7 @@ exit <- function(client.only=TRUE, q.server=TRUE)
   if(!client.only && q.server)
   {
     if (iam("remote") && interactive())
-      set.status(should_exit_interactive_server, TRUE)
+      set(kill_interactive_server, TRUE)
   }
 
   return(invisible(TRUE))
