@@ -27,7 +27,7 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, prompt="remoteR")
+client <- function(addr="localhost", port=55555, prompt="remoter")
 {
   validate_address(addr)
   addr <- scrub_addr(addr)
