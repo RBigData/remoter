@@ -2,8 +2,9 @@ Release 0.3-0:
   * Dump log output to file.
   * Add showlog().
   * Add "q.server" argument to exit() (WCC).
-  * Massive refactoring of internals.
-  * Better separation and clarity in client/server code.
+  * Complete refactoring of internals.
+  * Better state management/abstraction.
+  * Better clarity in client/server REPL's.
   * Significant improvements to error checking in s2c() and c2s().
 
 Release 0.2-1:
