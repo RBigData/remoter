@@ -43,7 +43,7 @@ remoter_check_password_local <- function()
 
 remoter_check_password_remote <- function()
 {
-  if (is.null(.pbdenv$password))
+  if (is.null(getval(password)))
   {
     logprint(level="PASS", "alerting client no password required", checkverbose=TRUE)
     send(FALSE)
@@ -59,13 +59,13 @@ remoter_check_password_remote <- function()
     {
       logprint(level="PASS", "receiving password attempt", checkverbose=TRUE)
       pw <- receive()
-      if (pw == .pbdenv$password)
+      if (pw == getval(password))
       {
         logprint("client password authenticated")
         send(TRUE)
         break
       }
-      else if (attempts <= .pbdenv$maxattempts)
+      else if (attempts <= getval(maxattempts))
       {
         logprint(level="PASS", "received bad password", checkverbose=TRUE)
         send(FALSE)
@@ -74,8 +74,11 @@ remoter_check_password_remote <- function()
       {
         logprint(level="PASS", "alert client max password attempts reached", checkverbose=TRUE)
         send(NULL)
-        logprint(paste0("received maxretry=", .pbdenv$maxattempts, " bad passwords; terminating self..."))
-        stop("Max password attempts reached.")
+        logprint(paste0("received maxretry=", getval(maxattempts), " bad passwords; terminating self..."))
+        if (getval(kill_interactive_server))
+          q("no")
+        else
+          stop("Max password attempts reached.")
       }
       
       attempts <- attempts + 1L

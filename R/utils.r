@@ -96,7 +96,7 @@ assert_nostop <- function(..., env = parent.frame())
   test <- tryCatch(assert_that(env=env, ...), error=identity)
   if (!is.logical(test))
   {
-    if (iam("local") || .pbdenv$debug)
+    if (iam("local") || getval(debug))
     {
       msg <- gsub(test, pattern="(^<assert|>$|Error: )", replacement="")
       remoter_client_stop(msg)

@@ -12,7 +12,7 @@
 
 send_unsecure <- function(data, send.more=FALSE)
 {
-  send.socket(.pbdenv$socket, data=data, send.more=send.more)
+  send.socket(getval(socket), data=data, send.more=send.more)
 }
 
 
@@ -28,7 +28,7 @@ send_secure <- function(data, send.more=FALSE)
 
 receive_unsecure <- function()
 {
-  msg <- receive.socket(.pbdenv$socket)
+  msg <- receive.socket(getval(socket))
   
   if (identical(msg, magicmsg_first_connection))
   {
@@ -43,7 +43,7 @@ receive_unsecure <- function()
 
 receive_secure <- function()
 {
-  encrypted <- receive.socket(.pbdenv$socket)
+  encrypted <- receive.socket(getval(socket))
   
   if (identical(encrypted, magicmsg_first_connection))
   {
@@ -59,7 +59,7 @@ receive_secure <- function()
 
 send <- function(data, send.more=FALSE)
 {
-  if (.pbdenv$secure)
+  if (getval(secure))
     send_secure(data=data, send.more=send.more)
   else
     send_unsecure(data=data, send.more=send.more)
@@ -69,7 +69,7 @@ send <- function(data, send.more=FALSE)
 
 receive <- function()
 {
-  if (.pbdenv$secure)
+  if (getval(secure))
     receive_secure()
   else
     receive_unsecure()
@@ -87,12 +87,12 @@ first_send <- function()
   else if (!security && has.sodium())
     cat("WARNING: server not secure; communications are not encrypted.\n")
   
-  .pbdenv$secure <- security
+  set(secure, security)
   
-  if (.pbdenv$secure)
+  if (getval(secure))
   {
     send_unsecure(NULL)
-    .pbdenv$keys$theirs <- receive_unsecure()
+    setkey(theirs, receive_unsecure())
     send_unsecure(getkey(public))
   }
   else
@@ -106,17 +106,17 @@ first_send <- function()
 first_receive <- function()
 {
   logprint(level="INIT", "Receiving first connection from client...", checkverbose=TRUE)
-  logprint(level="INIT", paste("alerting that server", ifelse(.pbdenv$secure, "is", "isn't"), "secure"), checkverbose=TRUE)
-  send_unsecure(.pbdenv$secure)
+  logprint(level="INIT", paste("alerting that server", ifelse(getval(secure), "is", "isn't"), "secure"), checkverbose=TRUE)
+  send_unsecure(getval(secure))
   
   logprint(level="INIT", "receiving security acknowledgement from client", checkverbose=TRUE)
-  if (.pbdenv$secure)
+  if (getval(secure))
   {
     receive_unsecure()
     logprint(level="AUTH", "sending server public key", checkverbose=TRUE)
     send_unsecure(getkey(public))
     logprint(level="AUTH", "receiving client public key", checkverbose=TRUE)
-    .pbdenv$keys$theirs <- receive_unsecure()
+    setkey(theirs, receive_unsecure())
   }
   else
     receive_unsecure()

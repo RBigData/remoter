@@ -3,7 +3,7 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
   if (identical(msg, magicmsg_first_connection))
     return(invisible())
   
-  if ((.pbdenv$serverlog && !checkverbose && !checkshowmsg) || (.pbdenv$verbose && checkverbose) || (.pbdenv$showmsg && checkshowmsg))
+  if ((getval(serverlog) && !checkverbose && !checkshowmsg) || (getval(verbose) && checkverbose) || (getval(showmsg) && checkshowmsg))
   {
     logmsg <- paste0(preprint, "[", Sys.time(), "]: ", level, ifelse(level=="", "", ": "), msg, "\n")
     cat(logmsg)
@@ -29,7 +29,7 @@ logfile_init <- function()
 
 logprint_file <- function(logmsg)
 {
-  cat(logmsg, file=.pbdenv$logfile, append=TRUE)
+  cat(logmsg, file=getval(logfile), append=TRUE)
   invisible()
 }
 
@@ -42,10 +42,9 @@ logprint_file <- function(logmsg)
 #' @export
 showlog <- function()
 {
-  file <- .pbdenv$logfile
+  file <- getval(logfile)
   if (file.exists(file))
-    readLines(.pbdenv$logfile)
+    readLines(getval(logfile))
   else
     stop("no log file found!")
 }
-

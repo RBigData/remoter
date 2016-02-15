@@ -1,8 +1,7 @@
 magicmsg_first_connection <- ".__remoter_first_connection"
 
-### Do not do this. This will be sealed at remoter:::.pbdenv.
-# .pbdenv <- new.env()
-### Call .rropt_init() inside .OnLoad() to make a global one. The rests are ok.
+
+
 init_state <- function(envir = .GlobalEnv)
 {
   if(!exists(".pbdenv", envir = envir))
@@ -45,6 +44,7 @@ reset_state <- function()
   # .pbdenv$keys$public <- NULL
   .pbdenv$keys$theirs <- NULL
   
+  
   # C/S state
   .pbdenv$status <- list(
     ret               = invisible(),
@@ -71,6 +71,12 @@ set <- function(var, val)
   invisible()
 }
 
+getval <- function(var)
+{
+  name <- as.character(substitute(var))
+  .pbdenv[[name]]
+}
+
 get.status <- function(var)
 {
   name <- as.character(substitute(var))
@@ -81,6 +87,20 @@ set.status <- function(var, val)
 {
   name <- as.character(substitute(var))
   .pbdenv$status[[name]] <- val
+  invisible()
+}
+
+getkey <- function(type)
+{
+  name <- as.character(substitute(type))
+  stopifnot(name == "private" || name == "public" || name == "theirs")
+  .pbdenv$keys[[name]]
+}
+
+setkey <- function(var, val)
+{
+  name <- as.character(substitute(var))
+  .pbdenv$keys[[name]] <- val
   invisible()
 }
 
