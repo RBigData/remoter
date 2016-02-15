@@ -42,5 +42,10 @@ logprint_file <- function(logmsg)
 #' @export
 showlog <- function()
 {
-  readLines(.pbdenv$logfile)
+  file <- .pbdenv$logfile
+  if (file.exists(file))
+    readLines(.pbdenv$logfile)
+  else
+    stop("no log file found!")
 }
+

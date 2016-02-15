@@ -8,6 +8,8 @@ init_state <- function(envir = .GlobalEnv)
   if(!exists(".pbdenv", envir = envir))
     envir$.pbdenv <- new.env()
   
+  reset_state()
+  
   invisible()
 }
 
@@ -26,7 +28,7 @@ reset_state <- function()
   .pbdenv$serverlog <- TRUE
   .pbdenv$verbose <- FALSE
   .pbdenv$showmsg <- FALSE
-  .pbdenv$logfile <- NULL
+  .pbdenv$logfile <- logfile_init()
   
   # internals
   .pbdenv$debug <- FALSE
