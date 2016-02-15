@@ -1,17 +1,5 @@
 remoter_read_password <- function()
 {
-  # tt <- tktoplevel() 
-  # pw <- tclVar("") 
-  # 
-  # label <- tklabel(tt, text="PASSWORD") 
-  # textbox <- tkentry(tt, show="*", textvariable=pw) 
-  # tkbind(textbox, "<Return>", function() tkdestroy(tt)) 
-  # button <- tkbutton(tt,text="ok", default="active", command=function() tkdestroy(tt)) 
-  # tkpack(label, textbox, button) 
-  # 
-  # tkwait.window(tt) 
-  # 
-  # return(tclvalue(pw)) 
   pw <- readline("PASSWORD:  ") 
   
   pw
