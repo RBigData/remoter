@@ -69,7 +69,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   
-  rm("port", "password", "maxretry", "showmsg", "secure")
+  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
   invisible(gc())
   
   remoter_repl_server()
