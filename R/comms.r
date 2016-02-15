@@ -1,6 +1,6 @@
 ### When a client first connects:
 # * client sends magicmsg_first_connection
-# * server sends value of .pbdenv$secure (TRUE or FALSE)
+# * server sends value of "secure" stored in the state (TRUE or FALSE)
 # * client either responds "" or hangs up if it can't continue
 # * key exchange if necessary
 # * next operation is to check if server needs a password...

@@ -67,7 +67,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(password, password)
   set(secure, secure)
   
-  logprint(paste("*** Launching", ifelse(.pbdenv$secure, "secure", "UNSECURE"), "server ***"), preprint="\n\n")
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n\n")
   
   rm("port", "password", "maxretry", "showmsg", "secure")
   invisible(gc())
@@ -81,10 +81,10 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
 
 remoter_warning <- function(warn)
 {
-  .pbdenv$status$shouldwarn <- TRUE
-  .pbdenv$status$num_warnings <- .pbdenv$status$num_warnings + 1
+  set.status(shouldwarn, TRUE)
+  set.status(num_warnings, get.status(num_warnings) + 1L)
   
-  .pbdenv$status$warnings <- append(.pbdenv$status$warnings, conditionMessage(warn))
+  set.status(warnings, append(get.status(warnings), conditionMessage(warn)))
   invokeRestart("muffleWarning")
   print(warn)
 }
@@ -150,7 +150,7 @@ remoter_server_eval <- function(env)
   ret <- 
   withCallingHandlers(
     tryCatch({
-        .pbdenv$visible <- withVisible(eval(parse(text=msg), envir=env))
+        withVisible(eval(parse(text=msg), envir=env))
       }, interrupt=identity, error=remoter_error
     ), warning=remoter_warning
   )
@@ -165,16 +165,16 @@ remoter_server_eval <- function(env)
       set.status(ret, utils::capture.output(ret$value))
   }
   
-  send(.pbdenv$status)
+  send(getval(status))
 }
 
 
 
 remoter_init_server <- function()
 {
-  .pbdenv$context <- init.context()
-  .pbdenv$socket <- init.socket(.pbdenv$context, "ZMQ_REP")
-  bind.socket(.pbdenv$socket, paste0("tcp://*:", .pbdenv$port))
+  set(context, init.context())
+  set(socket, init.socket(getval(context), "ZMQ_REP"))
+  bind.socket(getval(socket), paste0("tcp://*:", getval(port)))
   
   return(TRUE)
 }
@@ -183,7 +183,7 @@ remoter_init_server <- function()
 
 remoter_exit_server <- function()
 {
-  if (.pbdenv$kill_interactive_server)
+  if (getval(kill_interactive_server))
     q("no")
   
   return(TRUE)
@@ -202,7 +202,6 @@ remoter_repl_server <- function(env=sys.parent())
     
     while (TRUE)
     {
-      .pbdenv$visible <- withVisible(invisible())
       
       remoter_server_eval(env=env)
       
@@ -213,7 +212,7 @@ remoter_repl_server <- function(env=sys.parent())
       {
         set.status(remoter_prompt_active, FALSE)
         set.status(should_exit, FALSE)
-        if (.pbdenv$kill_interactive_server)
+        if (getval(kill_interactive_server))
           remoter_exit_server()
         
         return(invisible())

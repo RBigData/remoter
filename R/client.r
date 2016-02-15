@@ -176,7 +176,7 @@ remoter_repl_client <- function(env=sys.parent())
     
     while (TRUE)
     {
-      set(visble, withVisible(invisible()))
+      # set(visble, withVisible(invisible()))
       input <- remoter_readline(input=input)
       
       remoter_client_send(input=input)
