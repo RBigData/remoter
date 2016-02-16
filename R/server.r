@@ -191,9 +191,9 @@ remoter_exit_server <- function()
 
 
 
-remoter_repl_server <- function(env=sys.parent())
+remoter_repl_server <- function(env=sys.parent(), initfun=remoter_init_server, evalfun=remoter_server_eval)
 {
-  remoter_init_server()
+  initfun()
   
   while (TRUE)
   {
@@ -203,7 +203,7 @@ remoter_repl_server <- function(env=sys.parent())
     while (TRUE)
     {
       
-      remoter_server_eval(env=env)
+      evalfun(env=env)
       
       if (get.status(continuation)) next
       
