@@ -23,7 +23,7 @@ Suggests:
     sodium (>= 0.2),
     rstudioapi (>= 0.5)
 VignetteBuilder: knitr
-NeedsCompilation: no
+NeedsCompilation: yes
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
     email="wrathematics@gmail.com"),
