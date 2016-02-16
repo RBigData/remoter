@@ -20,7 +20,8 @@ Imports:
 Suggests: 
     knitr, 
     rmarkdown, 
-    sodium (>= 0.2)
+    sodium (>= 0.2),
+    rstudioapi (>= 0.5)
 VignetteBuilder: knitr
 NeedsCompilation: no
 ByteCompile: yes

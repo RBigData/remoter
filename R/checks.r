@@ -1,6 +1,14 @@
 remoter_read_password <- function()
 {
-  pw <- readline("PASSWORD:  ") 
+  query <- "PASSWORD:  "
+  
+  if (getval(withrstudioapi) && rstudioapi::hasFun("askForPassword"))
+    pw <- rstudioapi::askForPassword(query)
+  else
+  {
+    cat("WARNING: input is not masked!\n")
+    pw <- readline("PASSWORD:  ") 
+  }
   
   pw
 }

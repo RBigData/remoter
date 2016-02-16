@@ -13,6 +13,12 @@
   else
     set(withsodium, FALSE)
   
+  test <- requireNamespace("rstudioapi", quietly=TRUE)
+  if (test)
+    set(withrstudioapi, TRUE)
+  else
+    set(withrstudioapi, FALSE)
+  
   invisible()
 }
 
