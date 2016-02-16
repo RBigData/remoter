@@ -68,7 +68,7 @@ remoter_readline <- function(input)
       break
     else
     {
-      cat("C-c\n")
+      cat("^C\n")
     }
   }
   
