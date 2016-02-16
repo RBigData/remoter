@@ -79,8 +79,6 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
 
 
 
-#' @rdname internals
-#' @export
 remoter_warning <- function(warn)
 {
   set.status(shouldwarn, TRUE)
@@ -93,8 +91,6 @@ remoter_warning <- function(warn)
 
 
 
-#' @rdname internals
-#' @export
 remoter_error <- function(err)
 {
   msg <- err$message

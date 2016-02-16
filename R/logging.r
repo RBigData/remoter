@@ -1,5 +1,3 @@
-#' @rdname internals
-#' @export
 logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="")
 {
   if (identical(msg, magicmsg_first_connection))

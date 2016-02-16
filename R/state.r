@@ -14,8 +14,6 @@ init_state <- function(envir = .GlobalEnv)
 
 
 
-#' @rdname internals
-#' @export
 reset_state <- function()
 {
   # options
@@ -23,7 +21,7 @@ reset_state <- function()
   set(port, 55555)
   set(remote_addr, "localhost")
   set(password, NULL)
-  set(maxattempt, 5)
+  set(maxattempts, 5)
   
   # logs
   set(serverlog, TRUE)

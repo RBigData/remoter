@@ -57,8 +57,6 @@ receive_secure <- function()
 
 
 
-#' @rdname internals
-#' @export
 remoter_send <- function(data, send.more=FALSE)
 {
   if (getval(secure))
@@ -69,8 +67,6 @@ remoter_send <- function(data, send.more=FALSE)
 
 
 
-#' @rdname internals
-#' @export
 remoter_receive <- function()
 {
   if (getval(secure))

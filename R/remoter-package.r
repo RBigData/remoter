@@ -14,6 +14,8 @@
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion
 #' @importFrom tools file_path_as_absolute
+#' 
+#' @useDynLib remoter
 #'
 #' @docType package
 #' @keywords package
