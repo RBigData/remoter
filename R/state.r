@@ -17,29 +17,29 @@ init_state <- function(envir = .GlobalEnv)
 reset_state <- function()
 {
   # options
-  .pbdenv$prompt <- "remoter"
-  .pbdenv$port <- 55555
-  .pbdenv$remote_addr <- "localhost"
-  .pbdenv$password <- NULL
-  .pbdenv$maxattempts <- 5
+  set(prompt, "remoter")
+  set(port, 55555)
+  set(remote_addr, "localhost")
+  set(password, NULL)
+  set(maxattempt, 5)
   
   # logs
-  .pbdenv$serverlog <- TRUE
-  .pbdenv$verbose <- FALSE
-  .pbdenv$showmsg <- FALSE
-  .pbdenv$logfile <- logfile_init()
+  set(serverlog, TRUE)
+  set(verbose, FALSE)
+  set(showmsg, FALSE)
+  set(logfile, logfile_init())
   
   # internals
-  .pbdenv$debug <- FALSE
-  .pbdenv$context <- NULL
-  .pbdenv$socket <- NULL
-  .pbdenv$client_lasterror <- ""
-  .pbdenv$kill_interactive_server <- TRUE
+  set(debug, FALSE)
+  set(context, NULL)
+  set(socket, NULL)
+  set(client_lasterror, "")
+  set(kill_interactive_server, TRUE)
   
   
   # Crypto
   # .pbdenv$withsodium <- FALSE
-  .pbdenv$secure <- FALSE
+  set(secure, FALSE)
   # .pbdenv$keys$private <- NULL
   # .pbdenv$keys$public <- NULL
   .pbdenv$keys$theirs <- NULL
