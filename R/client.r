@@ -116,7 +116,7 @@ remoter_sanitize <- function(inputs)
 
 remoter_client_send <- function(input)
 {
-  send(data=input)
+  remoter_send(data=input)
   
   ### Special cases that need to be eval'd locally
   if (all(grepl(x=input, pattern="^(\\s+)?s2c\\(", perl=TRUE)))
@@ -130,7 +130,7 @@ remoter_client_send <- function(input)
   else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
     eval(parse(text=input))
   
-  set(status, receive())
+  set(status, remoter_receive())
   
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()

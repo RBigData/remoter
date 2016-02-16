@@ -54,6 +54,8 @@ scrub_addr <- function(addr)
 
 
 
+#' @rdname internals
+#' @export
 validate_port <- function(port)
 {
   assert_that(is.count(port))

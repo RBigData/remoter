@@ -10,13 +10,13 @@ remoter_read_password <- function()
 remoter_check_password_local <- function()
 {
   first_send()
-  needpw <- receive()
+  needpw <- remoter_receive()
   
   while (needpw)
   {
     pw <- remoter_read_password()
-    send(pw)
-    check <- receive()
+    remoter_send(pw)
+    check <- remoter_receive()
     
     if (isTRUE(check))
       break
@@ -34,34 +34,34 @@ remoter_check_password_remote <- function()
   if (is.null(getval(password)))
   {
     logprint(level="PASS", "alerting client no password required", checkverbose=TRUE)
-    send(FALSE)
+    remoter_send(FALSE)
   }
   else
   {
     logprint("client attempting to connect...")
     logprint(level="PASS", "alerting client a password is required", checkverbose=TRUE)
-    send(TRUE)
+    remoter_send(TRUE)
     
     attempts <- 2L
     while (TRUE)
     {
       logprint(level="PASS", "receiving password attempt", checkverbose=TRUE)
-      pw <- receive()
+      pw <- remoter_receive()
       if (pw == getval(password))
       {
         logprint("client password authenticated")
-        send(TRUE)
+        remoter_send(TRUE)
         break
       }
       else if (attempts <= getval(maxattempts))
       {
         logprint(level="PASS", "received bad password", checkverbose=TRUE)
-        send(FALSE)
+        remoter_send(FALSE)
       }
       else
       {
         logprint(level="PASS", "alert client max password attempts reached", checkverbose=TRUE)
-        send(NULL)
+        remoter_send(NULL)
         logprint(paste0("received maxretry=", getval(maxattempts), " bad passwords; terminating self..."))
         if (getval(kill_interactive_server))
           q("no")
@@ -78,8 +78,8 @@ remoter_check_password_remote <- function()
 
 remoter_check_version_local <- function()
 {
-  send(get_versions())
-  check <- receive()
+  remoter_send(get_versions())
+  check <- remoter_receive()
   
   if (!check)
     stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
@@ -92,12 +92,12 @@ remoter_check_version_local <- function()
 remoter_check_version_remote <- function()
 {
   logprint("VERS: checking client package versions", checkverbose=TRUE)
-  versions_client <- receive()
+  versions_client <- remoter_receive()
   versions_server <- get_versions()
   check <- compare_versions(versions_client, versions_server)
   
   logprint(level="VERS", "send version check result to client", checkverbose=TRUE)
-  send(check)
+  remoter_send(check)
   
   if (check)
   {

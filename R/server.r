@@ -79,6 +79,8 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
 
 
 
+#' @rdname internals
+#' @export
 remoter_warning <- function(warn)
 {
   set.status(shouldwarn, TRUE)
@@ -91,6 +93,8 @@ remoter_warning <- function(warn)
 
 
 
+#' @rdname internals
+#' @export
 remoter_error <- function(err)
 {
   msg <- err$message
@@ -133,7 +137,7 @@ remoter_server_eval <- function(env)
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   
-  msg <- receive()
+  msg <- remoter_receive()
   
   logprint(level="RMSG", msg[length(msg)], checkshowmsg=TRUE)
   
@@ -165,7 +169,7 @@ remoter_server_eval <- function(env)
       set.status(ret, utils::capture.output(ret$value))
   }
   
-  send(getval(status))
+  remoter_send(getval(status))
 }
 
 

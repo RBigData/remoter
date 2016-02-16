@@ -57,7 +57,9 @@ receive_secure <- function()
 
 
 
-send <- function(data, send.more=FALSE)
+#' @rdname internals
+#' @export
+remoter_send <- function(data, send.more=FALSE)
 {
   if (getval(secure))
     send_secure(data=data, send.more=send.more)
@@ -67,7 +69,9 @@ send <- function(data, send.more=FALSE)
 
 
 
-receive <- function()
+#' @rdname internals
+#' @export
+remoter_receive <- function()
 {
   if (getval(secure))
     receive_secure()

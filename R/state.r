@@ -14,6 +14,8 @@ init_state <- function(envir = .GlobalEnv)
 
 
 
+#' @rdname internals
+#' @export
 reset_state <- function()
 {
   # options

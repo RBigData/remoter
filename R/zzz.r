@@ -1,6 +1,6 @@
 .onLoad <- function(libname, pkgname)
 {
-  ### Preload to tlobal environment.
+  ### Preload to global environment.
   invisible(eval(parse(text = "remoter:::init_state()")))
 
   ### Load and set sodium then generate public/private keys.
