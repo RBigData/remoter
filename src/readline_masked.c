@@ -74,15 +74,15 @@ SEXP readline_masked(SEXP msg)
   old = tp;
   tp.c_lflag &= ~ECHO;
   tcsetattr(0, TCSAFLUSH, &tp);
-#endif
-#if OS_LINUX
+  #if OS_LINUX
   signal(SIGINT, do_nothing); 
-#else
+  #else
   struct sigaction sa;
   sa.sa_handler = do_nothing;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(SIGINT, &sa, NULL);
+  #endif
 #endif
   
   for (i=0; i<MAXLEN; i++)
@@ -100,11 +100,14 @@ SEXP readline_masked(SEXP msg)
     else if (c == '\b')
     {
       if (i == 0)
+      {
+        i--;
         continue;
+      }
       else
       {
-        pw[i-1] = '\0';
-        i -= 2;
+        pw[--i] = '\0';
+        i--;
       }
     }
     // C-c
@@ -112,12 +115,13 @@ SEXP readline_masked(SEXP msg)
     {
 #if !(OS_WINDOWS)
       tcsetattr(0, TCSANOW, &old);
-      Rprintf("\n");
 #endif
+      Rprintf("\n");
       return R_NilValue;
     }
-    
-    pw[i] = c;
+    // store value
+    else
+      pw[i] = c;
   }
   
 #if !(OS_WINDOWS)
