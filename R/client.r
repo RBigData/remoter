@@ -152,7 +152,8 @@ remoter_init_client <- function()
   addr <- pbdZMQ::address(getval(remote_addr), getval(port))
   connect.socket(getval(socket), addr)
   
-  remoter_check_password_local()
+  test <- remoter_check_password_local()
+  if (!test) return(FALSE)
   remoter_check_version_local()
   cat("\n")
   
@@ -166,7 +167,8 @@ remoter_repl_client <- function(env=sys.parent())
   if (!interactive())
     stop("You can only use the client interactively at this time")
   
-  remoter_init_client()
+  test <- remoter_init_client()
+  if (!test) return(FALSE)
   
   while (TRUE)
   {

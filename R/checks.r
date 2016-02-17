@@ -6,6 +6,13 @@ remoter_check_password_local <- function()
   while (needpw)
   {
     pw <- password()
+    if (is.null(pw)) # C-c
+    {
+      remoter_send(NULL)
+      remoter_receive()
+      return(FALSE)
+    }
+    
     remoter_send(pw)
     check <- remoter_receive()
     
@@ -16,6 +23,8 @@ remoter_check_password_local <- function()
     
     cat("Sorry, try again.\n")
   }
+  
+  TRUE
 }
 
 
@@ -38,7 +47,13 @@ remoter_check_password_remote <- function()
     {
       logprint(level="PASS", "receiving password attempt", checkverbose=TRUE)
       pw <- remoter_receive()
-      if (!is.null(pw) && pw == getval(password))
+      if (is.null(pw))
+      {
+        logprint(level="PASS", "client disconnected", checkverbose=TRUE)
+        remoter_send(NULL)
+        return(FALSE)
+      }
+      else if (pw == getval(password))
       {
         logprint("client password authenticated")
         remoter_send(TRUE)
@@ -63,6 +78,8 @@ remoter_check_password_remote <- function()
       attempts <- attempts + 1L
     }
   }
+  
+  TRUE
 }
 
 

@@ -140,7 +140,8 @@ remoter_server_eval <- function(env)
   ### Run first-time checks
   if (length(msg)==1 && msg == magicmsg_first_connection)
   {
-    remoter_check_password_remote()
+    test <- remoter_check_password_remote()
+    if (!test) return(invisible())
     remoter_check_version_remote()
     return(invisible())
   }
