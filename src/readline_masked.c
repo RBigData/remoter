@@ -97,8 +97,7 @@ SEXP readline_masked(SEXP msg)
       }
     }
     
-    //FIXME not actually working...
-    if (checkInterrupt())
+    if (c == 3)
     {
 #if !(OS_WINDOWS)
       tcsetattr(0, TCSANOW, &old);
