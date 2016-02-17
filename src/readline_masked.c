@@ -53,11 +53,18 @@ static int checkInterrupt()
 #include <windows.h>
 #include <conio.h>
 #else
-#include <termios.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <unistd.h>
+#include <signal.h>
+
+static void do_nothing(int s)
+{
+  ;
+}
 #endif
+
 
 SEXP readline_masked(SEXP msg)
 {
@@ -73,6 +80,8 @@ SEXP readline_masked(SEXP msg)
   old = tp;
   tp.c_lflag &= ~ECHO;
   tcsetattr(0, TCSAFLUSH, &tp);
+  
+  signal(SIGINT, do_nothing); 
 #endif
   
   for (i=0; i<MAXLEN; i++)
@@ -97,10 +106,11 @@ SEXP readline_masked(SEXP msg)
       }
     }
     
-    if (c == 3)
+    if (c == 3 || c == '\xff')
     {
 #if !(OS_WINDOWS)
       tcsetattr(0, TCSANOW, &old);
+      Rprintf("\n");
 #endif
       return R_NilValue;
     }
