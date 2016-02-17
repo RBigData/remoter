@@ -31,23 +31,15 @@
 // if you have passwords more than 200 chars, you have mental problems
 #define MAXLEN 200
 char pw[MAXLEN];
+int ctrlc;
 
 
 #define CHARPT(x,i)	((char*)CHAR(STRING_ELT(x,i)))
 
-static void chkIntFn(void *dummy)
-{
-  R_CheckUserInterrupt();
-}
-
-static int checkInterrupt()
-{
-  return (R_ToplevelExec(chkIntFn, NULL) == FALSE);
-}
-
 
 
 #define OS_WINDOWS (defined(__WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WIN64) || defined(__WIN64__) || defined(__TOS_WIN__) || defined(__WINNT) || defined(__WINNT__))
+#define OS_LINUX (defined(__gnu_linux__) || defined(__linux__) || defined(__linux))
 
 #if OS_WINDOWS
 #include <windows.h>
@@ -59,10 +51,11 @@ static int checkInterrupt()
 #include <unistd.h>
 #include <signal.h>
 
-static void do_nothing(int s)
+static void do_nothing(int signal)
 {
-  ;
+  ctrlc = 1;
 }
+
 #endif
 
 
@@ -71,6 +64,7 @@ SEXP readline_masked(SEXP msg)
   SEXP ret;
   int i=0;
   char c;
+  ctrlc = 0;
   
   Rprintf(CHARPT(msg, 0));
   
@@ -80,8 +74,15 @@ SEXP readline_masked(SEXP msg)
   old = tp;
   tp.c_lflag &= ~ECHO;
   tcsetattr(0, TCSAFLUSH, &tp);
-  
+#endif
+#if OS_LINUX
   signal(SIGINT, do_nothing); 
+#else
+  struct sigaction sa;
+  sa.sa_handler = do_nothing;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_flags = 0;
+  sigaction(SIGINT, &sa, NULL);
 #endif
   
   for (i=0; i<MAXLEN; i++)
@@ -92,10 +93,11 @@ SEXP readline_masked(SEXP msg)
     c = fgetc(stdin);
 #endif
     
+    // newline
     if (c == '\n' || c == '\r')
       break;
-    
-    if (c == '\b')
+    // backspace
+    else if (c == '\b')
     {
       if (i == 0)
         continue;
@@ -105,8 +107,8 @@ SEXP readline_masked(SEXP msg)
         i -= 2;
       }
     }
-    
-    if (c == 3 || c == '\xff')
+    // C-c
+    else if (ctrlc == 1 || c == 3 || c == '\xff')
     {
 #if !(OS_WINDOWS)
       tcsetattr(0, TCSANOW, &old);
