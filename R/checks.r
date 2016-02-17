@@ -38,7 +38,7 @@ remoter_check_password_remote <- function()
     {
       logprint(level="PASS", "receiving password attempt", checkverbose=TRUE)
       pw <- remoter_receive()
-      if (pw == getval(password))
+      if (!is.null(pw) && pw == getval(password))
       {
         logprint("client password authenticated")
         remoter_send(TRUE)
