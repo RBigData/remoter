@@ -51,7 +51,7 @@ int ctrlc;
 #include <unistd.h>
 #include <signal.h>
 
-static void do_nothing(int signal)
+static void ctrlc_handler(int signal)
 {
   ctrlc = 1;
 }
@@ -75,10 +75,10 @@ SEXP readline_masked(SEXP msg)
   tp.c_lflag &= ~ECHO;
   tcsetattr(0, TCSAFLUSH, &tp);
   #if OS_LINUX
-  signal(SIGINT, do_nothing); 
+  signal(SIGINT, ctrlc_handler); 
   #else
   struct sigaction sa;
-  sa.sa_handler = do_nothing;
+  sa.sa_handler = ctrlc_handler;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = 0;
   sigaction(SIGINT, &sa, NULL);
