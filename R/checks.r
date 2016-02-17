@@ -5,7 +5,7 @@ remoter_check_password_local <- function()
   
   while (needpw)
   {
-    pw <- remoter_read_password()
+    pw <- password()
     remoter_send(pw)
     check <- remoter_receive()
     
