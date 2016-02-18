@@ -1,3 +1,7 @@
+Release 0.3-1:
+  * Add password() method with masking (where supported).
+  * Integrate password() into client authentication.
+
 Release 0.3-0:
   * Dump log output to file.
   * Add showlog().
