@@ -73,6 +73,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   invisible(gc())
   
   remoter_repl_server()
+  remoter_exit_server()
   
   invisible(TRUE)
 }
@@ -213,8 +214,6 @@ remoter_repl_server <- function(env=sys.parent(), initfun=remoter_init_server, e
       {
         set.status(remoter_prompt_active, FALSE)
         set.status(should_exit, FALSE)
-        if (getval(kill_interactive_server))
-          remoter_exit_server()
         
         return(invisible())
       }
