@@ -5,19 +5,12 @@
 
   ### Load and set sodium then generate public/private keys.
   test <- requireNamespace("sodium", quietly=TRUE)
+  set(withsodium, test)
   if (test)
-  {
     generate_keypair()
-    set(withsodium, TRUE)
-  }
-  else
-    set(withsodium, FALSE)
   
   test <- requireNamespace("rstudioapi", quietly=TRUE)
-  if (test)
-    set(withrstudioapi, TRUE)
-  else
-    set(withrstudioapi, FALSE)
+  set(withrstudioapi, test)
   
   invisible()
 }
