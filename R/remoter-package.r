@@ -11,9 +11,11 @@
 #' 
 #' @import pbdZMQ
 #' @import assertthat
+#' 
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion
 #' @importFrom tools file_path_as_absolute
+#' @importFrom getPass getPass
 #' 
 #' @useDynLib remoter
 #'

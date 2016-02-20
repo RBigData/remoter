@@ -16,12 +16,12 @@ Imports:
     stats, 
     utils, 
     tools, 
-    assertthat (>= 0.1)
+    assertthat (>= 0.1),
+    getPass (>= 0.1-0)
 Suggests: 
     knitr, 
     rmarkdown, 
-    sodium (>= 0.2),
-    rstudioapi (>= 0.5)
+    sodium (>= 0.2)
 VignetteBuilder: knitr
 NeedsCompilation: yes
 ByteCompile: yes
