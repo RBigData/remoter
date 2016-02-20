@@ -79,7 +79,7 @@ s2c <- function(object, newname, env=.GlobalEnv)
   
   if (iam("local"))
   {
-    value <- receive()
+    value <- remoter_receive()
     
     if (value == err)
     {
@@ -95,7 +95,7 @@ s2c <- function(object, newname, env=.GlobalEnv)
   else if (iam("remote"))
   {
     val <- get0(name, envir=sys.frame(-1), ifnotfound=err)
-    send(data=val, send.more=TRUE)
+    remoter_send(data=val, send.more=TRUE)
   }
   
   return(invisible(TRUE))

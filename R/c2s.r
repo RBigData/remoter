@@ -74,10 +74,10 @@ c2s <- function(object, newname, env=.GlobalEnv)
   
   if (iam("local"))
   {
-    receive()
+    remoter_receive()
     
     value <- get0(name, ifnotfound=err)
-    send(data=value)
+    remoter_send(data=value)
     
     if (identical(value, err))
     {
@@ -87,13 +87,13 @@ c2s <- function(object, newname, env=.GlobalEnv)
   }
   else if (iam("remote"))
   {
-    send(NULL)
+    remoter_send(NULL)
     
-    value <- receive()
+    value <- remoter_receive()
     
     if (identical(value, err))
     {
-      send(FALSE)
+      remoter_send(FALSE)
       return(invisible(FALSE))
     }
     

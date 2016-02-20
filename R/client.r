@@ -27,7 +27,7 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, prompt="remoteR")
+client <- function(addr="localhost", port=55555, prompt="remoter")
 {
   validate_address(addr)
   addr <- scrub_addr(addr)
@@ -57,7 +57,7 @@ remoter_readline <- function(input)
   else
     symb <- "> "
   
-  prompt <- paste0(.pbdenv$prompt, symb)
+  prompt <- paste0(getval(prompt), symb)
   
   Cc_check <- ".__cantstopwontstop"
   
@@ -68,7 +68,7 @@ remoter_readline <- function(input)
       break
     else
     {
-      cat("C-c\n")
+      cat("^C\n")
     }
   }
   
@@ -87,13 +87,13 @@ remoter_sanitize <- function(inputs)
     input <- inputs[i]
     if (grepl(x=input, pattern="^(\\s+)?(q|quit)\\(", perl=TRUE)) 
       inputs[i] <- "exit(client.only=TRUE)"
-    else if (grepl(x=input, pattern=".pbdenv") && !.pbdenv$debug)
+    else if (grepl(x=input, pattern=".pbdenv") && !getval(debug))
     {
       remoter_client_stop("I can't do that.")
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^(\\s+)?geterrmessage\\(", perl=TRUE))
-      inputs[i] <- .pbdenv$client_lasterror
+      inputs[i] <- getval(client_lasterror)
     else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
     {
       remoter_client_stop("Reading help files from the server is currently not supported.")
@@ -101,7 +101,7 @@ remoter_sanitize <- function(inputs)
     }
     else if (grepl(x=input, pattern="^(\\s+)?warnings\\(", perl=TRUE))
     {
-      .pbdenv$status$shouldwarn <- TRUE
+      set.status(shouldwarn, TRUE)
       remoter_show_warnings()
       inputs[i] <- "invisible()"
     }
@@ -116,7 +116,7 @@ remoter_sanitize <- function(inputs)
 
 remoter_client_send <- function(input)
 {
-  send(data=input)
+  remoter_send(data=input)
   
   ### Special cases that need to be eval'd locally
   if (all(grepl(x=input, pattern="^(\\s+)?s2c\\(", perl=TRUE)))
@@ -130,7 +130,7 @@ remoter_client_send <- function(input)
   else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
     eval(parse(text=input))
   
-  .pbdenv$status <- receive()
+  set(status, remoter_receive())
   
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()
@@ -147,12 +147,13 @@ remoter_client_send <- function(input)
 
 remoter_init_client <- function()
 {
-  .pbdenv$context <- init.context()
-  .pbdenv$socket <- init.socket(.pbdenv$context, "ZMQ_REQ")
-  addr <- pbdZMQ::address(.pbdenv$remote_addr, .pbdenv$port)
-  connect.socket(.pbdenv$socket, addr)
+  set(context, init.context())
+  set(socket, init.socket(getval(context), "ZMQ_REQ"))
+  addr <- pbdZMQ::address(getval(remote_addr), getval(port))
+  connect.socket(getval(socket), addr)
   
-  remoter_check_password_local()
+  test <- remoter_check_password_local()
+  if (!test) return(FALSE)
   remoter_check_version_local()
   cat("\n")
   
@@ -166,7 +167,8 @@ remoter_repl_client <- function(env=sys.parent())
   if (!interactive())
     stop("You can only use the client interactively at this time")
   
-  remoter_init_client()
+  test <- remoter_init_client()
+  if (!test) return(FALSE)
   
   while (TRUE)
   {
@@ -176,7 +178,7 @@ remoter_repl_client <- function(env=sys.parent())
     
     while (TRUE)
     {
-      .pbdenv$visible <- withVisible(invisible())
+      # set(visble, withVisible(invisible()))
       input <- remoter_readline(input=input)
       
       remoter_client_send(input=input)

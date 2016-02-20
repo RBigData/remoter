@@ -9,7 +9,7 @@
 #' @export
 has.sodium <- function()
 {
-  .pbdenv$withsodium
+  getval(withsodium)
 }
 
 
@@ -31,24 +31,15 @@ is.secure <- function()
   if (iam("local"))
     NA
   else
-    .pbdenv$secure
+    getval(secure)
 }
 
 
 
 generate_keypair <- function()
 {
-  .pbdenv$keys$private <- sodium::keygen()
-  .pbdenv$keys$public <- sodium::pubkey(.pbdenv$keys$private)
+  setkey(private, sodium::keygen())
+  setkey(public, sodium::pubkey(getkey(private)))
   
   invisible()
-}
-
-
-
-getkey <- function(type)
-{
-  name <- as.character(substitute(type))
-  stopifnot(name == "private" || name == "public" || name == "theirs")
-  .pbdenv$keys[[name]]
 }

@@ -1,8 +1,7 @@
 magicmsg_first_connection <- ".__remoter_first_connection"
 
-### Do not do this. This will be sealed at remoter:::.pbdenv.
-# .pbdenv <- new.env()
-### Call .rropt_init() inside .OnLoad() to make a global one. The rests are ok.
+
+
 init_state <- function(envir = .GlobalEnv)
 {
   if(!exists(".pbdenv", envir = envir))
@@ -18,32 +17,33 @@ init_state <- function(envir = .GlobalEnv)
 reset_state <- function()
 {
   # options
-  .pbdenv$prompt <- "remoter"
-  .pbdenv$port <- 55555
-  .pbdenv$remote_addr <- "localhost"
-  .pbdenv$password <- NULL
-  .pbdenv$maxattempts <- 5
+  set(prompt, "remoter")
+  set(port, 55555)
+  set(remote_addr, "localhost")
+  set(password, NULL)
+  set(maxattempts, 5)
   
   # logs
-  .pbdenv$serverlog <- TRUE
-  .pbdenv$verbose <- FALSE
-  .pbdenv$showmsg <- FALSE
-  .pbdenv$logfile <- logfile_init()
+  set(serverlog, TRUE)
+  set(verbose, FALSE)
+  set(showmsg, FALSE)
+  set(logfile, logfile_init())
   
   # internals
-  .pbdenv$debug <- FALSE
-  .pbdenv$context <- NULL
-  .pbdenv$socket <- NULL
-  .pbdenv$client_lasterror <- ""
-  .pbdenv$kill_interactive_server <- TRUE
+  set(debug, FALSE)
+  set(context, NULL)
+  set(socket, NULL)
+  set(client_lasterror, "")
+  set(kill_interactive_server, TRUE)
   
   
   # Crypto
   # .pbdenv$withsodium <- FALSE
-  .pbdenv$secure <- FALSE
+  set(secure, FALSE)
   # .pbdenv$keys$private <- NULL
   # .pbdenv$keys$public <- NULL
   .pbdenv$keys$theirs <- NULL
+  
   
   # C/S state
   .pbdenv$status <- list(
@@ -71,6 +71,12 @@ set <- function(var, val)
   invisible()
 }
 
+getval <- function(var)
+{
+  name <- as.character(substitute(var))
+  .pbdenv[[name]]
+}
+
 get.status <- function(var)
 {
   name <- as.character(substitute(var))
@@ -81,6 +87,20 @@ set.status <- function(var, val)
 {
   name <- as.character(substitute(var))
   .pbdenv$status[[name]] <- val
+  invisible()
+}
+
+getkey <- function(type)
+{
+  name <- as.character(substitute(type))
+  stopifnot(name == "private" || name == "public" || name == "theirs")
+  .pbdenv$keys[[name]]
+}
+
+setkey <- function(var, val)
+{
+  name <- as.character(substitute(var))
+  .pbdenv$keys[[name]] <- val
   invisible()
 }
 

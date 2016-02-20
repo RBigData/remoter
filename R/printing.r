@@ -1,7 +1,7 @@
 ### client printing tools
 remoter_client_stop <- function(msg)
 {
-  .pbdenv$client_lasterror <- msg
+  set(client_lasterror, msg)
   cat("Error: ", msg, "\n")
   
   invisible()
@@ -37,7 +37,7 @@ remoter_show_warnings <- function()
   warnings <- get.status(warnings)
   nwarnings <- length(warnings)
   
-  if (!is.null(warnings) && .pbdenv$status$shouldwarn)
+  if (!is.null(warnings) && get.status(shouldwarn))
   {
     if (nwarnings == 1)
     {
@@ -60,7 +60,7 @@ remoter_show_warnings <- function()
     cat("\n")
   }
   
-  .pbdenv$status$shouldwarn <- FALSE
+  set.status(shouldwarn, FALSE)
   
   invisible()
 }

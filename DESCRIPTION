@@ -1,7 +1,7 @@
 Package: remoter
 Type: Package
 Title: Remote R: Control a Remote R Session from a Local One
-Version: 0.3-0
+Version: 0.3-1
 Description: A set of utilities for controlling a remote R session
     from a local one.  Simply set up a server (see package vignette
     for more details) and connect to it from your local R session,
@@ -16,13 +16,14 @@ Imports:
     stats, 
     utils, 
     tools, 
-    assertthat (>= 0.1)
+    assertthat (>= 0.1),
+    getPass (>= 0.1-0)
 Suggests: 
     knitr, 
     rmarkdown, 
     sodium (>= 0.2)
 VignetteBuilder: knitr
-NeedsCompilation: no
+NeedsCompilation: yes
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
     email="wrathematics@gmail.com"),
