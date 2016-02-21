@@ -23,7 +23,7 @@ Suggests:
     rmarkdown, 
     sodium (>= 0.2)
 VignetteBuilder: knitr
-NeedsCompilation: yes
+NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
     email="wrathematics@gmail.com"),
