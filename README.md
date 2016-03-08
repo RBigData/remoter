@@ -1,7 +1,7 @@
 # remoter
 
 * **Version:** 0.3-1
-* **URL**: https://github.com/wrathematics/remoter
+* **URL**: https://github.com/RBigData/remoter
 * **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
 * **Author:** Drew Schmidt and Wei-Chen Chen
 
@@ -51,9 +51,9 @@ The development version is maintained on GitHub, and can easily be installed by 
 
 ```r
 ### Pick your preference
-devtools::install_github("wrathematics/remoter")
-ghit::install_github("wrathematics/remoter")
-remotes::install_github("wrathematics/remoter")
+devtools::install_github("RBigData/remoter")
+ghit::install_github("RBigData/remoter")
+remotes::install_github("RBigData/remoter")
 ```
 
 
