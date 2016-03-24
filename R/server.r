@@ -67,7 +67,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(password, password)
   set(secure, secure)
   
-  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n\n")
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
   
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
   invisible(gc())
