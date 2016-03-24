@@ -61,10 +61,12 @@ remoter_repl_relay <- function()
   
   while (TRUE)
   {
+    ### receive from client, send to server
     data <- receive.socket(socket=socket.recv, unserialize=FALSE)
     logprint("Received message from client. Sending to server.", checkverbose=TRUE)
     send.socket(socket=socket.send, data=data, serialize=FALSE)
     
+    ### receive from server, send to client
     data <- receive.socket(socket=socket.send, unserialize=FALSE)
     logprint("Received response from server. Sending to client.", checkverbose=TRUE)
     send.socket(socket=socket.recv, data=data, serialize=FALSE)
