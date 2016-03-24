@@ -49,27 +49,28 @@ relay <- function(addr, recvport=55556, sendport=55555, verbose=FALSE)
 remoter_repl_relay <- function()
 {
   ### client/relay comms
-  ctxt.recv <- init.context()
-  socket.recv <- init.socket(ctxt.recv, "ZMQ_REP")
-  bind.socket(socket.recv, address("*", getval(recvport)))
+  ctxt.recv <- pbdZMQ::init.context()
+  socket.recv <- pbdZMQ::init.socket(ctxt.recv, "ZMQ_REP")
+  addr <- pbdZMQ::address("*", getval(recvport))
+  pbdZMQ::bind.socket(socket.recv, addr)
   
   ### relay/server comms
-  ctxt.send <- init.context()
-  socket.send <- init.socket(ctxt.send, "ZMQ_REQ")
+  ctxt.send <- pbdZMQ::init.context()
+  socket.send <- pbdZMQ::init.socket(ctxt.send, "ZMQ_REQ")
   addr <- pbdZMQ::address(getval(remote_addr), getval(sendport))
-  connect.socket(socket.send, addr)
+  pbdZMQ::connect.socket(socket.send, addr)
   
   while (TRUE)
   {
     ### receive from client, send to server
-    data <- receive.socket(socket=socket.recv, unserialize=FALSE)
+    data <- pbdZMQ::receive.socket(socket=socket.recv, unserialize=FALSE)
     logprint("Received message from client. Sending to server.", checkverbose=TRUE)
-    send.socket(socket=socket.send, data=data, serialize=FALSE)
+    pbdZMQ::send.socket(socket=socket.send, data=data, serialize=FALSE)
     
     ### receive from server, send to client
-    data <- receive.socket(socket=socket.send, unserialize=FALSE)
+    data <- pbdZMQ::receive.socket(socket=socket.send, unserialize=FALSE)
     logprint("Received response from server. Sending to client.", checkverbose=TRUE)
-    send.socket(socket=socket.recv, data=data, serialize=FALSE)
+    pbdZMQ::send.socket(socket=socket.recv, data=data, serialize=FALSE)
   }
   
   return(invisible())

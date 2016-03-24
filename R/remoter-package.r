@@ -9,7 +9,7 @@
 #' 
 #' @name remoter-package
 #' 
-#' @import pbdZMQ
+#' @importFrom pbdZMQ zmq
 #' @import assertthat
 #' 
 #' @importFrom stats runif

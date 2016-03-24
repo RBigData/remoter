@@ -147,10 +147,10 @@ remoter_client_send <- function(input)
 
 remoter_init_client <- function()
 {
-  set(context, init.context())
-  set(socket, init.socket(getval(context), "ZMQ_REQ"))
+  set(context, pbdZMQ::init.context())
+  set(socket, pbdZMQ::init.socket(getval(context), "ZMQ_REQ"))
   addr <- pbdZMQ::address(getval(remote_addr), getval(port))
-  connect.socket(getval(socket), addr)
+  pbdZMQ::connect.socket(getval(socket), addr)
   
   test <- remoter_check_password_local()
   if (!test) return(FALSE)

@@ -174,9 +174,9 @@ remoter_server_eval <- function(env)
 
 remoter_init_server <- function()
 {
-  set(context, init.context())
-  set(socket, init.socket(getval(context), "ZMQ_REP"))
-  bind.socket(getval(socket), paste0("tcp://*:", getval(port)))
+  set(context, pbdZMQ::init.context())
+  set(socket, pbdZMQ::init.socket(getval(context), "ZMQ_REP"))
+  pbdZMQ::bind.socket(getval(socket), pbdZMQ::address("*", getval(port)))
   
   return(TRUE)
 }
