@@ -4,12 +4,12 @@
 #' remoter, you can use RStudio running on your laptop to execute
 #' commands on an R session running on, for example, Amazon's EC2.
 #' 
-#' @references Project URL: \url{https://github.com/wrathematics/remoter}
+#' @references Project URL: \url{https://github.com/RBigData/remoter}
 #' @author Drew Schmidt and Wei-Chen Chen
 #' 
 #' @name remoter-package
 #' 
-#' @import pbdZMQ
+#' @importFrom pbdZMQ zmq
 #' @import assertthat
 #' 
 #' @importFrom stats runif

@@ -1,13 +1,17 @@
 test_connection <- function(addr, port, ntries=10, sleeptime=1)
 {
-  ctx <- init.context()
-  socket <- init.socket(ctx, "ZMQ_REQ")
+  ctx <- pbdZMQ::init.context()
+  socket <- pbdZMQ::init.socket(ctx, "ZMQ_REQ")
   addr <- pbdZMQ::address(addr, port)
   
   
   for (i in ntries)
   {
-    test <- tryCatch(connect.socket(socket, addr), error=identity, warning=identity, message=identity)
+    test <- tryCatch(
+      pbdZMQ::connect.socket(socket, addr), 
+      error=identity, warning=identity, message=identity
+    )
+    
     if (inherits(test, "simpleWarning"))
       Sys.sleep(sleeptime)
     else

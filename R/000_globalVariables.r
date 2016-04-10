@@ -5,5 +5,6 @@ utils::globalVariables(c(
   "visible", "should_exit",  "kill_interactive_server", "remoter_prompt_active",
   "ret", "lasterror", "withrstudioapi", "secure", "verbose", "showmsg",
   "socket", "password", "maxattempts", "status", "context", "port", 
-  "shouldwarn", "num_warnings", "prompt", "client_lasterror"
+  "shouldwarn", "num_warnings", "prompt", "client_lasterror",
+  "sendport", "recvport"
 ))

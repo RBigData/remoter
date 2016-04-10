@@ -24,7 +24,6 @@ wrap("h3");
 
 
 
-
 function captionizeImages() {
   if (!document.getElementsByTagName) return false;
   if (!document.createElement) return false;

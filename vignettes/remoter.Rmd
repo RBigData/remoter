@@ -16,6 +16,11 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
+<meta name="description" content="Guide to using the remoter package">
+<meta name="author" content="Drew Schmidt">
+<meta name="keywords" content="remoter">
+
+
 # Introduction
 
 <img src="pics/remoter.png" style="width:250px" align="right">
@@ -41,6 +46,9 @@ The development version is maintained on GitHub.  You can install this version u
 ```r
 devtools::install_github("wrathematics/remoter")
 ```
+
+
+
 
 
 
@@ -125,7 +133,6 @@ If ever in any doubt, use the `is.secure()` command from the client to see if co
 
 
 
-
 # Working with Remote Machines
 
 Before we begin, a quick word about addresses and ports.  
@@ -204,6 +211,37 @@ This will automatically launch a **remoter** server listening on port 55555, tun
 ```
 ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e "remoter::server(port=55555)"'
 ```
+
+
+## Working with Relays
+
+As of **remoter** version 0.3-1, you can now set up "relays".  These serve as "middlemen" between the client and server, and are particularly useful for resources like clusters and supercomputers where the login and compute nodes are separate.  Internally, the relay is a server that does nothing but pass messages between the client and server.
+
+The diagram below shows the basic setup for using a relay:
+
+<div class="centerfig">
+  <img
+    src="./pics/remoter_relay.png" 
+    class="captioned"
+    alt=""
+    title="Diagram for using relays with remoter">
+  <div class="caption">A diagram showing the relationship between client, relay, and server.  Image composed of icons from the <a href="http://www.opensecurityarchitecture.org/cms/library/icon-library">OSA Icon Library</a></div>
+</div>
+
+To spawn a relay, you can do:
+
+```r
+remoter::relay(addr=my.server.addr, sendport=my.server.port)
+```
+
+As the name suggests in the above example, `my.server.addr` and `sendport` represent the address and port of the server (what you would use for `addr` in `remoter::client()` if you could connect directly).  Then the client will connect to the relay, not the server (that's the whole point!) something like:
+
+```r
+remoter::client(addr=my.relay.addr, port=my.relay.port)
+```
+
+Here `my.relay.addr` is the address of the relay, and `my.relay.port` should math the argument `recvport` used when creating the relay (default is `r as.integer(formals(remoter::relay)[["recvport"]])`).
+
 
 
 

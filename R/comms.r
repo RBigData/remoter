@@ -12,7 +12,7 @@
 
 send_unsecure <- function(data, send.more=FALSE)
 {
-  send.socket(getval(socket), data=data, send.more=send.more)
+  pbdZMQ::send.socket(getval(socket), data=data, send.more=send.more)
 }
 
 
@@ -28,7 +28,7 @@ send_secure <- function(data, send.more=FALSE)
 
 receive_unsecure <- function()
 {
-  msg <- receive.socket(getval(socket))
+  msg <- pbdZMQ::receive.socket(getval(socket))
   
   if (identical(msg, magicmsg_first_connection))
   {
@@ -43,7 +43,7 @@ receive_unsecure <- function()
 
 receive_secure <- function()
 {
-  encrypted <- receive.socket(getval(socket))
+  encrypted <- pbdZMQ::receive.socket(getval(socket))
   
   if (identical(encrypted, magicmsg_first_connection))
   {

@@ -67,7 +67,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(password, password)
   set(secure, secure)
   
-  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n\n")
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
   
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
   invisible(gc())
@@ -174,9 +174,9 @@ remoter_server_eval <- function(env)
 
 remoter_init_server <- function()
 {
-  set(context, init.context())
-  set(socket, init.socket(getval(context), "ZMQ_REP"))
-  bind.socket(getval(socket), paste0("tcp://*:", getval(port)))
+  set(context, pbdZMQ::init.context())
+  set(socket, pbdZMQ::init.socket(getval(context), "ZMQ_REP"))
+  pbdZMQ::bind.socket(getval(socket), pbdZMQ::address("*", getval(port)))
   
   return(TRUE)
 }
