@@ -22,17 +22,21 @@
 #' must agree.
 #' @param prompt
 #' The prompt to use to delineate the client from the normal R REPL.
+#' @param timer
+#' Logical; should the "performance prompt", which shows timing
+#' statistics after every command, be used?
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, prompt="remoter")
+client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
 {
+  assert_that(is.flag(timer))
+  assert_that(is.string(prompt))
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port)
-  assert_that(is.string(prompt))
   
   test_connection(addr, port)
   
@@ -40,6 +44,7 @@ client <- function(addr="localhost", port=55555, prompt="remoter")
   
   set(whoami, "local")
   set(prompt, prompt)
+  set(timer, timer)
   set(port, port)
   set(remote_addr, addr)
   
@@ -170,6 +175,12 @@ remoter_repl_client <- function(env=sys.parent())
   test <- remoter_init_client()
   if (!test) return(FALSE)
   
+  timer <- getval(timer)
+  if (timer)
+    EVALFUN <- function(expr) capture.output(system.time(expr))
+  else
+    EVALFUN <- identity
+  
   while (TRUE)
   {
     input <- character(0)
@@ -178,14 +189,18 @@ remoter_repl_client <- function(env=sys.parent())
     
     while (TRUE)
     {
-      # set(visble, withVisible(invisible()))
       input <- remoter_readline(input=input)
       
-      remoter_client_send(input=input)
+      timing <- EVALFUN({
+        remoter_client_send(input=input)
+        
+        if (get.status(continuation)) next
+        
+        remoter_repl_printer()
+      })
       
-      if (get.status(continuation)) next
-      
-      remoter_repl_printer()
+      if (timer)
+        cat(paste0(timing[-1], collapse="\n"), "\n")
       
       ### Should go after all other evals and handlers
       if (get.status(should_exit))

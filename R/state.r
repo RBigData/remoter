@@ -18,6 +18,7 @@ reset_state <- function()
 {
   # options
   set(prompt, "remoter")
+  set(timer, FALSE)
   set(port, 55555)
   set(remote_addr, "localhost")
   set(password, NULL)
