@@ -4,7 +4,8 @@
 \alias{client}
 \title{Client Launcher}
 \usage{
-client(addr = "localhost", port = 55555, prompt = "remoter")
+client(addr = "localhost", port = 55555, prompt = "remoter",
+  timer = FALSE)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -14,6 +15,9 @@ the client and server.  The port value for the client and server
 must agree.}
 
 \item{prompt}{The prompt to use to delineate the client from the normal R REPL.}
+
+\item{timer}{Logical; should the "performance prompt", which shows timing
+statistics after every command, be used?}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

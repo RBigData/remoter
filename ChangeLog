@@ -1,4 +1,8 @@
-Release 0.3-1 (///):
+Release 0.3-2 (//)
+  * 
+
+Release 0.3-1 (4/17/2016):
+  * Add "timer" option to client.
   * Add "middleman" functionality via relay().
   * Add blurb about relays to the vignette.
   * Move password method with masking to getPass package.
