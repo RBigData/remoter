@@ -162,7 +162,7 @@ remoter_init_client <- function()
 
 
 
-remoter_repl_client <- function(env=sys.parent())
+remoter_repl_client <- function(env=globalenv())
 {
   if (!interactive())
     stop("You can only use the client interactively at this time")

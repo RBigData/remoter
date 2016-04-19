@@ -193,7 +193,7 @@ remoter_exit_server <- function()
 
 
 
-remoter_repl_server <- function(env=sys.parent(), initfun=remoter_init_server, evalfun=remoter_server_eval)
+remoter_repl_server <- function(env=globalenv(), initfun=remoter_init_server, evalfun=remoter_server_eval)
 {
   initfun()
   
