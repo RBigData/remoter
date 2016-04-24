@@ -72,6 +72,8 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
   invisible(gc())
   
+  eval(parse(text = "library(remoter, quietly = TRUE)"), envir = globalenv()) 
+  
   remoter_repl_server()
   remoter_exit_server()
   
