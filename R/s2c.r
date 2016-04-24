@@ -81,7 +81,7 @@ s2c <- function(object, newname, env=.GlobalEnv)
   {
     value <- remoter_receive()
     
-    if (value == err)
+    if (identical(value, err))
     {
       cat(paste0("Error: object '", name, "' not found on the server\n"))
       return(invisible(FALSE))
