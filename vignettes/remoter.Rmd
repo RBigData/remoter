@@ -4,6 +4,8 @@ author: "Drew Schmidt"
 date: "`r Sys.Date()`"
 output:
   html_document:
+    includes:
+      in_header: include/header.html
     fig_caption: true
     toc: true
     number_sections: true
@@ -15,10 +17,6 @@ vignette: >
   %\VignetteIndexEntry{Guide to the remoter Package}
   %\VignetteEngine{knitr::rmarkdown}
 ---
-
-<meta name="description" content="Guide to using the remoter package">
-<meta name="author" content="Drew Schmidt">
-<meta name="keywords" content="remoter">
 
 
 # Introduction
