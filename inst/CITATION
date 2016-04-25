@@ -1,15 +1,16 @@
-citHeader("To cite remoter in a publication use:")
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("{R} package version %s", meta$Version)
 
 citEntry(
   entry = "Misc",
   title = "{remoter}: Remote {R}: Control a Remote {R} Session from a Local One",
   author = personList(as.person("Drew Schmidt"),
                       as.person("Wei-Chen Chen")),
-  year = "2016",
-  note = "{R} Package",
-  url = "http://cran.r-project.org/package=remoter",
-  textVersion = "Schmidt, D. and Chen, W.-C. (2016) remoter: Remote R: Control a Remote R Session from a Local One. R Package, URL http://cran.r-project.org/package=remoter",
-  key = "Schmidt2016remoterpackage"
+  year = year,
+  note = note,
+  url = "https://cran.r-project.org/package=remoter",
+  textVersion = NULL,
+  key = "remoterpackage"
 )
 
 citEntry(
@@ -18,8 +19,7 @@ citEntry(
   author = personList(as.person("Drew Schmidt")),
   year = "2016",
   note = "{R} Vignette",
-  url = "http://cran.r-project.org/package=remoter",
-  textVersion = "Schmidt, D. (2016) Guide to the remoter Package. R Vignette, URL http://cran.r-project.org/package=remoter",
-  key = "Schmidt2016remotervignette"
+  url = "https://cran.r-project.org/package=remoter",
+  textVersion = NULL,
+  key = "remotervignette"
 )
-
