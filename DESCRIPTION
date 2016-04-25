@@ -11,7 +11,7 @@ Description: A set of utilities for controlling a remote R session
 License: BSD 2-clause License + file LICENSE
 Depends: 
     R (>= 3.2.0), 
-    pbdZMQ (>= 0.2-1)
+    pbdZMQ (>= 0.2-2)
 Imports: 
     stats, 
     utils, 
