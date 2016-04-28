@@ -1,5 +1,6 @@
-Release 0.3-2 (//)
+Release 0.3-2 (4/28/2016)
   * Minor internal cleanup.
+  * Improve timer behavior.
   * Fix s2c() bug.
   * Fix bug that affected attaching some package namespaces (WCC).
   * Always attach remoter namespace within the server.
