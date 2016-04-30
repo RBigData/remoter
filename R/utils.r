@@ -58,14 +58,14 @@ scrub_addr <- function(addr)
 
 
 
-validate_port <- function(port)
+validate_port <- function(port, warn=FALSE)
 {
   assert_that(is.count(port))
   assert_that(port > 1023)
   assert_that(port < 65536)
   
-  if (port < 49152)
-    warning("You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
+  if (port < 49152 && warn)
+    cat("WARNING: You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
   
   TRUE
 }

@@ -36,7 +36,7 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   assert_that(is.string(prompt))
   validate_address(addr)
   addr <- scrub_addr(addr)
-  validate_port(port)
+  validate_port(port, warn=FALSE)
   
   test_connection(addr, port)
   
