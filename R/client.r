@@ -198,11 +198,11 @@ remoter_repl_client <- function(env=globalenv())
       
       timing <- EVALFUN({
         remoter_client_send(input=input)
-        
-        if (get.status(continuation)) next
-        
-        remoter_repl_printer()
       })
+      
+      if (get.status(continuation)) next
+      
+      remoter_repl_printer()
       
       if (timer)
         cat(paste0(timing[-1], collapse="\n"), "\n")
