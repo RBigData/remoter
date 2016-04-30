@@ -104,6 +104,11 @@ remoter_sanitize <- function(inputs)
       remoter_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
     }
+    else if (grepl(x=input, pattern="^(\\s+)?debug\\(", perl=TRUE))
+    {
+      remoter_client_stop("debug mode is currently not supported.")
+      inputs[i] <- "invisible()"
+    }
     else if (grepl(x=input, pattern="^(\\s+)?warnings\\(", perl=TRUE))
     {
       set.status(shouldwarn, TRUE)
