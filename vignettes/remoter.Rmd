@@ -39,11 +39,15 @@ You can install the stable version from CRAN using the usual `install.packages()
 install.packages("remoter")
 ```
 
-The development version is maintained on GitHub.  You can install this version using the `devtools` package:
+The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
 
 ```r
-devtools::install_github("wrathematics/remoter")
+### Pick your preference
+devtools::install_github("RBigData/remoter")
+ghit::install_github("RBigData/remoter")
+remotes::install_github("RBigData/remoter")
 ```
+
 
 
 
