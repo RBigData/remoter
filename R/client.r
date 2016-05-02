@@ -36,7 +36,7 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   assert_that(is.string(prompt))
   validate_address(addr)
   addr <- scrub_addr(addr)
-  validate_port(port)
+  validate_port(port, warn=FALSE)
   
   test_connection(addr, port)
   
@@ -102,6 +102,11 @@ remoter_sanitize <- function(inputs)
     else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
     {
       remoter_client_stop("Reading help files from the server is currently not supported.")
+      inputs[i] <- "invisible()"
+    }
+    else if (grepl(x=input, pattern="^(\\s+)?debug\\(", perl=TRUE))
+    {
+      remoter_client_stop("debug mode is currently not supported.")
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^(\\s+)?warnings\\(", perl=TRUE))
@@ -193,11 +198,11 @@ remoter_repl_client <- function(env=globalenv())
       
       timing <- EVALFUN({
         remoter_client_send(input=input)
-        
-        if (get.status(continuation)) next
-        
-        remoter_repl_printer()
       })
+      
+      if (get.status(continuation)) next
+      
+      remoter_repl_printer()
       
       if (timer)
         cat(paste0(timing[-1], collapse="\n"), "\n")

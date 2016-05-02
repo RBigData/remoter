@@ -40,7 +40,7 @@
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE)
 {
-  validate_port(port)
+  validate_port(port, warn=TRUE)
   assert_that(is.null(password) || is.string(password))
   assert_that(is.infinite(maxretry) || is.count(maxretry))
   assert_that(is.flag(secure))
