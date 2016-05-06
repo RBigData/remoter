@@ -118,9 +118,9 @@ remoter_sanitize <- function(inputs)
     }
     else if (input == "")
       inputs[i] <- "invisible()"
-    else if (grepl(x=input, pattern="^(\\s+)?(remoter::client|client)\\(", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?(remoter::)?(client|server|relay)\\(", perl=TRUE))
     {
-      remoter_client_stop("can not call client from inside the client")
+      remoter_client_stop("can not spawn client/server/relay from inside the client")
       inputs[i] <- "invisible()"
     }
   }
