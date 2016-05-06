@@ -85,6 +85,7 @@ remoter_readline <- function(input)
 
 
 
+### TODO use a proper parser...
 remoter_sanitize <- function(inputs)
 {
   for (i in 1:length(inputs))
@@ -117,6 +118,11 @@ remoter_sanitize <- function(inputs)
     }
     else if (input == "")
       inputs[i] <- "invisible()"
+    else if (grepl(x=input, pattern="^(\\s+)?(remoter::)?(client|server|relay)\\(", perl=TRUE))
+    {
+      remoter_client_stop("can not spawn client/server/relay from inside the client")
+      inputs[i] <- "invisible()"
+    }
   }
   
   return(inputs)
@@ -138,6 +144,14 @@ remoter_client_send <- function(input)
   else if (all(grepl(x=input, pattern="^(\\s+)?rmc\\(", perl=TRUE)))
     eval(parse(text=input))
   else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
+    eval(parse(text=input))
+  else if (all(grepl(x=input, pattern="^(\\s+)?dev.offc\\(", perl=TRUE)))
+    eval(parse(text=input))
+  else if (all(grepl(x=input, pattern="^(\\s+)?dev.newc\\(", perl=TRUE)))
+    eval(parse(text=input))
+  else if (all(grepl(x=input, pattern="^(\\s+)?dev.curc\\(", perl=TRUE)))
+    eval(parse(text=input))
+  else if (all(grepl(x=input, pattern="^(\\s+)?rrpng\\(", perl=TRUE)))
     eval(parse(text=input))
   
   set(status, remoter_receive())
