@@ -85,6 +85,7 @@ remoter_readline <- function(input)
 
 
 
+### TODO use a proper parser...
 remoter_sanitize <- function(inputs)
 {
   for (i in 1:length(inputs))
@@ -117,6 +118,11 @@ remoter_sanitize <- function(inputs)
     }
     else if (input == "")
       inputs[i] <- "invisible()"
+    else if (grepl(x=input, pattern="^(\\s+)?(remoter::client|client)\\(", perl=TRUE))
+    {
+      remoter_client_stop("can not call client from inside the client")
+      inputs[i] <- "invisible()"
+    }
   }
   
   return(inputs)
