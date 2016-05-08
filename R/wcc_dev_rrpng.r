@@ -24,6 +24,10 @@
 #' background colour as in \code{grDevices::png()}
 #' @param res
 #' resolution as in \code{grDevices::png()}
+#' @param interpolate
+#' if render the image with interpolation as in
+#' \code{grDevices::rasterImage()}. Default is changed to FALSE. It gains a few
+#' readiness in low res or small images when this argument is TRUE.
 #' @param ...
 #' additional arguments as in \code{grDevices::png()}
 #'  
@@ -58,8 +62,8 @@
 
 #' @export
 rrpng <- function(expr, filename = tempfile(fileext = "_rr.png"),
-                  width = 480, height = 480, units = "px", pointsize = 12,
-                  bg = "white", res = NA, ...){
+                  width = 590, height = 590, units = "px", pointsize = 12,
+                  bg = "white", res = 120, interpolate = FALSE, ...){
   if (iam("remote"))
   {
     grDevices::png(filename = filename, width = width, height = height,
@@ -108,7 +112,8 @@ rrpng <- function(expr, filename = tempfile(fileext = "_rr.png"),
       graphics::plot(NULL, NULL, type = "n", axes = FALSE,
                      main = "", xlab = "", ylab = "",
                      xlim = c(0, img.dim[1]), ylim = c(0, img.dim[2]))
-      graphics::rasterImage(img.r, 0, 0, img.dim[1], img.dim[2])
+      graphics::rasterImage(img.r, 0, 0, img.dim[1], img.dim[2],
+                            interpolate = interpolate)
     }
     else
     {

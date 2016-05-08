@@ -4,9 +4,9 @@
 \alias{rrpng}
 \title{rrpng}
 \usage{
-rrpng(expr, filename = tempfile(fileext = "_rr.png"), width = 480,
-  height = 480, units = "px", pointsize = 12, bg = "white", res = NA,
-  ...)
+rrpng(expr, filename = tempfile(fileext = "_rr.png"), width = 590,
+  height = 590, units = "px", pointsize = 12, bg = "white", res = 120,
+  interpolate = FALSE, ...)
 }
 \arguments{
 \item{expr}{An expression or a function generating a plot. This checks in the
@@ -27,6 +27,10 @@ eval'd at \code{parent.frame()}.}
 \item{bg}{background colour as in \code{grDevices::png()}}
 
 \item{res}{resolution as in \code{grDevices::png()}}
+
+\item{interpolate}{if render the image with interpolation as in
+\code{grDevices::rasterImage()}. Default is changed to FALSE. It gains a few
+readiness in low res or small images when this argument is TRUE.}
 
 \item{...}{additional arguments as in \code{grDevices::png()}}
 }
