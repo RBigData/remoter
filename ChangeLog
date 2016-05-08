@@ -1,6 +1,8 @@
 Release 0.3-3 (//):
   * Fix warning precedence for small port values.
   * Fix client timer printing.
+  * Add rrDevices functions.
+  * Add rrpng().
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

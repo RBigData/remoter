@@ -17,7 +17,10 @@ Imports:
     utils, 
     tools, 
     assertthat (>= 0.1),
-    getPass (>= 0.1-0)
+    getPass (>= 0.1-0),
+    grDevices,
+    graphics,
+    png (>= 0.1-7)
 Suggests: 
     knitr, 
     rmarkdown, 
