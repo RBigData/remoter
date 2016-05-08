@@ -18,9 +18,9 @@ Imports:
     tools, 
     assertthat (>= 0.1),
     getPass (>= 0.1-0),
-    graphics,
     grDevices,
-    png (>= 2.9.0)
+    graphics,
+    png (>= 0.1-7)
 Suggests: 
     knitr, 
     rmarkdown, 

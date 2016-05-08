@@ -4,12 +4,15 @@
 \alias{rrpng}
 \title{rrpng}
 \usage{
-rrpng(func = NULL, filename = tempfile(fileext = "_rr.png"), width = 480,
+rrpng(expr, filename = tempfile(fileext = "_rr.png"), width = 480,
   height = 480, units = "px", pointsize = 12, bg = "white", res = NA,
   ...)
 }
 \arguments{
-\item{func}{A function generates a plot}
+\item{expr}{An expression or a function generating a plot. This checks in the
+following orders: function, ggplot, expression. The function and ggplot
+are eval'd within the \code{rrpng()}, while the expression is
+eval'd at \code{parent.frame()}.}
 
 \item{filename}{A temporary file to save the plot on server}
 
@@ -24,6 +27,8 @@ rrpng(func = NULL, filename = tempfile(fileext = "_rr.png"), width = 480,
 \item{bg}{background colour as in \code{grDevices::png()}}
 
 \item{res}{resolution as in \code{grDevices::png()}}
+
+\item{...}{additional arguments as in \code{grDevices::png()}}
 }
 \value{
 A local plot
@@ -36,18 +41,28 @@ Remote R PNG Device
 }
 \examples{
 \dontrun{
-### Prompts are listed to clarify when something is eval'd locally vs remotely
-> library(remoter)
+### Prompts are listed to clarify when something is eval'd locally vs
+### remotely
+> library(remoter, quietly = TRUE)
 > client()
-remoter> a <- function() plot(1:5)
-remoter> rrpng(a)
-remoter> dev.newc()
+
+remoter> rrpng(plot(1:5))
 remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
-remoter> rrpng(b)
-remoter> dev.offc(2)
-remoter> dev.offc(3)
+remoter> rrpng(b, bg = "transparent")
+
+remoter> library(ggplot2)
+remoter> g <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length)) +
+remoter+      geom_point(aes(colour = Species, shape = Species))
+remoter> rrpng(g)
+remoter> dev.newc(width = 6, height = 4)
+remoter> rrpng(g, width = 6 * 72, height = 4 * 72, bg = "transparent")
+
 remoter> q()
+>
 }
 
+}
+\seealso{
+\code{\link{rrDevices}}
 }
 

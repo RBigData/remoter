@@ -1,47 +1,104 @@
-#' rrDevices
+#' Remote R Graphic Devices
 #' 
 #' Remote R Graphic Device Controling Functions
 #' 
 #' @description
+#'
 #' Functions for controlling graphic device locally
 #'
-#' \code{dev.newc()} locally eval \code{grDevices::dev.new()}.
+#' \code{dev.curc()} locally evals \code{grDevices::dev.cur()}.
+#'
+#' \code{dev.listc()} locally evals \code{grDevices::dev.list()}.
+#'
+#' \code{dev.nextc()} locally evals \code{grDevices::dev.next()}.
+#'
+#' \code{dev.prevc()} locally evals \code{grDevices::dev.prev()}.
 #'
 #' \code{dev.offc()} locally evals \code{grDevices::dev.off()}.
 #'
-#' \code{dev.curc()} locally evals \code{grDevices::dev.cur()}.
+#' \code{dev.setc()} locally evals \code{grDevices::dev.set()}.
+#'
+#' \code{dev.newc()} locally eval \code{grDevices::dev.new()}.
+#'
+#' \code{dev.sizec()} locally evals \code{grDevices::dev.size()}.
+#'
 #'
 #' @param which
 #' An integer specifying a device number as in \code{grDevices::dev.off()}
 #' @param ...
 #' arguments to be passed to the device selected as in
 #'  \code{grDevices::dev.new()}
+#' @param noRstudioGD
+#' as in \code{grDevices::dev.new()}
+#' @param units
+#' as in \code{grDevices::dev.size()}
 #' 
+#' @seealso \code{\link{rrpng}()}
+#'
 #' @examples
 #' \dontrun{
-#' ### Prompts are listed to clarify when something is eval'd locally vs remotely
+#' ### Prompts are listed to clarify when something is eval'd locally vs
+#' ### remotely
 #' > library(remoter, quietly = TRUE)
 #' > client()
-#' remoter> a <- function() plot(1:5)
-#' remoter> rrpng(a)
-#' remoter> dev.newc()
-#' remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
-#' remoter> rrpng(b)
+#'
+#' remoter> rrpng(plot(1:5))
+#' remoter> dev.newc(width = 6, height = 4)
+#' remoter> a <- function() plot(iris$Sepal.Length, iris$Petal.Length)
+#' remoter> rrpng(a, width = 6 * 72, height = 4 * 72)
+#'
 #' remoter> dev.curc()
-#' remoter> dev.offc(2)
-#' remoter> dev.offc(3)
+#' remoter> dev.listc()
+#' remoter> dev.offc()
+#'
 #' remoter> q()
+#' >
 #' }
 #' 
 #' @rdname rrDevices
+#' @name rrDevices
+NULL
 
+
+#' @rdname rrDevices
 #' @export
-dev.offc <- function(which = dev.cur()){
+dev.curc <- function(){
+  evalc(grDevices::dev.cur())
+}
+
+#' @rdname rrDevices
+#' @export
+dev.listc <- function(){
+  evalc(grDevices::dev.list())
+}
+
+#' @rdname rrDevices
+#' @export
+dev.nextc <- function(which = grDevices::dev.cur()){
+  evalc(grDevices::dev.next(which = which))
+}
+
+#' @rdname rrDevices
+#' @export
+dev.prevc <- function(which = grDevices::dev.cur()){
+  evalc(grDevices::dev.prev(which = which))
+}
+
+#' @rdname rrDevices
+#' @export
+dev.offc <- function(which = grDevices::dev.cur()){
   if(iam("local")){
     tryCatch(grDevices::dev.off(which = which))
   }
 }
 
+#' @rdname rrDevices
+#' @export
+dev.setc <- function(which = grDevices::dev.cur()){
+  evalc(grDevices::dev.set(which = which))
+}
+
+#' @rdname rrDevices
 #' @export
 dev.newc <- function(..., noRstudioGD = FALSE){
   if(iam("local")){
@@ -49,7 +106,16 @@ dev.newc <- function(..., noRstudioGD = FALSE){
   }
 }
 
+#' @rdname rrDevices
 #' @export
-dev.curc <- function(){
-  evalc(grDevices::dev.cur())
+dev.sizec <- function(units = c("in", "cm", "px")){
+  evalc(grDevices::dev.size(units = units))
 }
+
+### For windows only?
+# bringToTopc <- function(which = grDevices::dev.cur(), stay = FALSE){
+#   if(iam("local")){
+#     tryCatch(grDevices::bringToTop(which = which, stay = stay))
+#   }
+# }
+
