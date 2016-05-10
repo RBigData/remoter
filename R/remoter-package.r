@@ -16,6 +16,10 @@
 #' @importFrom utils capture.output globalVariables packageVersion
 #' @importFrom tools file_path_as_absolute
 #' @importFrom getPass getPass
+#' @importFrom grDevices dev.cur dev.list dev.next dev.prev dev.off dev.set
+#'             dev.new dev.size png as.raster
+#' @importFrom graphics plot.new par plot rasterImage
+#' @importFrom png readPNG
 #' 
 #' @docType package
 #' @keywords package
