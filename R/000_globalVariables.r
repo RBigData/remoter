@@ -6,5 +6,5 @@ utils::globalVariables(c(
   "ret", "lasterror", "withrstudioapi", "secure", "verbose", "showmsg",
   "socket", "password", "maxattempts", "status", "context", "port", 
   "shouldwarn", "num_warnings", "prompt", "client_lasterror",
-  "sendport", "recvport", "timer"
+  "sendport", "recvport", "timer", ".rDevices"
 ))
