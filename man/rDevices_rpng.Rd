@@ -64,8 +64,11 @@ Remote R PNG Device
 > library(remoter, quietly = TRUE)
 > client()
 
-remoter> rpng(width = 400, height = 300)
 remoter> plot(1:5)
+remoter> dev.off()
+
+remoter> rpng()
+remoter> plot(iris$Sepal.Length, iris$Petal.Length)
 remoter> dev.off()
 
 remoter> library(ggplot2)
