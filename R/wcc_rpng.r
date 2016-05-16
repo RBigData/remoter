@@ -53,17 +53,24 @@
 #' remoter> dev.off()
 #'
 #' remoter> library(ggplot2)
-#' remoter> g <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
-#' remoter+             color = Species)) +
-#' remoter+      geom_point(aes(shape = Species))
+#' remoter> g1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
+#' remoter+              color = Species)) +
+#' remoter+       geom_point(aes(shape = Species))
 #' remoter> rpng()
-#' remoter> print(g)
+#' remoter> print(g1)
 #' remoter> dev.off()
 #'
-#' remoter> g <- g + geom_smooth(method = "lm")
+#' remoter> g2 <- g1 + geom_smooth(method = "lm")
 #' remoter> rpng(bg = "transparent")
-#' remoter> g
+#' remoter> g2
 #' remoter> dev.off()
+#'
+#' remoter> rpng.new(plot(1:5))
+#'
+#' remoter> rpng.new(g1)
+#'
+#' remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
+#' remoter> rpng.new(b)
 #'
 #' remoter> q()
 #' >
@@ -74,15 +81,21 @@
 NULL
 
 #' @export
-rpng <- function(filename = NULL,
+rpng <- function(filename = tempfile(fileext = "_r.png"),
                  width = 590, height = 590, units = "px", pointsize = 12,
-                 bg = "white", res = 120, interpolate = FALSE, ...)
+                 bg = "white", res = 120, interpolate = TRUE, ...)
 {
-  ### Use NULL to delay opening device locally.
-  ### Use rpng.off() or dev.off() to open device locally.
-  rpng.new(NULL, filename = filename, width = width, height = height,
-           units = units, pointsize = pointsize, bg = bg, res = res,
-           interpolate = interpolate, ...)
+  if (!is.character(filename))
+    cat("filename should be in character.")
+  else
+  {
+    ### Use NULL to delay opening a local device automatically
+    rpng.new(NULL, filename = filename, width = width, height = height,
+             units = units, pointsize = pointsize, bg = bg, res = res,
+             interpolate = interpolate, ...)
+    ### Use rpng.off() or dev.off() to close the remote device and
+    ### open the local device manually.
+  }
 
   invisible()
 }

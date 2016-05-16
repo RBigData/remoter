@@ -8,7 +8,7 @@
 \title{rpng}
 \usage{
 rpng.new(expr, filename = NULL, width = 590, height = 590, units = "px",
-  pointsize = 12, bg = "white", res = 120, interpolate = FALSE, ...)
+  pointsize = 12, bg = "white", res = 120, interpolate = TRUE, ...)
 
 rpng.off(which = grDevices::dev.cur())
 
@@ -16,7 +16,7 @@ dev.off(which = grDevices::dev.cur())
 }
 \arguments{
 \item{expr}{An expression or a function generating a plot. This checks in the
-following orders: function, ggplot, expression. The function and ggplot
+following orders: expression or ggplot. The ggplot
 are eval'd within the \code{rpng.new()}, while the expression is
 eval'd at \code{parent.frame()}.}
 
@@ -72,17 +72,24 @@ remoter> plot(iris$Sepal.Length, iris$Petal.Length)
 remoter> dev.off()
 
 remoter> library(ggplot2)
-remoter> g <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
-remoter+             color = Species)) +
-remoter+      geom_point(aes(shape = Species))
+remoter> g1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
+remoter+              color = Species)) +
+remoter+       geom_point(aes(shape = Species))
 remoter> rpng()
-remoter> print(g)
+remoter> print(g1)
 remoter> dev.off()
 
-remoter> g <- g + geom_smooth(method = "lm")
+remoter> g2 <- g1 + geom_smooth(method = "lm")
 remoter> rpng(bg = "transparent")
-remoter> g
+remoter> g2
 remoter> dev.off()
+
+remoter> rpng.new(plot(1:5))
+
+remoter> rpng.new(g1)
+
+remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
+remoter> rpng.new(b)
 
 remoter> q()
 >
