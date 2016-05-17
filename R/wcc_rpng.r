@@ -82,8 +82,8 @@ NULL
 
 #' @export
 rpng <- function(filename = tempfile(fileext = "_r.png"),
-                 width = 590, height = 590, units = "px", pointsize = 12,
-                 bg = "white", res = 120, interpolate = TRUE, ...)
+                 width = 587, height = 586, units = "px", pointsize = 12,
+                 bg = "white", res = 96, interpolate = FALSE, ...)
 {
   if (!is.character(filename))
     cat("filename should be in character.")

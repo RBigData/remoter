@@ -7,8 +7,8 @@
 #' @rdname rDevices_rpng
 #' @export
 rpng.new <- function(expr, filename = NULL,
-                     width = 590, height = 590, units = "px", pointsize = 12,
-                     bg = "white", res = 120, interpolate = TRUE, ...)
+                     width = 587, height = 586, units = "px", pointsize = 12,
+                     bg = "white", res = 96, interpolate = FALSE, ...)
 {
   if (iam("remote"))
   {

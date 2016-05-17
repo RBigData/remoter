@@ -7,8 +7,8 @@
 \alias{rpng.off}
 \title{rpng}
 \usage{
-rpng.new(expr, filename = NULL, width = 590, height = 590, units = "px",
-  pointsize = 12, bg = "white", res = 120, interpolate = TRUE, ...)
+rpng.new(expr, filename = NULL, width = 587, height = 586, units = "px",
+  pointsize = 12, bg = "white", res = 96, interpolate = FALSE, ...)
 
 rpng.off(which = grDevices::dev.cur())
 
