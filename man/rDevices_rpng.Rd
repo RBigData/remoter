@@ -79,9 +79,11 @@ remoter> rpng()
 remoter> print(g1)
 remoter> dev.off()
 
-remoter> g2 <- g1 + geom_smooth(method = "lm")
 remoter> rpng(bg = "transparent")
-remoter> g2
+remoter> g1 + geom_smooth(method = "lm")
+remoter> dev.off()
+
+remoter> g1 + stat_smooth(span = 0.9)
 remoter> dev.off()
 
 remoter> rpng.new(plot(1:5))

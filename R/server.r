@@ -79,6 +79,10 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   ### Set rpng device as the default.
   if(userpng)
     options(device = remoter::rpng)
+
+  ### Export print.ggplot2() manually.
+  ### This does not work as stupid as it should.
+  # eval(parse(text = "assign('print.ggplot', remoter:::print.ggplot, envir = .GlobalEnv)"))
   
   remoter_repl_server()
   remoter_exit_server()
