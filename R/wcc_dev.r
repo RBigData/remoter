@@ -60,12 +60,15 @@
 NULL
 
 
+
 #' @rdname rDevices
 #' @export
 dev.curc <- function()
 {
   evalc(grDevices::dev.cur())
 }
+
+
 
 #' @rdname rDevices
 #' @export
@@ -74,6 +77,8 @@ dev.listc <- function()
   evalc(grDevices::dev.list())
 }
 
+
+
 #' @rdname rDevices
 #' @export
 dev.nextc <- function(which = grDevices::dev.cur())
@@ -81,12 +86,16 @@ dev.nextc <- function(which = grDevices::dev.cur())
   evalc(grDevices::dev.next(which = which))
 }
 
+
+
 #' @rdname rDevices
 #' @export
 dev.prevc <- function(which = grDevices::dev.cur())
 {
   evalc(grDevices::dev.prev(which = which))
 }
+
+
 
 #' @rdname rDevices
 #' @export
@@ -96,12 +105,16 @@ dev.offc <- function(which = grDevices::dev.cur())
     tryCatch(grDevices::dev.off(which = which))
 }
 
+
+
 #' @rdname rDevices
 #' @export
 dev.setc <- function(which = grDevices::dev.cur())
 {
   evalc(grDevices::dev.set(which = which))
 }
+
+
 
 #' @rdname rDevices
 #' @export
@@ -111,12 +124,16 @@ dev.newc <- function(..., noRstudioGD = FALSE)
     tryCatch(grDevices::dev.new(..., noRstudioGD = noRstudioGD))
 }
 
+
+
 #' @rdname rDevices
 #' @export
 dev.sizec <- function(units = c("in", "cm", "px"))
 {
   evalc(grDevices::dev.size(units = units))
 }
+
+
 
 ### For windows only?
 # bringToTopc <- function(which = grDevices::dev.cur(), stay = FALSE){

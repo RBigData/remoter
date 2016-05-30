@@ -80,10 +80,6 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   if(userpng)
     options(device = remoter::rpng)
 
-  ### Export print.ggplot2() manually.
-  ### This does not work as stupid as it should.
-  # eval(parse(text = "assign('print.ggplot', remoter:::print.ggplot, envir = .GlobalEnv)"))
-  
   remoter_repl_server()
   remoter_exit_server()
   
@@ -145,6 +141,7 @@ remoter_server_eval <- function(env)
 {
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
+  set.status(need_auto_rpng_off, FALSE)
   
   msg <- remoter_receive()
   
@@ -160,7 +157,7 @@ remoter_server_eval <- function(env)
   }
   
   msg <- remoter_eval_filter_server(msg=msg)
-  
+
   ret <- 
   withCallingHandlers(
     tryCatch({
@@ -168,7 +165,7 @@ remoter_server_eval <- function(env)
       }, interrupt=identity, error=remoter_error
     ), warning=remoter_warning
   )
-  
+
   if (!is.null(ret))
   {
     set.status(visible, ret$visible)
@@ -177,8 +174,22 @@ remoter_server_eval <- function(env)
       set.status(ret, NULL)
     else
       set.status(ret, utils::capture.output(ret$value))
+
+    ### The output is an image from a S3 method via print.ggplot().
+    if (ret$visible && is.gg.ggplot(ret$value))
+    {
+      ret$value <- rpng.off()
+      ret$visible <- FALSE
+    }
+
+    ### The output is an image from dev.off().
+    if (get.status(need_auto_rpng_off))
+    {
+      set.status(ret, ret$value)
+      set.status(visible, ret$visible)
+    }
   }
-  
+
   remoter_send(getval(status))
 }
 

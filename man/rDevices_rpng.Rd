@@ -8,7 +8,7 @@
 \title{rpng}
 \usage{
 rpng.new(expr, filename = NULL, width = 587, height = 586, units = "px",
-  pointsize = 12, bg = "white", res = 96, interpolate = FALSE, ...)
+  pointsize = 12, bg = "white", res = 96, ...)
 
 rpng.off(which = grDevices::dev.cur())
 
@@ -34,10 +34,6 @@ eval'd at \code{parent.frame()}.}
 
 \item{res}{resolution as in \code{grDevices::png()}}
 
-\item{interpolate}{if render the image with interpolation as in
-\code{grDevices::rasterImage()}. Default is changed to FALSE. It gains a few
-readiness in low res or small images when this argument is TRUE.}
-
 \item{...}{additional arguments as in \code{grDevices::png()}}
 
 \item{which}{An integer specifying a device number as in \code{grDevices::dev.off()}}
@@ -61,15 +57,16 @@ Remote R PNG Device
 \dontrun{
 ### Prompts are listed to clarify when something is eval'd locally vs
 ### remotely
-> library(remoter, quietly = TRUE)
-> client()
+> # suppressMessages(library(remoter, quietly = TRUE))
+> # client()
+> remoter::client("192.168.56.101")
 
 remoter> plot(1:5)
-remoter> dev.off()
+remoter> rpng.off()
 
 remoter> rpng()
 remoter> plot(iris$Sepal.Length, iris$Petal.Length)
-remoter> dev.off()
+remoter> rpng.off()
 
 remoter> library(ggplot2)
 remoter> g1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
@@ -77,14 +74,9 @@ remoter+              color = Species)) +
 remoter+       geom_point(aes(shape = Species))
 remoter> rpng()
 remoter> print(g1)
-remoter> dev.off()
+remoter> rpng.off()
 
-remoter> rpng(bg = "transparent")
 remoter> g1 + geom_smooth(method = "lm")
-remoter> dev.off()
-
-remoter> g1 + stat_smooth(span = 0.9)
-remoter> dev.off()
 
 remoter> rpng.new(plot(1:5))
 

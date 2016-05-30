@@ -161,16 +161,13 @@ remoter_client_send <- function(input)
     eval(parse(text=input))
   else if (all(grepl(x=input, pattern="^(\\s+)?dev.sizec\\(", perl=TRUE)))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?rpng\\(", perl=TRUE)))
-    eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?rpng.new\\(", perl=TRUE)))
-    eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?rpng.off\\(", perl=TRUE)))
-    eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.off\\(", perl=TRUE)))
-    eval(parse(text=input))
   
   set(status, remoter_receive())
+
+  ### Because rpng.off() needs a call at the client to display image
+  ### on local screen.
+  if (get.status(need_auto_rpng_off))
+    auto_rpng_off_local(get.status(ret))
   
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()

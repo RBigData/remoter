@@ -28,10 +28,6 @@
 #' background colour as in \code{grDevices::png()}
 #' @param res
 #' resolution as in \code{grDevices::png()}
-#' @param interpolate
-#' if render the image with interpolation as in
-#' \code{grDevices::rasterImage()}. Default is changed to FALSE. It gains a few
-#' readiness in low res or small images when this argument is TRUE.
 #' @param ...
 #' additional arguments as in \code{grDevices::png()}
 #'  
@@ -42,15 +38,16 @@
 #' \dontrun{
 #' ### Prompts are listed to clarify when something is eval'd locally vs
 #' ### remotely
-#' > library(remoter, quietly = TRUE)
-#' > client()
+#' > # suppressMessages(library(remoter, quietly = TRUE))
+#' > # client()
+#' > remoter::client("192.168.56.101")
 #'
 #' remoter> plot(1:5)
-#' remoter> dev.off()
+#' remoter> rpng.off()
 #'
 #' remoter> rpng()
 #' remoter> plot(iris$Sepal.Length, iris$Petal.Length)
-#' remoter> dev.off()
+#' remoter> rpng.off()
 #'
 #' remoter> library(ggplot2)
 #' remoter> g1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
@@ -58,14 +55,9 @@
 #' remoter+       geom_point(aes(shape = Species))
 #' remoter> rpng()
 #' remoter> print(g1)
-#' remoter> dev.off()
+#' remoter> rpng.off()
 #'
-#' remoter> rpng(bg = "transparent")
 #' remoter> g1 + geom_smooth(method = "lm")
-#' remoter> dev.off()
-#'
-#' remoter> g1 + stat_smooth(span = 0.9)
-#' remoter> dev.off()
 #'
 #' remoter> rpng.new(plot(1:5))
 #'
@@ -85,7 +77,7 @@ NULL
 #' @export
 rpng <- function(filename = tempfile(fileext = "_r.png"),
                  width = 587, height = 586, units = "px", pointsize = 12,
-                 bg = "white", res = 96, interpolate = FALSE, ...)
+                 bg = "white", res = 96, ...)
 {
   if (!is.character(filename))
     cat("filename should be in character.")
@@ -94,8 +86,8 @@ rpng <- function(filename = tempfile(fileext = "_r.png"),
     ### Use NULL to delay opening a local device automatically
     rpng.new(NULL, filename = filename, width = width, height = height,
              units = units, pointsize = pointsize, bg = bg, res = res,
-             interpolate = interpolate, ...)
-    ### Use rpng.off() or dev.off() to close the remote device and
+             ...)
+    ### Use rpng.off() to close the remote device and
     ### open the local device manually.
   }
 
