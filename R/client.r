@@ -100,7 +100,8 @@ remoter_sanitize <- function(inputs)
     }
     else if (grepl(x=input, pattern="^(\\s+)?geterrmessage\\(", perl=TRUE))
       inputs[i] <- getval(client_lasterror)
-    else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
+    # else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?)", perl=TRUE))
     {
       remoter_client_stop("Reading help files from the server is currently not supported.")
       inputs[i] <- "invisible()"
@@ -162,13 +163,17 @@ remoter_client_send <- function(input)
   else if (all(grepl(x=input, pattern="^(\\s+)?dev.sizec\\(", perl=TRUE)))
     eval(parse(text=input))
   
+  ### Update status by the server's results.
   set(status, remoter_receive())
 
-  ### Because rpng.off() needs a call at the client to display image
-  ### on local screen.
+  ### Because rpng.off() needs a call at the client to display image.
   if (get.status(need_auto_rpng_off))
     auto_rpng_off_local(get.status(ret))
-  
+
+  ### Because rhelp() needs a call at the client to cast help message.
+  if (get.status(need_auto_rhelp_on))
+    auto_rhelp_on_local(get.status(ret))
+
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()
   if (all(grepl(x=input, pattern="^(\\s+)?exit\\(", perl=TRUE)))

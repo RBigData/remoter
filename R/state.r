@@ -56,7 +56,8 @@ reset_state <- function()
     remoter_prompt_active = FALSE,
     should_exit       = FALSE,
     continuation      = FALSE,
-    need_auto_rpng_off = FALSE
+    need_auto_rpng_off = FALSE,
+    need_auto_rhelp_on = FALSE
   )
   
   invisible()

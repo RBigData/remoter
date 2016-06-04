@@ -30,7 +30,9 @@ NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
     email="wrathematics@gmail.com"),
-    person("Wei-Chen", "Chen", role="aut"))
+    person("Wei-Chen", "Chen", role="aut"),
+    person("R Core team", role = "ctb", comment = "some functions are
+            modified from the R source code"))
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>

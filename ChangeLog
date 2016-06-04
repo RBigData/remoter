@@ -5,6 +5,8 @@ Release 0.3-3 (//):
   * Add rpng() and its utility functions.
   * Add need_auto_rpng_off option to the status to inform client.
   * Add ggplot2 support including print.ggplot() without dependency.
+  * Add rhelp() and its utility functions.
+  * Add need_auto_rhelp_on option to the status to inform client.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

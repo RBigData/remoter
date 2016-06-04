@@ -142,6 +142,7 @@ remoter_server_eval <- function(env)
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   set.status(need_auto_rpng_off, FALSE)
+  set.status(need_auto_rhelp_on, FALSE)
   
   msg <- remoter_receive()
   
@@ -187,6 +188,13 @@ remoter_server_eval <- function(env)
     {
       set.status(ret, ret$value)
       set.status(visible, ret$visible)
+    }
+
+    ### The output is an Rd from help().
+    if (get.status(need_auto_rhelp_on))
+    {
+      set.status(ret, ret$value)
+      set.status(visible, FALSE)
     }
   }
 
