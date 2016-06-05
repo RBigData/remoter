@@ -7,8 +7,7 @@
 \usage{
 help(topic, package = NULL, lib.loc = NULL,
   verbose = getOption("verbose"),
-  try.all.packages = getOption("help.try.all.packages"),
-  help_type = getOption("help_type"))
+  try.all.packages = getOption("help.try.all.packages"))
 }
 \arguments{
 \item{topic}{A topic as in \code{utils::help()}}
@@ -38,8 +37,14 @@ Remote R Help System
 > remoter::client("192.168.56.101")
 
 remoter> rhelp("plot")
+remoter> rhelp(package = "remoter")
+remoter> rhelp("plot", package = "remoter")
+
+remoter> rhelp("dev.off")
+remoter> rhelp("dev.off", package = "remoter")
+remoter> rhelp("dev.off", package = "grDevices")
+
 remoter> help("par")
-remoter> ?help
 
 remoter> q()
 >

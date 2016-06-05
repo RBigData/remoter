@@ -27,7 +27,12 @@
 #' > remoter::client("192.168.56.101")
 #'
 #' remoter> rhelp("plot")
-#' remoter> ?rhelp
+#' remoter> rhelp(package = "remoter")
+#' remoter> rhelp("plot", package = "remoter")
+#'
+#' remoter> rhelp("dev.off")
+#' remoter> rhelp("dev.off", package = "remoter")
+#' remoter> rhelp("dev.off", package = "grDevices")
 #'
 #' remoter> help("par")
 #'
@@ -42,16 +47,46 @@ NULL
 #' @export
 rhelp <- function(topic, package = NULL, lib.loc = NULL,
                   verbose = getOption("verbose"),
-                  try.all.packages = getOption("help.try.all.packages"),
-                  help_type = getOption("help_type"))
+                  try.all.packages = getOption("help.try.all.packages"))
 {
-  set.status(need_auto_rhelp_on, TRUE)
-  ret <- utils::help(topic, lib.loc = lib.loc,
-                     verbose = verbose, try.all.packages = try.all.packages,
-                     help_type = help_type)
-  Rd <- print.rhelp_files_with_topic(ret)
+  ### The next are very stupid but works.
+  if (missing(topic))
+    txt.head <- "utils::help("
+  else
+    txt.head <- paste0("utils::help('", as.character(topic), "', ")
 
-  ### Visible is necessary because of retmoter_server_eval().
+  if (is.null(package))
+    package <- "NULL"
+  else
+    package <- paste0("'", as.character(package), "'")
+
+  if (is.null(lib.loc))
+    lib.loc <- "NULL"
+  else
+    lib.loc <- paste0("'", as.character(lib.loc), "'")
+
+  help_type <- paste0("'", "text", "'")
+
+  txt <- paste0(txt.head, "package = ", package, ", ",
+                          "lib.loc = ", lib.loc, ", ",
+                          "verbose = ", verbose, ", ",
+                          "try.all.packages = ", try.all.packages, ", ",
+                          "help_type = ", help_type, ")")
+  ret <- eval(parse(text = txt))
+
+  ### Deal with "help_files_with_topic" or "packageInfo"
+  if (class(ret) == "help_files_with_topic")
+    Rd <- print.rhelp_files_with_topic(ret)
+  else if (class(ret) == "packageInfo")
+    Rd <- print.rpackageInfo(ret)
+  else
+    Rd <- ret
+
+  ### Ask client to show
+  if (class(ret) != "try-error")
+    set.status(need_auto_rhelp_on, TRUE)
+
+  ### Visible return is necessary because of retmoter_server_eval().
   return(Rd)
 }
 
@@ -65,12 +100,20 @@ help <- rhelp
 
 auto_rhelp_on_local <- function(Rd)
 {
-  temp <- tempfile("Rtxt")
-  cat(Rd, file = temp, sep = "\n")
-  file.show(temp, title = "R Help", delete.file = TRUE, encoding = "UTF-8")
-
-  ### Directly cast to terminal if igetOption("pager") is not right.
-  # cat(Rd, sep = "\n")
+  if (class(Rd) == "rhelp_files_with_topic")
+  {
+    temp <- tempfile("Rtxt")
+    cat(Rd, file = temp, sep = "\n")
+    file.show(temp, title = "R Help", delete.file = TRUE, encoding = "UTF-8")
+  }
+  else if (class(Rd) == "rpackageInfo")
+  {
+    temp <- tempfile("RpackageInfo")
+    cat(Rd, file = temp, sep = "\n")
+    file.show(temp, title = "R Package", delete.file = TRUE, encoding = "UTF-8")
+  }
+  else
+    cat(Rd, sep = "\n")
 
   invisible()
 }
@@ -78,16 +121,14 @@ auto_rhelp_on_local <- function(Rd)
 
 
 ### Hijack utils:::print.help_files_with_topic()
-print.rhelp_files_with_topic <- function(x)
+print.rhelp_files_with_topic <- function(x, ...)
 {
-  ### Only support text type
-  attr(x, "type") <- "text"
   paths <- as.character(x)
   topic <- attr(x, "topic")
 
   if (!length(paths))
   {
-    ret <- c(gettextf("No documentation for %s in specified packages and libraries:", 
+    ret <- c(gettextf("No documentation for %s in specified packages and libraries.", 
                       sQuote(topic)))
     return(invisible(ret))
   }
@@ -124,9 +165,25 @@ print.rhelp_files_with_topic <- function(x)
       temp <- Rd2txt(.getHelpFile(file), out = tempfile("Rtxt"), 
                      package = pkgname, outputEncoding = "UTF-8")
       ret <- readLines(temp, warn = FALSE, encoding = "UTF-8")
+      class(ret) <- "rhelp_files_with_topic"
       file.remove(temp)
     }
   }
 
   invisible(ret)
 }
+
+
+
+### Hijack base:::print.packageInfo()
+print.rpackageInfo <- function(x, ...)
+{
+  temp <- tempfile("RpackageInfo")
+  writeLines(format(x), temp)
+  ret <- readLines(temp, warn = FALSE, encoding = "UTF-8")
+  class(ret) <- "rpackageInfo"
+  file.remove(temp)
+
+  invisible(ret)
+}
+

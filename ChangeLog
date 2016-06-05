@@ -8,6 +8,8 @@ Release 0.3-3 (//):
   * Add rhelp() and its utility functions.
   * Add need_auto_rhelp_on option to the status to inform client.
   * Add hotkey.
+  * Add shutdown().
+  * Add packageInfo class to rhelp().
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
