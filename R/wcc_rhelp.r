@@ -7,6 +7,8 @@
 #' 
 #' @param topic
 #' A topic as in \code{utils::help()}
+#' @param package
+#' A package as in \code{utils::help()}
 #' @param lib.loc
 #' A lib location as in \code{utils::help()}
 #' @param verbose
@@ -25,8 +27,9 @@
 #' > remoter::client("192.168.56.101")
 #'
 #' remoter> rhelp("plot")
+#' remoter> ?rhelp
+#'
 #' remoter> help("par")
-#' remoter> ?help
 #'
 #' remoter> q()
 #' >
@@ -37,7 +40,7 @@
 NULL
 
 #' @export
-rhelp <- function(topic, lib.loc = NULL,
+rhelp <- function(topic, package = NULL, lib.loc = NULL,
                   verbose = getOption("verbose"),
                   try.all.packages = getOption("help.try.all.packages"),
                   help_type = getOption("help_type"))
@@ -48,7 +51,7 @@ rhelp <- function(topic, lib.loc = NULL,
                      help_type = help_type)
   Rd <- print.rhelp_files_with_topic(ret)
 
-  ### This needs to be visible because of retmoter_server_eval().
+  ### Visible is necessary because of retmoter_server_eval().
   return(Rd)
 }
 
@@ -62,7 +65,13 @@ help <- rhelp
 
 auto_rhelp_on_local <- function(Rd)
 {
-  cat(Rd, sep = "\n")
+  temp <- tempfile("Rtxt")
+  cat(Rd, file = temp, sep = "\n")
+  file.show(temp, title = "R Help", delete.file = TRUE, encoding = "UTF-8")
+
+  ### Directly cast to terminal if igetOption("pager") is not right.
+  # cat(Rd, sep = "\n")
+
   invisible()
 }
 
@@ -111,20 +120,13 @@ print.rhelp_files_with_topic <- function(x)
     {
       file <- paths
       pkgname <- basename(dirname(dirname(file)))
+      .getHelpFile <- eval(parse(text = "utils:::.getHelpFile"))
       temp <- Rd2txt(.getHelpFile(file), out = tempfile("Rtxt"), 
-                     package = pkgname)
-      ret <- readLines(temp, warn = FALSE)
+                     package = pkgname, outputEncoding = "UTF-8")
+      ret <- readLines(temp, warn = FALSE, encoding = "UTF-8")
       file.remove(temp)
     }
   }
 
   invisible(ret)
-}
-
-
-
-.getHelpFile <- function(file)
-{
-  .getHelpFile <- eval(parse(text = "utils:::.getHelpFile"))
-  .getHelpFile(file)
 }

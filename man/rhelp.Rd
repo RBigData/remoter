@@ -5,12 +5,15 @@
 \alias{rhelp}
 \title{rhelp}
 \usage{
-help(topic, lib.loc = NULL, verbose = getOption("verbose"),
+help(topic, package = NULL, lib.loc = NULL,
+  verbose = getOption("verbose"),
   try.all.packages = getOption("help.try.all.packages"),
   help_type = getOption("help_type"))
 }
 \arguments{
 \item{topic}{A topic as in \code{utils::help()}}
+
+\item{package}{A package as in \code{utils::help()}}
 
 \item{lib.loc}{A lib location as in \code{utils::help()}}
 

@@ -78,8 +78,13 @@ remoter_readline <- function(input)
   }
   
   ret <- c(input, read)
+
+  ### Add to history().
+  utils::timestamp(stamp = as.character(read), prefix = "", suffix = "",
+                   quiet = TRUE)
+
   ret <- remoter_sanitize(inputs=ret)
-  
+
   return(ret)
 }
 
@@ -227,7 +232,7 @@ remoter_repl_client <- function(env=globalenv())
     while (TRUE)
     {
       input <- remoter_readline(input=input)
-      
+
       timing <- EVALFUN({
         remoter_client_send(input=input)
       })
