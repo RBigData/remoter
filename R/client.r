@@ -77,12 +77,14 @@ remoter_readline <- function(input)
     }
   }
   
+  ### Add to history() and avoid repeatedly appending suffix.
+  tmp <- as.character(read)
+  suffix <- paste0(" # ", getval(prompt))
+  if (!grepl(x = tmp, pattern = paste0(suffix, "$"), perl = TRUE))
+    tmp <- paste0(tmp, suffix)
+  utils::timestamp(stamp = tmp, prefix = "", suffix = "", quiet = TRUE)
+
   ret <- c(input, read)
-
-  ### Add to history().
-  utils::timestamp(stamp = as.character(read), prefix = "", suffix = "",
-                   quiet = TRUE)
-
   ret <- remoter_sanitize(inputs=ret)
 
   return(ret)
@@ -105,10 +107,9 @@ remoter_sanitize <- function(inputs)
     }
     else if (grepl(x=input, pattern="^(\\s+)?geterrmessage\\(", perl=TRUE))
       inputs[i] <- getval(client_lasterror)
-    # else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
-    else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?)", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?(\\?\\?|help.search\\(|help.start\\()", perl=TRUE))
     {
-      remoter_client_stop("Reading help files from the server is currently not supported.")
+      remoter_client_stop("Using help() to obtain help files from the server.")
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^(\\s+)?debug\\(", perl=TRUE))

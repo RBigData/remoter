@@ -36,6 +36,13 @@
 #'
 #' remoter> help("par")
 #'
+#' remoter> ?`+`
+#' remoter> ?`?`
+#' remoter> ?"??"
+#' remoter> package?base
+#' remoter> `?`(package, remoter)
+#'
+#'
 #' remoter> q()
 #' >
 #' }
@@ -98,19 +105,56 @@ help <- rhelp
 
 
 
+#' @rdname rhelp
+#' @export
+`?` <- function(e1, e2)
+{
+  if (missing(e2))
+    txt <- paste0("utils::`?`('", as.character(substitute(e1)), "', )")
+  else
+    txt <- paste0("utils::`?`('", as.character(substitute(e1)), "', '",
+                  as.character(substitute(e2)), "')")
+  ret <- eval(parse(text = txt))
+
+  ### Deal with "help_files_with_topic" or "packageInfo"
+  if (class(ret) == "help_files_with_topic")
+    Rd <- print.rhelp_files_with_topic(ret)
+  else
+    Rd <- ret
+
+  ### Ask client to show
+  if (class(ret) != "try-error")
+    set.status(need_auto_rhelp_on, TRUE)
+
+  ### Visible return is necessary because of retmoter_server_eval().
+  return(Rd)
+}
+
+
+
 auto_rhelp_on_local <- function(Rd)
 {
+  ### Don not use "latin1" to encode the character string.
+  encoding <- "UTF-8"
+  Encoding(Rd) <- encoding
+
+  ### Encoding in windows is inconsistent for the Rterm and file.show().
+  if (.Platform$OS.type == "windows")
+    encoding <- "latin1"
+
+  ### Cast Rd by class.
   if (class(Rd) == "rhelp_files_with_topic")
   {
     temp <- tempfile("Rtxt")
     cat(Rd, file = temp, sep = "\n")
-    file.show(temp, title = "R Help", delete.file = TRUE, encoding = "UTF-8")
+    file.show(temp, title = "R Help", delete.file = TRUE, encoding = encoding)
   }
   else if (class(Rd) == "rpackageInfo")
   {
     temp <- tempfile("RpackageInfo")
     cat(Rd, file = temp, sep = "\n")
-    file.show(temp, title = "R Package", delete.file = TRUE, encoding = "UTF-8")
+    file.show(temp, title = "R Package", delete.file = TRUE,
+              encoding = encoding)
   }
   else
     cat(Rd, sep = "\n")
@@ -175,7 +219,7 @@ print.rhelp_files_with_topic <- function(x, ...)
 
 
 
-### Hijack base:::print.packageInfo()
+### Hijack base::print.packageInfo()
 print.rpackageInfo <- function(x, ...)
 {
   temp <- tempfile("RpackageInfo")

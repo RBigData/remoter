@@ -10,6 +10,8 @@ Release 0.3-3 (//):
   * Add hotkey.
   * Add shutdown().
   * Add packageInfo class to rhelp().
+  * Add `?`() in addition to rhelp().
+  * Fix Windows encoding problem.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
