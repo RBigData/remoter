@@ -32,13 +32,15 @@
 #' @param verbose
 #' Logical; enables the verbose logger.
 #' @param showmsg
-#' Logical; if TRUE, messages from the client are logged
+#' Logical; if TRUE, messages from the client are logged.
+#' @param userpng
+#' Logical; if TRUE, rpng is set as the default device for displaying.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE)
+server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE)
 {
   validate_port(port, warn=TRUE)
   assert_that(is.null(password) || is.string(password))
@@ -72,8 +74,12 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
   invisible(gc())
   
-  eval(parse(text = "library(remoter, quietly = TRUE)"), envir = globalenv()) 
-  
+  eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
+
+  ### Set rpng device as the default.
+  if(userpng)
+    options(device = remoter::rpng)
+
   remoter_repl_server()
   remoter_exit_server()
   
@@ -135,6 +141,8 @@ remoter_server_eval <- function(env)
 {
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
+  set.status(need_auto_rpng_off, FALSE)
+  set.status(need_auto_rhelp_on, FALSE)
   
   msg <- remoter_receive()
   
@@ -150,7 +158,7 @@ remoter_server_eval <- function(env)
   }
   
   msg <- remoter_eval_filter_server(msg=msg)
-  
+
   ret <- 
   withCallingHandlers(
     tryCatch({
@@ -158,7 +166,7 @@ remoter_server_eval <- function(env)
       }, interrupt=identity, error=remoter_error
     ), warning=remoter_warning
   )
-  
+
   if (!is.null(ret))
   {
     set.status(visible, ret$visible)
@@ -167,8 +175,29 @@ remoter_server_eval <- function(env)
       set.status(ret, NULL)
     else
       set.status(ret, utils::capture.output(ret$value))
+
+    ### The output is an image from a S3 method via print.ggplot().
+    if (ret$visible && is.gg.ggplot(ret$value))
+    {
+      ret$value <- rpng.off()
+      ret$visible <- FALSE
+    }
+
+    ### The output is an image from dev.off().
+    if (get.status(need_auto_rpng_off))
+    {
+      set.status(ret, ret$value)
+      set.status(visible, ret$visible)
+    }
+
+    ### The output is an Rd from help().
+    if (get.status(need_auto_rhelp_on))
+    {
+      set.status(ret, ret$value)
+      set.status(visible, FALSE)
+    }
   }
-  
+
   remoter_send(getval(status))
 }
 

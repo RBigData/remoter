@@ -5,7 +5,8 @@
 \title{Server Launcher}
 \usage{
 server(port = 55555, password = NULL, maxretry = 5,
-  secure = has.sodium(), log = TRUE, verbose = FALSE, showmsg = FALSE)
+  secure = has.sodium(), log = TRUE, verbose = FALSE, showmsg = FALSE,
+  userpng = TRUE)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
@@ -26,7 +27,9 @@ the 'sodium' package is available.}
 
 \item{verbose}{Logical; enables the verbose logger.}
 
-\item{showmsg}{Logical; if TRUE, messages from the client are logged}
+\item{showmsg}{Logical; if TRUE, messages from the client are logged.}
+
+\item{userpng}{Logical; if TRUE, rpng is set as the default device for displaying.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

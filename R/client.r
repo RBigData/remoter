@@ -77,9 +77,16 @@ remoter_readline <- function(input)
     }
   }
   
+  ### Add to history() and avoid repeatedly appending suffix.
+  tmp <- as.character(read)
+  suffix <- paste0(" # ", getval(prompt))
+  if (!grepl(x = tmp, pattern = paste0(suffix, "$"), perl = TRUE))
+    tmp <- paste0(tmp, suffix)
+  utils::timestamp(stamp = tmp, prefix = "", suffix = "", quiet = TRUE)
+
   ret <- c(input, read)
   ret <- remoter_sanitize(inputs=ret)
-  
+
   return(ret)
 }
 
@@ -100,9 +107,9 @@ remoter_sanitize <- function(inputs)
     }
     else if (grepl(x=input, pattern="^(\\s+)?geterrmessage\\(", perl=TRUE))
       inputs[i] <- getval(client_lasterror)
-    else if (grepl(x=input, pattern="^(\\s+)?(\\?|\\?\\?|help\\()", perl=TRUE))
+    else if (grepl(x=input, pattern="^(\\s+)?(\\?\\?|help.search\\(|help.start\\()", perl=TRUE))
     {
-      remoter_client_stop("Reading help files from the server is currently not supported.")
+      remoter_client_stop("Using help() to obtain help files from the server.")
       inputs[i] <- "invisible()"
     }
     else if (grepl(x=input, pattern="^(\\s+)?debug\\(", perl=TRUE))
@@ -161,13 +168,18 @@ remoter_client_send <- function(input)
     eval(parse(text=input))
   else if (all(grepl(x=input, pattern="^(\\s+)?dev.sizec\\(", perl=TRUE)))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?bringToTopc\\(", perl=TRUE)))
-    eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?rrpng\\(", perl=TRUE)))
-    eval(parse(text=input))
   
+  ### Update status by the server's results.
   set(status, remoter_receive())
-  
+
+  ### Because rpng.off() needs a call at the client to display image.
+  if (get.status(need_auto_rpng_off))
+    auto_rpng_off_local(get.status(ret))
+
+  ### Because rhelp() needs a call at the client to cast help message.
+  if (get.status(need_auto_rhelp_on))
+    auto_rhelp_on_local(get.status(ret))
+
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()
   if (all(grepl(x=input, pattern="^(\\s+)?exit\\(", perl=TRUE)))
@@ -221,7 +233,7 @@ remoter_repl_client <- function(env=globalenv())
     while (TRUE)
     {
       input <- remoter_readline(input=input)
-      
+
       timing <- EVALFUN({
         remoter_client_send(input=input)
       })

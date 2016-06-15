@@ -53,3 +53,11 @@ exit <- function(client.only=TRUE, q.server=TRUE)
 
 ### For internal consistency
 remoter_exit <- exit
+
+
+
+#' @export
+shutdown <- function()
+{
+  exit(client.only = FALSE, q.server = TRUE)
+}

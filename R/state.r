@@ -45,7 +45,6 @@ reset_state <- function()
   # .pbdenv$keys$public <- NULL
   .pbdenv$keys$theirs <- NULL
   
-  
   # C/S state
   .pbdenv$status <- list(
     ret               = invisible(),
@@ -56,7 +55,9 @@ reset_state <- function()
     warnings          = NULL,
     remoter_prompt_active = FALSE,
     should_exit       = FALSE,
-    continuation      = FALSE
+    continuation      = FALSE,
+    need_auto_rpng_off = FALSE,
+    need_auto_rhelp_on = FALSE
   )
   
   invisible()

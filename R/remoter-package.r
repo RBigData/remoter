@@ -13,8 +13,8 @@
 #' @import assertthat
 #' 
 #' @importFrom stats runif
-#' @importFrom utils capture.output globalVariables packageVersion
-#' @importFrom tools file_path_as_absolute
+#' @importFrom utils capture.output globalVariables packageVersion help
+#' @importFrom tools file_path_as_absolute Rd2txt
 #' @importFrom getPass getPass
 #' @importFrom grDevices dev.cur dev.list dev.next dev.prev dev.off dev.set
 #'             dev.new dev.size png as.raster
