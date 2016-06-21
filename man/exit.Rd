@@ -2,9 +2,12 @@
 % Please edit documentation in R/exit.r
 \name{exit}
 \alias{exit}
+\alias{shutdown}
 \title{exit}
 \usage{
 exit(client.only = TRUE, q.server = TRUE)
+
+shutdown()
 }
 \arguments{
 \item{client.only}{Logical; if \code{TRUE}, then the client disconnects from
@@ -27,5 +30,9 @@ this will not close the active R session on the client.
 }
 \details{
 Exit the remoter client/server.
+
+
+The \code{shutdown()} function is shorthand for 
+\code{exit(FALSE, TRUE)}.
 }
 
