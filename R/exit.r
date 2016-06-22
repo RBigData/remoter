@@ -8,9 +8,10 @@
 #' One can also use \code{q()} (while the client is running), and
 #' this will not close the active R session on the client.
 #' 
-#' \code{exit()} will exit the remoter client/server.
-#'
-#' \code{shutdown()} will automatically shutdown the server before exit.
+#' @details
+#' The \code{shutdown()} function is shorthand for 
+#' \code{exit(FALSE, TRUE)}.
+#' 
 #' 
 #' @param client.only
 #' Logical; if \code{TRUE}, then the client disconnects from
@@ -25,11 +26,9 @@
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
-#' @rdname exit
 #' @name exit
+#' @rdname exit
 NULL
-
-
 
 #' @rdname exit
 #' @export

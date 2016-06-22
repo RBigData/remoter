@@ -5,7 +5,7 @@
 #' @description
 #' Provide the primary interface to the help systems as \code{utils::help()}
 #' 
-#' @param topic
+#' @param topic,e1,e2
 #' A topic as in \code{utils::help()}
 #' @param package
 #' A package as in \code{utils::help()}
@@ -15,10 +15,6 @@
 #' if verbose on/off as in \code{utils::help()}
 #' @param try.all.packages
 #' if try all packages as in \code{utils::help()}
-#' @param e1
-#' a topic to be asked as in \code{utils::`?`}
-#' @param e2
-#' a type to be asked as in \code{utils::`?`}
 #'
 #' @examples
 #' \dontrun{
@@ -53,6 +49,7 @@
 #' @name rhelp
 NULL
 
+#' @rdname rhelp 
 #' @export
 rhelp <- function(topic, package = NULL, lib.loc = NULL,
                   verbose = getOption("verbose"),
@@ -246,4 +243,3 @@ print.rpackageInfo <- function(x, ...)
 
   invisible(ret)
 }
-

@@ -34,5 +34,9 @@ this will not close the active R session on the client.
 }
 \details{
 Exit the remoter client/server.
+
+
+The \code{shutdown()} function is shorthand for 
+\code{exit(FALSE, TRUE)}.
 }
 

@@ -1,4 +1,4 @@
-Release 0.3-3 (//):
+Release 0.4-0 (//):
   * Fix warning precedence for small port values.
   * Fix client timer printing.
   * Add rDevices functions.

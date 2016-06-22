@@ -1,9 +1,8 @@
 # remoter
 
-* **Version:** 0.3-3
+* **Version:** 0.4-0
 * **URL**: https://github.com/RBigData/remoter
 * **License:** [![License](http://img.shields.io/badge/license-BSD%202--Clause-orange.svg?style=flat)](http://opensource.org/licenses/BSD-2-Clause)
-* **Download:** [![Download](http://cranlogs.r-pkg.org/badges/remoter)](https://cran.r-project.org/package=remoter)
 * **Author:** Drew Schmidt and Wei-Chen Chen
 
 

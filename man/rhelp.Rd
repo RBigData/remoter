@@ -6,6 +6,10 @@
 \alias{rhelp}
 \title{rhelp}
 \usage{
+rhelp(topic, package = NULL, lib.loc = NULL,
+  verbose = getOption("verbose"),
+  try.all.packages = getOption("help.try.all.packages"))
+
 help(topic, package = NULL, lib.loc = NULL,
   verbose = getOption("verbose"),
   try.all.packages = getOption("help.try.all.packages"))
@@ -13,7 +17,7 @@ help(topic, package = NULL, lib.loc = NULL,
 "?"(e1, e2)
 }
 \arguments{
-\item{topic}{A topic as in \code{utils::help()}}
+\item{topic, e1, e2}{A topic as in \code{utils::help()}}
 
 \item{package}{A package as in \code{utils::help()}}
 
@@ -22,10 +26,6 @@ help(topic, package = NULL, lib.loc = NULL,
 \item{verbose}{if verbose on/off as in \code{utils::help()}}
 
 \item{try.all.packages}{if try all packages as in \code{utils::help()}}
-
-\item{e1}{a topic to be asked as in \code{utils::`?`}}
-
-\item{e2}{a type to be asked as in \code{utils::`?`}}
 }
 \description{
 Provide the primary interface to the help systems as \code{utils::help()}
