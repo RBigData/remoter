@@ -12,6 +12,7 @@ Release 0.4-0 (//):
   * Add packageInfo class to rhelp().
   * Add `?`() in addition to rhelp().
   * Fix Windows encoding problem.
+  * Fix help() and dev.off() when client() or server() is not on.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

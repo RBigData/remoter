@@ -58,21 +58,35 @@ rpng.new <- function(expr, filename = NULL,
 #' @export
 rpng.off <- function(which = grDevices::dev.cur())
 {
-  if (which == 1)
+  ### Check if in the client/server while(TRUE) loops.
+  all.calls <- base::sys.calls()
+  # print(all.calls)
+  check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
+                 perl=TRUE)
+  if(any(check))
   {
-    set.status(need_auto_rpng_off, FALSE)
-    ret <- "dev.off(): Can not shut down device 1 (the null device)."
+    ### Call native R functions.
+    ret <- grDevices::dev.off(which = which)
+    return(ret)
   }
   else
   {
-    set.status(need_auto_rpng_off, TRUE)
-    grDevices::dev.off(which = which)
-    filename <- .GlobalEnv$.rDevices[[which]]
-    .GlobalEnv$.rDevices[[which]] <- ''
-    ret <- png::readPNG(filename)
+    ### Overwrite native R functions.
+    if (which == 1)
+    {
+      set.status(need_auto_rpng_off, FALSE)
+      ret <- "dev.off(): Can not shut down device 1 (the null device)."
+    }
+    else
+    {
+      set.status(need_auto_rpng_off, TRUE)
+      grDevices::dev.off(which = which)
+      filename <- .GlobalEnv$.rDevices[[which]]
+      .GlobalEnv$.rDevices[[which]] <- ''
+      ret <- png::readPNG(filename)
+      return(invisible(ret))
+    }
   }
-
-  invisible(ret)
 }
 
 

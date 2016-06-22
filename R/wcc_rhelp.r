@@ -92,8 +92,22 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   if (class(ret) != "try-error")
     set.status(need_auto_rhelp_on, TRUE)
 
-  ### Visible return is necessary because of retmoter_server_eval().
-  return(Rd)
+  ### Check if in the client/server while(TRUE) loops.
+  all.calls <- base::sys.calls()
+  # print(all.calls)
+  check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
+                 perl=TRUE)
+  if(any(check))
+  {
+    ### Call native R functions.
+    print(Rd)
+    return(invisible())
+  }
+  else
+  {
+    ### Visible return is necessary because of retmoter_server_eval().
+    return(Rd)
+  }
 }
 
 
