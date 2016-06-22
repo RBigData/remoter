@@ -23,7 +23,9 @@ help(topic, package = NULL, lib.loc = NULL,
 
 \item{try.all.packages}{if try all packages as in \code{utils::help()}}
 
-\item{help_type}{only text is supported in \pkg{remoter}}
+\item{e1}{a topic to be asked as in \code{utils::`?`}}
+
+\item{e2}{a type to be asked as in \code{utils::`?`}}
 }
 \description{
 Provide the primary interface to the help systems as \code{utils::help()}

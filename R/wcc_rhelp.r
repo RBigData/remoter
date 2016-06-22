@@ -15,8 +15,10 @@
 #' if verbose on/off as in \code{utils::help()}
 #' @param try.all.packages
 #' if try all packages as in \code{utils::help()}
-#' @param help_type
-#' only text is supported in \pkg{remoter}
+#' @param e1
+#' a topic to be asked as in \code{utils::`?`}
+#' @param e2
+#' a type to be asked as in \code{utils::`?`}
 #'
 #' @examples
 #' \dontrun{
@@ -93,8 +95,22 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   if (class(ret) != "try-error")
     set.status(need_auto_rhelp_on, TRUE)
 
-  ### Visible return is necessary because of retmoter_server_eval().
-  return(Rd)
+  ### Check if in the client/server while(TRUE) loops.
+  all.calls <- base::sys.calls()
+  # print(all.calls)
+  check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
+                 perl=TRUE)
+  if(any(check))
+  {
+    ### Call native R functions.
+    print(Rd)
+    return(invisible())
+  }
+  else
+  {
+    ### Visible return is necessary because of retmoter_server_eval().
+    return(Rd)
+  }
 }
 
 

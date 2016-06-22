@@ -17,7 +17,11 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
 
 logfile_init <- function()
 {
-  logfile <- paste0(tools::file_path_as_absolute("~"), "/.remoterserverlog")
+  if (.Platform$OS.type == "windows")
+    prefix <- base::getwd()
+  else
+    prefix <- tools::file_path_as_absolute("~")
+  logfile <- paste0(prefix, "/.remoterserverlog")
   
   if (file.exists(logfile))
     file.remove(logfile)
