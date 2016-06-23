@@ -66,15 +66,23 @@ remoter_readline <- function(input)
   
   Cc_check <- ".__cantstopwontstop"
   
+  Cc_ct <- 1L
   repeat
   {
     check <- tryCatch(read <- readline(prompt=prompt), interrupt=function(.) Cc_check)
-    if (check != Cc_check)
+    if (check != Cc_check || Cc_ct >= 3L)
       break
     else
     {
+      Cc_ct <- Cc_ct + 1
       cat("^C\n")
     }
+  }
+  
+  if (!exists("read"))
+  {
+    cat("3 ctrl+c's detected; killing remoter client...\n")
+    read <- "exit()"
   }
   
   ### Add to history() and avoid repeatedly appending suffix.
