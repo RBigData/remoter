@@ -79,7 +79,7 @@ remoter_readline <- function(input)
     }
   }
   
-  if (Cc_ct >= 3L)
+  if (!exists("read"))
   {
     cat("3 ctrl+c's detected; killing remoter client...\n")
     read <- "exit()"
