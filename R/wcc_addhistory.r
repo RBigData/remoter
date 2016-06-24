@@ -6,9 +6,11 @@ addhistory <- function(read)
   if (!grepl(x = tmp, pattern = paste0(suffix, "$"), perl = TRUE))
     tmp <- paste0(tmp, suffix)
 
+  ### TODO: need to check for OS X, X11, ... etc.
+  ###       check if hangs, then check if up/down recalls work.
   if (.Platform$OS.type == "windows" && tolower(.Platform$GUI) == "rstudio")
   {
-    ### This works but is insufficient.
+    ### This adds history to native R but is insufficient for Rtudio IDE.
     # .rs.registerReplaceHook("timestamp", "utils", function(original, ...)
     # {
     #   invisible(.Call("rs_timestamp", "bb"))
@@ -16,7 +18,7 @@ addhistory <- function(read)
     # timestamp()
   }
   else
-    utils::timestamp(stamp = tmp, prefix = "", suffix = suffix, quiet = TRUE)
+    utils::timestamp(stamp = tmp, prefix = "", suffix = "", quiet = TRUE)
 
   invisible()
 }
