@@ -63,13 +63,7 @@ rpng.off <- function(which = grDevices::dev.cur())
   # print(all.calls)
   check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
                  perl=TRUE)
-  if(any(check))
-  {
-    ### Call native R functions.
-    ret <- grDevices::dev.off(which = which)
-    return(ret)
-  }
-  else
+  if (any(check))
   {
     ### Overwrite native R functions.
     if (which == 1)
@@ -86,6 +80,12 @@ rpng.off <- function(which = grDevices::dev.cur())
       ret <- png::readPNG(filename)
       return(invisible(ret))
     }
+  }
+  else
+  {
+    ### Call native R functions.
+    ret <- grDevices::dev.off(which = which)
+    return(ret)
   }
 }
 

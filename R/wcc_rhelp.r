@@ -97,16 +97,16 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   # print(all.calls)
   check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
                  perl=TRUE)
-  if(any(check))
-  {
-    ### Call native R functions.
-    print(Rd)
-    return(invisible())
-  }
-  else
+  if (any(check))
   {
     ### Visible return is necessary because of retmoter_server_eval().
     return(Rd)
+  }
+  else
+  {
+    ### Call native R functions.
+    print(ret)
+    return(invisible())
   }
 }
 
