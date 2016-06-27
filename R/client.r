@@ -124,7 +124,7 @@ remoter_sanitize <- function(inputs)
     else if (grepl(x=input, pattern="^(\\s+)?warnings\\(", perl=TRUE))
     {
       set.status(shouldwarn, TRUE)
-      remoter_show_warnings()
+      remoter_show_warnings(force=TRUE)
       inputs[i] <- "invisible()"
     }
     else if (input == "")
@@ -188,9 +188,6 @@ remoter_client_send <- function(input)
   ### about it, and resets the status on receive.socket()
   if (all(grepl(x=input, pattern="^(\\s+)?exit\\(", perl=TRUE)))
     eval(parse(text=input))
-  
-#    remoter_show_errors()
-#    remoter_show_warnings()
   
   invisible()
 }
