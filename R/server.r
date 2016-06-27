@@ -139,6 +139,7 @@ remoter_eval_filter_server <- function(msg)
 
 remoter_server_eval <- function(env)
 {
+  set.status(shouldwarn, FALSE)
   set.status(continuation, FALSE)
   set.status(lasterror, NULL)
   set.status(need_auto_rpng_off, FALSE)
