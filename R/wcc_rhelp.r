@@ -15,8 +15,6 @@
 #' if verbose on/off as in \code{utils::help()}
 #' @param try.all.packages
 #' if try all packages as in \code{utils::help()}
-#' @param help_type
-#' type of help page as in \code{utils::help()}
 #'
 #' @examples
 #' \dontrun{
@@ -55,8 +53,7 @@ NULL
 #' @export
 rhelp <- function(topic, package = NULL, lib.loc = NULL,
                   verbose = getOption("verbose"),
-                  try.all.packages = getOption("help.try.all.packages"),
-                  help_type = getOption("help_type"))
+                  try.all.packages = getOption("help.try.all.packages"))
 {
 
   ### The next are very stupid but works.
@@ -75,8 +72,10 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   else
     lib.loc <- paste0("'", as.character(lib.loc), "'")
 
-  if (is.null(help_type))
+  if (iam("remote") && inwhileloop("server"))
     help_type <- "text"
+  else
+    help_type <- getOption("help_type")
   help_type <- paste0("'", as.character(help_type), "'")
 
   ### Execute the help command.
