@@ -80,6 +80,9 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   if(userpng)
     options(device = remoter::rpng)
 
+  ### For warnings.
+  options(warn = 1)
+
   remoter_repl_server()
   remoter_exit_server()
   
@@ -95,6 +98,7 @@ remoter_warning <- function(warn)
   
   set.status(warnings, append(get.status(warnings), conditionMessage(warn)))
   invokeRestart("muffleWarning")
+
   print(warn)
 }
 

@@ -55,6 +55,7 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
                   verbose = getOption("verbose"),
                   try.all.packages = getOption("help.try.all.packages"))
 {
+
   ### The next are very stupid but works.
   if (missing(topic))
     txt.head <- "utils::help("
@@ -71,8 +72,13 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   else
     lib.loc <- paste0("'", as.character(lib.loc), "'")
 
-  help_type <- paste0("'", "text", "'")
+  if (iam("remote") && inwhileloop("server"))
+    help_type <- "text"
+  else
+    help_type <- getOption("help_type")
+  help_type <- paste0("'", as.character(help_type), "'")
 
+  ### Execute the help command.
   txt <- paste0(txt.head, "package = ", package, ", ",
                           "lib.loc = ", lib.loc, ", ",
                           "verbose = ", verbose, ", ",
@@ -80,34 +86,26 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
                           "help_type = ", help_type, ")")
   ret <- eval(parse(text = txt))
 
-  ### Deal with "help_files_with_topic" or "packageInfo"
-  if (class(ret) == "help_files_with_topic")
-    Rd <- print.rhelp_files_with_topic(ret)
-  else if (class(ret) == "packageInfo")
-    Rd <- print.rpackageInfo(ret)
-  else
-    Rd <- ret
-
-  ### Ask client to show
-  if (class(ret) != "try-error")
-    set.status(need_auto_rhelp_on, TRUE)
-
-  ### Check if in the client/server while(TRUE) loops.
-  all.calls <- base::sys.calls()
-  # print(all.calls)
-  check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
-                 perl=TRUE)
-  if (any(check))
+  ### Return Rd when server is on
+  if (iam("remote") && inwhileloop("server"))
   {
+    ### Ask client to show
+    if (class(ret) != "try-error")
+      set.status(need_auto_rhelp_on, TRUE)
+
+    ### Deal with "help_files_with_topic" or "packageInfo"
+    if (class(ret) == "help_files_with_topic")
+      Rd <- print.rhelp_files_with_topic(ret)
+    else if (class(ret) == "packageInfo")
+      Rd <- print.rpackageInfo(ret)
+    else
+      Rd <- ret
+
     ### Visible return is necessary because of retmoter_server_eval().
     return(Rd)
   }
   else
-  {
-    ### Call native R functions.
-    print(ret)
-    return(invisible())
-  }
+    return(ret)
 }
 
 
@@ -122,25 +120,34 @@ help <- rhelp
 #' @export
 `?` <- function(e1, e2)
 {
+  ### The next are very stupid but works.
   if (missing(e2))
     txt <- paste0("utils::`?`('", as.character(substitute(e1)), "', )")
   else
     txt <- paste0("utils::`?`('", as.character(substitute(e1)), "', '",
                   as.character(substitute(e2)), "')")
+
+  ### Execute the help command.
   ret <- eval(parse(text = txt))
 
-  ### Deal with "help_files_with_topic" or "packageInfo"
-  if (class(ret) == "help_files_with_topic")
-    Rd <- print.rhelp_files_with_topic(ret)
+  ### Return Rd when server is on
+  if (iam("remote") && inwhileloop("server"))
+  {
+    ### Ask client to show
+    if (class(ret) != "try-error")
+      set.status(need_auto_rhelp_on, TRUE)
+
+    ### Deal with "help_files_with_topic" or "packageInfo"
+    if (class(ret) == "help_files_with_topic")
+      Rd <- print.rhelp_files_with_topic(ret)
+    else
+      Rd <- ret
+
+    ### Visible return is necessary because of retmoter_server_eval().
+    return(Rd)
+  }
   else
-    Rd <- ret
-
-  ### Ask client to show
-  if (class(ret) != "try-error")
-    set.status(need_auto_rhelp_on, TRUE)
-
-  ### Visible return is necessary because of retmoter_server_eval().
-  return(Rd)
+    return(ret)
 }
 
 
@@ -156,21 +163,26 @@ auto_rhelp_on_local <- function(Rd)
     encoding <- "latin1"
 
   ### Cast Rd by class.
-  if (class(Rd) == "rhelp_files_with_topic")
-  {
-    temp <- tempfile("Rtxt")
-    cat(Rd, file = temp, sep = "\n")
-    file.show(temp, title = "R Help", delete.file = TRUE, encoding = encoding)
-  }
-  else if (class(Rd) == "rpackageInfo")
-  {
-    temp <- tempfile("RpackageInfo")
-    cat(Rd, file = temp, sep = "\n")
-    file.show(temp, title = "R Package", delete.file = TRUE,
-              encoding = encoding)
-  }
-  else
+  if (tolower(.Platform$GUI) == "rstudio")
     cat(Rd, sep = "\n")
+  else
+  {
+    if (class(Rd) == "rhelp_files_with_topic")
+    {
+      temp <- tempfile("Rtxt")
+      cat(Rd, file = temp, sep = "\n")
+      file.show(temp, title = "R Help", delete.file = TRUE, encoding = encoding)
+    }
+    else if (class(Rd) == "rpackageInfo")
+    {
+      temp <- tempfile("RpackageInfo")
+      cat(Rd, file = temp, sep = "\n")
+      file.show(temp, title = "R Package", delete.file = TRUE,
+                encoding = encoding)
+    }
+    else
+      cat(Rd, sep = "\n")
+  }
 
   invisible()
 }

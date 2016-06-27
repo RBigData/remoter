@@ -58,12 +58,7 @@ rpng.new <- function(expr, filename = NULL,
 #' @export
 rpng.off <- function(which = grDevices::dev.cur())
 {
-  ### Check if in the client/server while(TRUE) loops.
-  all.calls <- base::sys.calls()
-  # print(all.calls)
-  check <- grepl(x=all.calls, pattern="^(\\s+)?remoter_server_eval\\(",
-                 perl=TRUE)
-  if (any(check))
+  if (iam("remote") && inwhileloop("server"))
   {
     ### Overwrite native R functions.
     if (which == 1)
