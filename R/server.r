@@ -49,6 +49,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   assert_that(is.flag(log))
   assert_that(is.flag(verbose))
   assert_that(is.flag(showmsg))
+  assert_that(is.flag(userpng))
   
   if (!log && verbose)
   {
@@ -69,18 +70,16 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(password, password)
   set(secure, secure)
   
+  if (userpng)
+    options(device = remoter::rpng)
+  
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
   
-  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose")
+  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
   invisible(gc())
   
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
 
-  ### Set rpng device as the default.
-  if(userpng)
-    options(device = remoter::rpng)
-
-  ### For warnings.
   options(warn = 1)
 
   remoter_repl_server()
@@ -240,26 +239,16 @@ remoter_repl_server <- function(env=globalenv(), initfun=remoter_init_server, ev
     
     while (TRUE)
     {
-      
       evalfun(env=env)
       
       if (get.status(continuation)) next
       
-      ### Should go after all other evals and handlers
       if (get.status(should_exit))
-      {
-        set.status(remoter_prompt_active, FALSE)
-        set.status(should_exit, FALSE)
-        
         return(invisible())
-      }
       
       break
     }
   }
-  
-  set.status(remoter_prompt_active, FALSE)
-  set.status(should_exit, FALSE)
   
   return(invisible())
 }
