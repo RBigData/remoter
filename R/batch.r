@@ -52,10 +52,7 @@ remoter_repl_batch <- function(file, env=globalenv())
   if (!test) return(FALSE)
   
   timer <- getval(timer)
-  if (timer)
-    EVALFUN <- function(expr) capture.output(system.time(expr))
-  else
-    EVALFUN <- identity
+  EVALFUN <- timerfun(timer)
   
   src <- readLines(file)
   len <- length(src)
@@ -98,10 +95,7 @@ remoter_repl_batch <- function(file, env=globalenv())
       
       remoter_repl_printer()
       
-      if (timer)
-      {
-        cat(paste0(timing[-1], collapse="\n"), "\n\n")
-      }
+      timerprint(timer, timing)
       
       break
     }
