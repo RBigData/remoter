@@ -17,7 +17,8 @@ Release 0.4-0 (//):
   * Fix eternal warning print bug.
   * Add inwhileloop().
   * Fix Rstudio help().
-  * Fix warnings problem by reseting status at server and options(warn = 1).
+  * Fix warning reset bug with options(warn = 1).
+  * Add batch().
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

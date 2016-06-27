@@ -29,6 +29,7 @@ reset_state <- function()
   set(verbose, FALSE)
   set(showmsg, FALSE)
   set(logfile, logfile_init())
+  set(isbatch, FALSE)
   
   # internals
   set(debug, FALSE)
@@ -119,4 +120,3 @@ inwhileloop <- function(name)
   check <- grepl(x=all.calls, pattern=match.call, perl=TRUE)
   any(check)
 }
-

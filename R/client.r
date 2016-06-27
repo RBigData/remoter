@@ -48,6 +48,8 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   set(port, port)
   set(remote_addr, addr)
   
+  set(isbatch, FALSE)
+  
   remoter_repl_client()
   
   invisible(TRUE)
@@ -214,7 +216,7 @@ remoter_init_client <- function()
 remoter_repl_client <- function(env=globalenv())
 {
   if (!interactive())
-    stop("You can only use the client interactively at this time")
+    stop("You can only use the client interactively. Use bacth() to execute in batch.")
   
   test <- remoter_init_client()
   if (!test) return(FALSE)
