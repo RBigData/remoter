@@ -110,3 +110,13 @@ iam <- function(name)
 {
   .pbdenv$whoami == name
 }
+
+inwhileloop <- function(name)
+{
+  ### Check if in the client/server while(TRUE) loops.
+  all.calls <- base::sys.calls()
+  match.call <- paste0("^(\\s+)?remoter_repl_", name, "\\(")
+  check <- grepl(x=all.calls, pattern=match.call, perl=TRUE)
+  any(check)
+}
+
