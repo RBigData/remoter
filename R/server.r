@@ -148,7 +148,6 @@ remoter_server_eval <- function(env)
   set.status(lasterror, NULL)
   set.status(need_auto_rpng_off, FALSE)
   set.status(need_auto_rhelp_on, FALSE)
-  set.status(shouldwarn, FALSE)
   
   msg <- remoter_receive()
   
