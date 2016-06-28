@@ -4,7 +4,7 @@
 \alias{batch}
 \title{Batch Execution}
 \usage{
-batch(addr = "localhost", port = 55555, file, timer = FALSE)
+batch(addr = "localhost", port = 55555, file, script, timer = FALSE)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -13,7 +13,11 @@ batch(addr = "localhost", port = 55555, file, timer = FALSE)
 the client and server.  The port value for the client and server
 must agree.}
 
-\item{file}{A character string pointing to the file you wish to execute/source.}
+\item{file}{A character string pointing to the file you wish to execute/source. Either
+this or \code{script} (but not both) should be procided.}
+
+\item{script}{A character string containing the commands you wish to execute/source. Either
+this or \code{script} (but not both) should be procided.}
 
 \item{timer}{Logical; should the "performance prompt", which shows timing
 statistics after every command, be used?}
@@ -24,5 +28,17 @@ Returns \code{TRUE} invisibly on successful exit.
 \description{
 Run a script on a remote server in batch.  Similar to R's own
 \code{source()} function.
+}
+\examples{
+\dontrun{
+# Run a script in an R file
+file <- "/path/to/an/R/script.r"
+batch(file=file)
+
+# Run a script stored in a character vector
+script <- "1+1"
+batch(script=script)
+}
+
 }
 

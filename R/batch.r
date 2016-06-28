@@ -10,23 +10,52 @@
 #' the client and server.  The port value for the client and server
 #' must agree.
 #' @param file
-#' A character string pointing to the file you wish to execute/source.
+#' A character string pointing to the file you wish to execute/source. Either
+#' this or \code{script} (but not both) should be procided.
+#' @param script
+#' A character string containing the commands you wish to execute/source. Either
+#' this or \code{script} (but not both) should be procided.
 #' @param timer
 #' Logical; should the "performance prompt", which shows timing
 #' statistics after every command, be used?
+#' 
+#' @examples
+#' \dontrun{
+#' # Run a script in an R file
+#' file <- "/path/to/an/R/script.r"
+#' batch(file=file)
+#' 
+#' # Run a script stored in a character vector
+#' script <- "1+1"
+#' batch(script=script)
+#' }
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-batch <- function(addr="localhost", port=55555, file, timer=FALSE)
+batch <- function(addr="localhost", port=55555, file, script, timer=FALSE)
 {
   assert_that(is.flag(timer))
-  assert_that(is.string(file))
-  assert_that(file.exists(file))
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port, warn=FALSE)
+  
+  if (missing(file) && missing(script))
+    stop("At least one of the arguments 'script' or 'file' should be provided")
+  else if (missing(file))
+  {
+    assert_that(is.string(script))
+    src <- script
+  }
+  else if (missing(script))
+  {
+    assert_that(is.string(file))
+    assert_that(file.exists(file))
+    src <- readLines(file)
+  }
+  else
+    stop("Only one of the arguments 'script' or 'file' should be provided")
   
   test_connection(addr, port)
   
@@ -39,14 +68,14 @@ batch <- function(addr="localhost", port=55555, file, timer=FALSE)
   
   set(isbatch, TRUE)
   
-  remoter_repl_batch(file=file)
+  remoter_repl_batch(src=src)
   
   invisible(TRUE)
 }
 
 
 
-remoter_repl_batch <- function(file, env=globalenv())
+remoter_repl_batch <- function(src, env=globalenv())
 {
   test <- remoter_init_client()
   if (!test) return(FALSE)
@@ -54,7 +83,6 @@ remoter_repl_batch <- function(file, env=globalenv())
   timer <- getval(timer)
   EVALFUN <- timerfun(timer)
   
-  src <- readLines(file)
   len <- length(src)
   line <- 1L
   
