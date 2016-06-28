@@ -16,9 +16,6 @@ test <- capture.output(
   batch(script=script)
 )
 
-# cat(paste0(ret, collapse="\n"))
-# cat("\n")
-
 truth <- c("", "[1] 2 ", "[1] 3 ")
 
 stopifnot(all.equal(truth, test))
