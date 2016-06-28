@@ -19,6 +19,7 @@ Release 0.4-0 (//):
   * Fix Rstudio help().
   * Fix warning reset bug with options(warn = 1).
   * Add batch().
+  * Fix s2c() newname bug that would drop the client.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
