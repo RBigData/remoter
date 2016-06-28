@@ -46,7 +46,7 @@ batch <- function(addr="localhost", port=55555, file, script, timer=FALSE)
   else if (missing(file))
   {
     assert_that(is.string(script))
-    src <- script
+    src <- unlist(strsplit(script, split="\n"))
   }
   else if (missing(script))
   {
