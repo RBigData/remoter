@@ -49,7 +49,7 @@ exit <- function(client.only=TRUE, q.server=TRUE)
   else
     logprint("client disconnected with call to exit()")
   
-  if(!client.only && q.server)
+  if (!client.only && q.server)
   {
     if (iam("remote") && interactive())
       set(kill_interactive_server, TRUE)

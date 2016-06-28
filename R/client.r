@@ -48,6 +48,8 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   set(port, port)
   set(remote_addr, addr)
   
+  set(isbatch, FALSE)
+  
   remoter_repl_client()
   
   invisible(TRUE)
@@ -211,19 +213,38 @@ remoter_init_client <- function()
 
 
 
+timerfun <- function(timer)
+{
+  if (timer)
+    EVALFUN <- function(expr) capture.output(system.time(expr))
+  else
+    EVALFUN <- identity
+  
+  EVALFUN  
+}
+
+
+
+timerprint <- function(timer, timing)
+{
+  if (timer)
+    cat(paste0(timing[-1], collapse="\n"), "\n")
+  
+  invisible()
+}
+
+
+
 remoter_repl_client <- function(env=globalenv())
 {
   if (!interactive())
-    stop("You can only use the client interactively at this time")
+    stop("You can only use the client interactively. Use bacth() to execute in batch.")
   
   test <- remoter_init_client()
   if (!test) return(FALSE)
   
   timer <- getval(timer)
-  if (timer)
-    EVALFUN <- function(expr) capture.output(system.time(expr))
-  else
-    EVALFUN <- identity
+  EVALFUN <- timerfun(timer)
   
   while (TRUE)
   {
@@ -243,23 +264,14 @@ remoter_repl_client <- function(env=globalenv())
       
       remoter_repl_printer()
       
-      if (timer)
-        cat(paste0(timing[-1], collapse="\n"), "\n")
+      timerprint(timer, timing)
       
-      ### Should go after all other evals and handlers
       if (get.status(should_exit))
-      {
-        set.status(remoter_prompt_active, FALSE)
-        set.status(should_exit, FALSE)
         return(invisible())
-      }
       
       break
     }
   }
-  
-  set.status(remoter_prompt_active, FALSE)
-  set.status(should_exit, FALSE)
   
   return(invisible())
 }

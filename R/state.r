@@ -1,10 +1,12 @@
-magicmsg_first_connection <- ".__remoter_first_connection"
+### NOTE: all explicit references to .pbdenv should occure only in this file.
+### To reference/modify state data, use the helper functions defined below.
 
+magicmsg_first_connection <- ".__remoter_first_connection"
 
 
 init_state <- function(envir = .GlobalEnv)
 {
-  if(!exists(".pbdenv", envir = envir))
+  if (!exists(".pbdenv", envir = envir))
     envir$.pbdenv <- new.env()
   
   reset_state()
@@ -29,6 +31,7 @@ reset_state <- function()
   set(verbose, FALSE)
   set(showmsg, FALSE)
   set(logfile, logfile_init())
+  set(isbatch, FALSE)
   
   # internals
   set(debug, FALSE)
@@ -119,4 +122,3 @@ inwhileloop <- function(name)
   check <- grepl(x=all.calls, pattern=match.call, perl=TRUE)
   any(check)
 }
-
