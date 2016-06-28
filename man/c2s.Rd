@@ -32,10 +32,10 @@ Localize R objects.
 > library(remoter)
 > x <- "some data"
 > remoter::connect("my.remote.server")
-remoteR> x
+remoter> x
 ### Error: object 'x' not found
-remoteR> c2s(x)
-remoteR> x
+remoter> c2s(x)
+remoter> x
 ###  [1] "some data" 
 }
 

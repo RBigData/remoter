@@ -32,13 +32,13 @@
 #' > y
 #' ###  Error: object 'y' not found
 #' > remoter::connect("my.remote.server")
-#' remoteR> x
+#' remoter> x
 #' ### Error: object 'x' not found
-#' remoteR> x <- "some data"
-#' remoteR> x
+#' remoter> x <- "some data"
+#' remoter> x
 #' ###  [1] "some data" 
-#' remoteR> s2c(x, "y")
-#' remoteR> q()
+#' remoter> s2c(x, "y")
+#' remoter> q()
 #' > y
 #' ###  [1] "some data"
 #' }
