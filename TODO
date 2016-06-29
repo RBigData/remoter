@@ -1,6 +1,1 @@
-0.3-1: 
-  * fix warnings() bug: 
-      for (i in 1:10) warning("asdf")
-      warnings()
-  * source() function
-  * fix s2c(x, y) client crash
+multi connections with secure server: private key issues
