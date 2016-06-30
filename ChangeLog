@@ -3,22 +3,16 @@ Release 0.4-0 (//):
   * Fix client timer printing.
   * Add rDevices functions.
   * Add rpng() and its utility functions.
-  * Add need_auto_rpng_off option to the status to inform client.
-  * Add ggplot2 support including print.ggplot() without dependency.
-  * Add rhelp() and its utility functions.
-  * Add need_auto_rhelp_on option to the status to inform client.
+  * Add rhelp(), custom `?`,  and its utility functions.
   * Add hotkey.
   * Add shutdown().
-  * Add packageInfo class to rhelp().
-  * Add `?`() in addition to rhelp().
   * Fix Windows encoding problem.
-  * Fix help() and dev.off() when client() or server() is not on.
   * Kill client when 3 consecutive C-c's detected.
   * Fix eternal warning print bug.
-  * Add inwhileloop().
-  * Fix Rstudio help().
   * Fix warning reset bug with options(warn = 1).
   * Add batch().
+  * Fix log restarts on client connect.
+  * Add kill().
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
