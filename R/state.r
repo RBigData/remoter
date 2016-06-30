@@ -25,13 +25,12 @@ reset_state <- function()
   set(remote_addr, "localhost")
   set(password, NULL)
   set(maxattempts, 5)
+  set(isbatch, FALSE)
   
   # logs
   set(serverlog, TRUE)
   set(verbose, FALSE)
   set(showmsg, FALSE)
-  set(logfile, logfile_init())
-  set(isbatch, FALSE)
   
   # internals
   set(debug, FALSE)
