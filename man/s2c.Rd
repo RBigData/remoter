@@ -10,8 +10,9 @@ s2c(object, newname, env = .GlobalEnv)
 \item{object}{A remote R object.}
 
 \item{newname}{The name the object should take when it is stored on the local
-client's R session. If left blank, the local name will be the
-same as the original (remote) object's name.}
+client's R session. Must be the form of a character string.
+If left blank, the local name will be the same as the original
+(remote) object's name.}
 
 \item{env}{The environment into which the assignment will take place. The
 default is the global environment.}
@@ -25,6 +26,11 @@ the local R session behind the client.
 }
 \details{
 Localize R objects.
+
+
+A \code{newname}, if specified, must be passed as a string
+(not a literal; i.e., \code{"mynewname"}, not \code{mynewname}).
+The name must also be syntactically valid (see \code{?make.names}).
 }
 \examples{
 \dontrun{
@@ -33,13 +39,13 @@ Localize R objects.
 > y
 ###  Error: object 'y' not found
 > remoter::connect("my.remote.server")
-remoteR> x
+remoter> x
 ### Error: object 'x' not found
-remoteR> x <- "some data"
-remoteR> x
+remoter> x <- "some data"
+remoter> x
 ###  [1] "some data" 
-remoteR> s2c(x, "y")
-remoteR> q()
+remoter> s2c(x, "y")
+remoter> q()
 > y
 ###  [1] "some data"
 }

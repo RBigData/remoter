@@ -6,12 +6,18 @@
 #' This function allows you to pass an object from the server to
 #' the local R session behind the client.
 #' 
+#' @details
+#' A \code{newname}, if specified, must be passed as a string
+#' (not a literal; i.e., \code{"mynewname"}, not \code{mynewname}).
+#' The name must also be syntactically valid (see \code{?make.names}).
+#' 
 #' @param object 
 #' A remote R object.
 #' @param newname
 #' The name the object should take when it is stored on the local
-#' client's R session. If left blank, the local name will be the
-#' same as the original (remote) object's name.
+#' client's R session. Must be the form of a character string.
+#' If left blank, the local name will be the same as the original
+#' (remote) object's name.
 #' @param env
 #' The environment into which the assignment will take place. The
 #' default is the global environment.
@@ -26,13 +32,13 @@
 #' > y
 #' ###  Error: object 'y' not found
 #' > remoter::connect("my.remote.server")
-#' remoteR> x
+#' remoter> x
 #' ### Error: object 'x' not found
-#' remoteR> x <- "some data"
-#' remoteR> x
+#' remoter> x <- "some data"
+#' remoter> x
 #' ###  [1] "some data" 
-#' remoteR> s2c(x, "y")
-#' remoteR> q()
+#' remoter> s2c(x, "y")
+#' remoter> q()
 #' > y
 #' ###  [1] "some data"
 #' }
@@ -64,7 +70,9 @@ s2c <- function(object, newname, env=.GlobalEnv)
   
   if (!missing(newname))
   {
-    if (!identical(make.names(newname), newname))
+    # test if 'newname' is a string or literal
+    test <- try(is.character(newname), silent=TRUE)
+    if (inherits(test, "try-error") || !test || !identical(make.names(newname), newname))
     {
       if (iam("local"))
         remoter_client_stop("invalid 'newname'")
