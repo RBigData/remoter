@@ -10,7 +10,8 @@
 #' 
 #' @details
 #' The \code{shutdown()} function is shorthand for 
-#' \code{exit(FALSE, TRUE)}.
+#' \code{exit(FALSE, TRUE)}.  The \code{kill()} function is shorthand
+#' for running \code{batch()} with \code{script="shutdown()"}.
 #' 
 #' 
 #' @param client.only
@@ -22,9 +23,13 @@
 #' after shuting down with the client.  This is useful for cases
 #' where the server is running in an interactive R session, and you
 #' wish to shut the entire thing down.
+#' @param addr,port
+#' The server address and port, as in \code{server()}.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
+#' 
+#' @seealso \code{\link{server}} and \code{\link{batch}}
 #' 
 #' @name exit
 #' @rdname exit
@@ -70,4 +75,13 @@ remoter_exit <- exit
 shutdown <- function()
 {
   exit(client.only = FALSE, q.server = TRUE)
+}
+
+
+
+#' @rdname exit
+#' @export
+kill <- function(addr="localhost", port=55555)
+{
+  batch(addr=addr, port=port, script="shutdown()")
 }
