@@ -49,6 +49,10 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   set(remote_addr, addr)
   
   set(isbatch, FALSE)
+
+  ### Both axes are proportionally scaled to fit the new window size
+  if (.Platform$OS.type == "windows")
+    windows.options(rescale = "fit")
   
   remoter_repl_client()
   
