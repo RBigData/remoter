@@ -10,8 +10,7 @@
 #' @name remoter-package
 #' 
 #' @importFrom pbdZMQ zmq
-#' @import assertthat
-#' 
+#' @importFrom assertthat assert_that is.flag is.string is.count
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion help
 #' @importFrom tools file_path_as_absolute Rd2txt
