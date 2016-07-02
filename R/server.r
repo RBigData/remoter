@@ -63,6 +63,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   reset_state()
   
   set(whoami, "remote")
+  set(logfile, logfile_init())
   set(serverlog, log)
   set(verbose, verbose)
   set(showmsg, showmsg)
@@ -73,15 +74,15 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   if (userpng)
     options(device = remoter::rpng)
   
-  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
-  
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
   invisible(gc())
   
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
-
+  
   options(warn = 1)
-
+  
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
+  
   remoter_repl_server()
   remoter_exit_server()
   
