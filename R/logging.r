@@ -17,7 +17,7 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
 
 logfile_init <- function()
 {
-  if (.Platform$OS.type == "windows")
+  if (isWindows())
     prefix <- base::getwd()
   else
     prefix <- tools::file_path_as_absolute("~")

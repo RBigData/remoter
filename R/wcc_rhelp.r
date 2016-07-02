@@ -159,11 +159,11 @@ auto_rhelp_on_local <- function(Rd)
   Encoding(Rd) <- encoding
 
   ### Encoding in windows is inconsistent for the Rterm and file.show().
-  if (.Platform$OS.type == "windows")
+  if (isWindows())
     encoding <- "latin1"
 
   ### Cast Rd by class.
-  if (tolower(.Platform$GUI) == "rstudio")
+  if (isRStudio())
     cat(Rd, sep = "\n")
   else
   {

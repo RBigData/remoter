@@ -118,3 +118,17 @@ isFALSE <- function(x)
 {
   identical(FALSE, x)
 }
+
+
+
+isWindows <- function()
+{
+  tolower(.Platform$OS.type) == "windows"
+}
+
+
+
+isRStudio <- function()
+{
+  tolower(.Platform$GUI) == "rstudio"
+}
