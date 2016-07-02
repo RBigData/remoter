@@ -123,12 +123,12 @@ isFALSE <- function(x)
 
 isWindows <- function()
 {
-  .Platform$OS.type == "windows"
+  tolower(.Platform$OS.type) == "windows"
 }
 
 
 
 isRStudio <- function()
 {
-  .Platform$GUI) == "rstudio"
+  tolower(.Platform$GUI) == "rstudio"
 }
