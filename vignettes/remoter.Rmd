@@ -49,6 +49,31 @@ remotes::install_github("RBigData/remoter")
 ```
 
 
+## Package Functions
+
+The package contains numerous functions.  Some should be called from regular R, and others only from inside a running client.
+
+The functions to call only from regular R (outside the client):
+
+| Function | Description |
+|----------|-------------|
+| `server()` | Create a server |
+| `client()` | Interactively connect to a server |
+| `batch()` | Send batch commands to |
+| `relay()` | Launch an intermediary to relay commands between client/server |
+
+Several of the functions to call only from inside the running client are:
+
+| Function | Description |
+|----------|-------------|
+| `c2s()` | Transport an object from the client to the server. |
+| `s2c()` | Transport an object from the server to the client. |
+| `exit()` | Disconnect the client from the server. |
+| `shutdown()` | Disconnect from and shut down the server. |
+| `showlog()` | View the server log. |
+| `evalc()`, `lsc()`, `rmc()` | Client versions of `eval()`, `ls()`, and `rm()` |
+
+We will discuss many of these functions throughout the remainder of this vignette.
 
 
 
