@@ -8,7 +8,7 @@ addhistory <- function(read)
 
   ### TODO: need to check for OS X, X11, ... etc.
   ###       check if hangs, then check if up/down recalls work.
-  if (.Platform$OS.type == "windows" && tolower(.Platform$GUI) == "rstudio")
+  if (isWindows() && isRStudio())
   {
     ### This adds history to native R but is insufficient for Rtudio IDE.
     # .rs.registerReplaceHook("timestamp", "utils", function(original, ...)
@@ -22,4 +22,3 @@ addhistory <- function(read)
 
   invisible()
 }
-
