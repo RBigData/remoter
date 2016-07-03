@@ -58,7 +58,7 @@ rpng.new <- function(expr, filename = NULL,
 #' @export
 rpng.off <- function(which = grDevices::dev.cur())
 {
-  if (iam("remote") && inwhileloop("server"))
+  if (iam("remote") && inwhileloop("server") && !isrmote())
   {
     ### Overwrite native R functions.
     if (which == 1)

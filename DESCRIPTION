@@ -25,6 +25,8 @@ Suggests:
     knitr, 
     rmarkdown, 
     sodium (>= 0.2)
+Enhances:
+    rmote
 VignetteBuilder: knitr
 NeedsCompilation: no
 ByteCompile: yes
