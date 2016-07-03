@@ -132,10 +132,3 @@ isRStudio <- function()
 {
   tolower(.Platform$GUI) == "rstudio"
 }
-
-
-
-isrmote <- function()
-{
-  getOption("rmote_on", FALSE)
-}

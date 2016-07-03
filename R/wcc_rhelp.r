@@ -72,7 +72,7 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   else
     lib.loc <- paste0("'", as.character(lib.loc), "'")
 
-  if (iam("remote") && inwhileloop("server") && !isrmote())
+  if (iam("remote") && inwhileloop("server"))
     help_type <- "text"
   else
     help_type <- getOption("help_type")
@@ -87,7 +87,7 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   ret <- eval(parse(text = txt))
 
   ### Return Rd when server is on
-  if (iam("remote") && inwhileloop("server") && !isrmote())
+  if (iam("remote") && inwhileloop("server"))
   {
     ### Ask client to show
     if (class(ret) != "try-error")
@@ -131,7 +131,7 @@ help <- rhelp
   ret <- eval(parse(text = txt))
 
   ### Return Rd when server is on
-  if (iam("remote") && inwhileloop("server") && !isrmote())
+  if (iam("remote") && inwhileloop("server"))
   {
     ### Ask client to show
     if (class(ret) != "try-error")
