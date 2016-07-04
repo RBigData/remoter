@@ -60,20 +60,30 @@ rpng.off <- function(which = grDevices::dev.cur())
 {
   if (iam("remote") && inwhileloop("server"))
   {
-    ### Overwrite native R functions.
-    if (which == 1)
+    if (!isrmoteon())
     {
-      set.status(need_auto_rpng_off, FALSE)
-      ret <- "dev.off(): Can not shut down device 1 (the null device)."
+      ### Overwrite native R functions.
+      if (which == 1)
+      {
+        set.status(need_auto_rpng_off, FALSE)
+        ret <- "dev.off(): Can not shut down device 1 (the null device)."
+        return(ret)
+      }
+      else
+      {
+        set.status(need_auto_rpng_off, TRUE)
+        grDevices::dev.off(which = which)
+        filename <- .GlobalEnv$.rDevices[[which]]
+        .GlobalEnv$.rDevices[[which]] <- ''
+        ret <- png::readPNG(filename)
+        return(invisible(ret))
+      }
     }
     else
     {
-      set.status(need_auto_rpng_off, TRUE)
-      grDevices::dev.off(which = which)
-      filename <- .GlobalEnv$.rDevices[[which]]
-      .GlobalEnv$.rDevices[[which]] <- ''
-      ret <- png::readPNG(filename)
-      return(invisible(ret))
+      set.status(need_auto_rpng_off, FALSE)
+      ret <- "rmote is on, use plot_donw() to close the graphical device."
+      return(ret)
     }
   }
   else
