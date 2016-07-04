@@ -139,3 +139,10 @@ isrmoteon <- function()
 {
   getOption("rmote_on", FALSE)
 }
+
+
+
+isrmotegraphics <- function()
+{
+  getOption("rmote_graphics", FALSE)
+}
