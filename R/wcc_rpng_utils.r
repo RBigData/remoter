@@ -82,7 +82,7 @@ rpng.off <- function(which = grDevices::dev.cur())
     else
     {
       set.status(need_auto_rpng_off, FALSE)
-      ret <- "rmote is on, use plot_donw() to close the graphical device."
+      ret <- "rmote is on, use plot_done() to close the graphical device."
       return(ret)
     }
   }
