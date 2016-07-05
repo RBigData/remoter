@@ -73,8 +73,6 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   
   if (userpng)
     options(device = remoter::rpng)
-  else
-    options(device = grDevices::png)
   
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
   invisible(gc())

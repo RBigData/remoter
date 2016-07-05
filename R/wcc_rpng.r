@@ -83,12 +83,17 @@ rpng <- function(filename = tempfile(fileext = "_r.png"),
     cat("filename should be in character.")
   else
   {
-    ### Use NULL to delay opening a local device automatically
-    rpng.new(NULL, filename = filename, width = width, height = height,
-             units = units, pointsize = pointsize, bg = bg, res = res,
-             ...)
-    ### Use rpng.off() to close the remote device and
-    ### open the local device manually.
+    if (!isrmoteon() && !isrmotegraphics())
+    {
+      ### Use NULL to delay opening a local device automatically
+      rpng.new(NULL, filename = filename, width = width, height = height,
+               units = units, pointsize = pointsize, bg = bg, res = res,
+               ...)
+      ### Use rpng.off() to close the remote device and
+      ### open the local device manually.
+    }
+    else
+      graphics::plot.new()
   }
 
   invisible()

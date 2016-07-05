@@ -60,7 +60,7 @@ rpng.off <- function(which = grDevices::dev.cur())
 {
   if (iam("remote") && inwhileloop("server"))
   {
-    if (!isrmoteon())
+    if (!isrmoteon() && !isrmotegraphics())
     {
       ### Overwrite native R functions.
       if (which == 1)
