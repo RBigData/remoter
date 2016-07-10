@@ -89,11 +89,13 @@ rpng <- function(filename = tempfile(fileext = "_r.png"),
       rpng.new(NULL, filename = filename, width = width, height = height,
                units = units, pointsize = pointsize, bg = bg, res = res,
                ...)
-      ### Use rpng.off() to close the remote device and
+      ### Use rpng.off() to close the remoter graphic device and
       ### open the local device manually.
     }
     else
-      graphics::plot.new()
+    {
+      getOption("device.default")()
+    }
   }
 
   invisible()

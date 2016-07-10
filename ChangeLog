@@ -15,6 +15,7 @@ Release 0.4-0 (//):
   * Fix log restarts on client connect.
   * Add kill().
   * Add rmote support to enhances.
+  * Fix device default for rmote base graphic plot.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
