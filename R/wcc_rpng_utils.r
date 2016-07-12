@@ -117,7 +117,7 @@ auto_rpng_off_local <- function(img)
   else
   {
     eval(parse(text = "assign('.rpng.img', img, envir = .GlobalEnv)"))
-    cat("Check .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
+    cat("Check 'local' .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
   }
 }
 

@@ -166,14 +166,20 @@ remoter_server_eval <- function(env)
   
   msg <- remoter_eval_filter_server(msg=msg)
 
-  ret <- 
+  ret.with.addition <- 
   withCallingHandlers(
     tryCatch({
-        withVisible(eval(parse(text=msg), envir=env))
+        tmp.addition <-
+        capture.output(
+          tmp.ret <- withVisible(eval(parse(text=msg), envir=env))
+        )
+        list(ret = tmp.ret, addition = tmp.addition)
       }, interrupt=identity, error=remoter_error
     ), warning=remoter_warning
   )
 
+  ### Take care the output from ret.
+  ret <- ret.with.addition$ret
   if (!is.null(ret))
   {
     set.status(visible, ret$visible)
@@ -204,6 +210,13 @@ remoter_server_eval <- function(env)
       set.status(visible, FALSE)
     }
   }
+
+  ### Take care the output from cat/print/message
+  addition <- ret.with.addition$addition
+  if (length(addition) == 0)
+    set.status(ret_addition, NULL)
+  else 
+    set.status(ret_addition, addition)
 
   remoter_send(getval(status))
 }

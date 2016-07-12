@@ -50,6 +50,7 @@ reset_state <- function()
   # C/S state
   .pbdenv$status <- list(
     ret               = invisible(),
+    ret_addition      = invisible(),
     visible           = FALSE,
     lasterror         = NULL,
     shouldwarn        = FALSE,
