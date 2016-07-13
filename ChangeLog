@@ -16,6 +16,7 @@ Release 0.4-0 (//):
   * Add kill().
   * Add rmote support to enhances.
   * Fix device default for rmote base graphic plot.
+  * Divert R message (warning, error, stop) to client.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

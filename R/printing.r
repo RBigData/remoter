@@ -14,7 +14,7 @@ remoter_repl_printer <- function()
   ### cast addition first.
   addition <- get.status(ret_addition)
   if (!is.null(addition))
-    cat(addition, "\n", sep = "")
+    cat(paste(addition, collapse = "\n"), "\n")
 
   ### cast return second.
   if (get.status(visible))
