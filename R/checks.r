@@ -89,8 +89,12 @@ remoter_check_version_local <- function()
   remoter_send(get_versions())
   check <- remoter_receive()
   
-  if (!check)
-    stop("Incompatible package versions; quitting client (perhaps you need to update and restart the server?)")
+  if (any(!check))
+  {
+    names <- c("pbdZMQ", "remoter")
+    
+    stop(paste0("Incompatible versions between client/server package(s) for: ", names[check], "\nKilling client..."))
+  }
   
   invisible(TRUE)
 }

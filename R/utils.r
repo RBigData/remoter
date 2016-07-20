@@ -85,12 +85,14 @@ get_versions <- function()
 
 compare_versions <- function(client, server)
 {
-  if (client$pbdZMQ < server$pbdZMQ)
-    return(FALSE)
-  if (client$remoter < server$remoter)
-    return(FALSE)
+  checks <- c(TRUE, TRUE)
   
-  TRUE
+  if (client$pbdZMQ < server$pbdZMQ)
+    checks[1L] <- FALSE
+  if (client$remoter < server$remoter)
+    checks[2L] <- FALSE
+  
+  return(checks)
 }
 
 
