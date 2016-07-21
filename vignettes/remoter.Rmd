@@ -177,7 +177,7 @@ Before beginning, you need to spawn your server.  To do this, you can:
 
 1. ssh to your remote (you only need to do this once!)
 2. Start a **tmux** or **screen** session
-3. Start R and run `remoter::server()` (see `?server` for additional options).  Or even better, run `Rscript -e remoter::server()` so the server dies if something goes wrong.
+3. Start R and run `remoter::server()` (see `?server` for additional options).  Or even better, run `Rscript -e "remoter::server()"` so the server dies if something goes wrong.
 5. Detach your tmux/screen session and log out.
 
 Alternatively, you can run the R session in the background by a fork via something like:
