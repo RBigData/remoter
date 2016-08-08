@@ -37,6 +37,10 @@ reset_state <- function()
   set(context, NULL)
   set(socket, NULL)
   set(client_lasterror, "")
+  
+  # Exiting stuff
+  set(client_called_exit, FALSE)
+  set(client_called_shutdown, FALSE)
   set(kill_interactive_server, TRUE)
   
   

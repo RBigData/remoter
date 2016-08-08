@@ -165,7 +165,7 @@ remoter_server_eval <- function(env)
   }
   
   msg <- remoter_eval_filter_server(msg=msg)
-
+  
   ### Divert/sink `R message` (warning, error, stop) to stdout
   additionmsg <-
   capture.output({
@@ -179,7 +179,15 @@ remoter_server_eval <- function(env)
     )
     sink(file = NULL, type = "message")
   })
-
+  
+  
+  ### Handle log printing for exit()/shutdown(): NOTE must happen outside of eval since we capture all output now
+  if (getval(client_called_shutdown) == TRUE)
+    logprint("client killed server")
+  else if (getval(client_called_exit) == TRUE)
+    logprint("client disconnected with call to exit()")
+  
+  
   ### Take care the `R output` from ret.
   if (!is.null(ret))
   {

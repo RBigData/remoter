@@ -224,7 +224,7 @@ timerfun <- function(timer)
   else
     EVALFUN <- identity
   
-  EVALFUN  
+  EVALFUN
 }
 
 

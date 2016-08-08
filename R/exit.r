@@ -49,10 +49,12 @@ exit <- function(client.only=TRUE, q.server=TRUE)
     set.status(should_exit, TRUE)
     
     if (iam("remote"))
-      logprint("client killed server")
+      set(client_called_shutdown, TRUE)
+      # logprint("client killed server")
   }
   else
-    logprint("client disconnected with call to exit()")
+    set(client_called_exit, TRUE)
+    # logprint("client disconnected with call to exit()")
   
   if (!client.only && q.server)
   {

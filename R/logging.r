@@ -6,7 +6,8 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
   if ((getval(serverlog) && !checkverbose && !checkshowmsg) || (getval(verbose) && checkverbose) || (getval(showmsg) && checkshowmsg))
   {
     logmsg <- paste0(preprint, "[", Sys.time(), "]: ", level, ifelse(level=="", "", ": "), msg, "\n")
-    cat(logmsg)
+    # cat(logmsg)
+    getPass:::print_stderr(logmsg)
     logprint_file(logmsg)
   }
   
