@@ -31,6 +31,9 @@ remoter_check_password_local <- function()
 
 remoter_check_password_remote <- function()
 {
+  ### Initial a dummy in case receive nothing.
+  pw <- ""
+
   if (is.null(getval(password)))
   {
     logprint(level="PASS", "alerting client no password required", checkverbose=TRUE)
@@ -78,6 +81,9 @@ remoter_check_password_remote <- function()
       attempts <- attempts + 1L
     }
   }
+
+  ### Overwrite whatever it received or not before quit this function.
+  getPass::zerobuff(pw)
   
   TRUE
 }

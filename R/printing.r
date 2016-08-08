@@ -11,6 +11,12 @@ remoter_client_stop <- function(msg)
 
 remoter_repl_printer <- function()
 {
+  ### cast addition first.
+  addition <- get.status(ret_addition)
+  if (!is.null(addition))
+    cat(paste(addition, collapse = "\n"), "\n")
+
+  ### cast return second.
   if (get.status(visible))
     cat(paste(get.status(ret), collapse="\n"), "\n")
   

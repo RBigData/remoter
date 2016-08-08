@@ -75,6 +75,9 @@ remoter_exit <- exit
 shutdown <- function()
 {
   exit(client.only = FALSE, q.server = TRUE)
+  ### Wipe out client as well when server is down.
+  if (!is.null(.pbdenv$password))
+    getPass::zerobuff(.pbdenv$password)
 }
 
 
