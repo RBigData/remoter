@@ -81,9 +81,10 @@ remoter_check_password_remote <- function()
       attempts <- attempts + 1L
     }
   }
-
+  
+  # FIXME
   ### Overwrite whatever it received or not before quit this function.
-  getPass::zerobuff(pw)
+  # getPass::zerobuff(pw)
   
   TRUE
 }
