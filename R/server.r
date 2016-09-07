@@ -185,7 +185,10 @@ remoter_server_eval <- function(env)
   if (getval(client_called_shutdown) == TRUE)
     logprint("client killed server")
   else if (getval(client_called_exit) == TRUE)
+  {
     logprint("client disconnected with call to exit()")
+    set(client_called_exit, FALSE)
+  }
   
   
   ### Take care the `R output` from ret.
