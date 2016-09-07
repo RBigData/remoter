@@ -76,7 +76,9 @@ remoter_readline <- function(input)
   repeat
   {
     check <- tryCatch(read <- readline(prompt=prompt), interrupt=function(.) Cc_check)
-    if (check != Cc_check || Cc_ct >= 3L)
+    if (check == Cc_check && get.status(continuation))
+      return("remoter_client_halt")
+    else if (check != Cc_check || Cc_ct >= 3L)
       break
     else
     {
@@ -140,6 +142,8 @@ remoter_sanitize <- function(inputs)
       remoter_client_stop("can not spawn client/server/relay from inside the client")
       inputs[i] <- "invisible()"
     }
+    else if (grepl(x=input, pattern="remoter_client_halt"))
+      inputs[i] <- "invisible()"
   }
   
   return(inputs)
@@ -259,6 +263,8 @@ remoter_repl_client <- function(env=globalenv())
     while (TRUE)
     {
       input <- remoter_readline(input=input)
+      if (identical(input[length(input)], "remoter_client_halt"))
+        break
 
       timing <- EVALFUN({
         remoter_client_send(input=input)
