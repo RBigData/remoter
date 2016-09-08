@@ -1,4 +1,5 @@
 Release 0.4-0 (//):
+  * Allow server port=0 to quickly select a random port.
   * Fix warning precedence for small port values.
   * Fix client timer printing.
   * Add rDevices functions.
