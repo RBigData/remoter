@@ -68,8 +68,11 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(verbose, verbose)
   set(showmsg, showmsg)
   set(port, port)
-  set(password, password)
   set(secure, secure)
+  if (secure)
+    set(password, pwhash(password))
+  else
+    set(password, password)
   
   ### Backup default device
   options(device.default = getOption("device"))

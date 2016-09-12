@@ -43,3 +43,20 @@ generate_keypair <- function()
   
   invisible()
 }
+
+
+
+pwhash <- function(password)
+{
+  sodium::password_store(password)
+}
+
+
+
+pwcheck <- function(pw)
+{
+  if (getval(secure))
+    sodium::password_verify(getval(password), pw)
+  else
+    identical(getval(password), pw)
+}

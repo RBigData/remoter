@@ -6,6 +6,7 @@ remoter_check_password_local <- function()
   while (needpw)
   {
     pw <- getPass::getPass()
+    
     if (is.null(pw)) # C-c
     {
       remoter_send(NULL)
@@ -56,7 +57,8 @@ remoter_check_password_remote <- function()
         remoter_send(NULL)
         return(FALSE)
       }
-      else if (pw == getval(password))
+      
+      if (pwcheck(pw))
       {
         logprint("client password authenticated")
         remoter_send(TRUE)
