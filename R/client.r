@@ -112,7 +112,7 @@ remoter_sanitize <- function(inputs)
     input <- inputs[i]
     if (grepl(x=input, pattern="^(\\s+)?(q|quit)\\(", perl=TRUE)) 
       inputs[i] <- "exit(client.only=TRUE)"
-    else if (grepl(x=input, pattern=".pbdenv") && !getval(debug))
+    else if (grepl(x=input, pattern="(.pbdenv|remoter:::)", perl=TRUE) && !getval(debug))
     {
       remoter_client_stop("I can't do that.")
       inputs[i] <- "invisible()"
