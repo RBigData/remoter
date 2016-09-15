@@ -69,10 +69,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(showmsg, showmsg)
   set(port, port)
   set(secure, secure)
-  if (secure)
-    set(password, pwhash(password))
-  else
-    set(password, password)
+  set(password, pwhash(password))
   
   ### Backup default device
   options(device.default = getOption("device"))
@@ -236,7 +233,8 @@ remoter_server_eval <- function(env)
     if (getval(verbose))
       cat(additionmsg, sep = "\n")
   }
-
+  
+  
   remoter_send(getval(status))
 }
 

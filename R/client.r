@@ -185,7 +185,7 @@ remoter_client_send <- function(input)
   
   ### Update status by the server's results.
   set(status, remoter_receive())
-
+  
   ### Because rpng.off() needs a call at the client to display image.
   if (get.status(need_auto_rpng_off))
     auto_rpng_off_local(get.status(ret))
