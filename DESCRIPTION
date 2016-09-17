@@ -16,8 +16,10 @@ Imports:
     stats, 
     utils, 
     tools, 
+    argon2 (>= 0.1-0),
+    getPass (>= 0.2-0),
+    getip (>= 0.1-0),
     assertthat (>= 0.1),
-    getPass (>= 0.3-0),
     grDevices,
     graphics,
     png (>= 0.1-7)

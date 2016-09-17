@@ -84,7 +84,12 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   
   options(warn = 1)
   
-  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***\n    Port: ", port), preprint="\n")
+  
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
+  ips <- getips()
+  logprint(paste("                           Internal IP:\t", ips$ip_in), timestamp=FALSE)
+  logprint(paste("                           External IP:\t", ips$ip_ex), timestamp=FALSE)
+  logprint(paste("                           Port:\t", port), timestamp=FALSE)
   
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
   invisible(gc())

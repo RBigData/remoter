@@ -19,6 +19,8 @@ Release 0.4-0 (//):
   * Fix device default for rmote base graphic plot.
   * Divert R message (warning, error, stop) to client.
   * Add wiping out password when server is down.
+  * Add password hashing via the argon2 package.
+  * Display port and internal/external ip's on server creation via getip.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
