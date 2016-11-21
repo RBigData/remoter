@@ -4,7 +4,8 @@
 \alias{batch}
 \title{Batch Execution}
 \usage{
-batch(addr = "localhost", port = 55555, file, script, timer = FALSE)
+batch(addr = "localhost", port = 55555, password = NULL, file, script,
+  timer = FALSE)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -12,6 +13,11 @@ batch(addr = "localhost", port = 55555, file, script, timer = FALSE)
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
 must agree.}
+
+\item{password}{An initial password to pass to the server.  If the server is not accepting
+passwords, then this argument is ignored.  If the initial pasword is
+incorrect, then assuming the server's \code{maxretry>1}, then you will be
+interactively asked to enter the password.}
 
 \item{file}{A character string pointing to the file you wish to execute/source. Either
 this or \code{script} (but not both) should be procided.}

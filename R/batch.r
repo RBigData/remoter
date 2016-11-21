@@ -9,6 +9,11 @@
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
 #' must agree.
+#' @param password
+#' An initial password to pass to the server.  If the server is not accepting
+#' passwords, then this argument is ignored.  If the initial pasword is
+#' incorrect, then assuming the server's \code{maxretry>1}, then you will be
+#' interactively asked to enter the password.
 #' @param file
 #' A character string pointing to the file you wish to execute/source. Either
 #' this or \code{script} (but not both) should be procided.
@@ -34,7 +39,7 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-batch <- function(addr="localhost", port=55555, file, script, timer=FALSE)
+batch <- function(addr="localhost", port=55555, password=NULL, file, script, timer=FALSE)
 {
   assert_that(is.flag(timer))
   validate_address(addr)
@@ -65,6 +70,7 @@ batch <- function(addr="localhost", port=55555, file, script, timer=FALSE)
   set(timer, timer)
   set(port, port)
   set(remote_addr, addr)
+  set(clientpw, password)
   
   set(isbatch, TRUE)
   
