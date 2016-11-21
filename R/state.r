@@ -24,6 +24,7 @@ reset_state <- function()
   set(port, 55555)
   set(remote_addr, "localhost")
   set(password, NULL)
+  set(clientpw, NULL)
   set(maxattempts, 5)
   set(isbatch, FALSE)
   

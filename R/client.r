@@ -20,6 +20,11 @@
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
 #' must agree.
+#' @param password
+#' An initial password to pass to the server.  If the server is not accepting
+#' passwords, then this argument is ignored.  If the initial pasword is
+#' incorrect, then assuming the server's \code{maxretry>1}, then you will be
+#' interactively asked to enter the password.
 #' @param prompt
 #' The prompt to use to delineate the client from the normal R REPL.
 #' @param timer
@@ -30,7 +35,7 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
+client <- function(addr="localhost", port=55555, password=NULL, prompt="remoter", timer=FALSE)
 {
   assert_that(is.flag(timer))
   assert_that(is.string(prompt))
@@ -47,6 +52,7 @@ client <- function(addr="localhost", port=55555, prompt="remoter", timer=FALSE)
   set(timer, timer)
   set(port, port)
   set(remote_addr, addr)
+  set(clientpw, password)
   
   set(isbatch, FALSE)
 

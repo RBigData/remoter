@@ -4,8 +4,8 @@
 \alias{client}
 \title{Client Launcher}
 \usage{
-client(addr = "localhost", port = 55555, prompt = "remoter",
-  timer = FALSE)
+client(addr = "localhost", port = 55555, password = NULL,
+  prompt = "remoter", timer = FALSE)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -13,6 +13,11 @@ client(addr = "localhost", port = 55555, prompt = "remoter",
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
 must agree.}
+
+\item{password}{An initial password to pass to the server.  If the server is not accepting
+passwords, then this argument is ignored.  If the initial pasword is
+incorrect, then assuming the server's \code{maxretry>1}, then you will be
+interactively asked to enter the password.}
 
 \item{prompt}{The prompt to use to delineate the client from the normal R REPL.}
 

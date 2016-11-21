@@ -5,7 +5,13 @@ remoter_check_password_local <- function()
   
   while (needpw)
   {
-    pw <- getPass::getPass()
+    if (!is.null(getval(clientpw)))
+    {
+      pw <- getval(clientpw)
+      set(clientpw, NULL)
+    }
+    else
+      pw <- getPass::getPass()
     
     if (is.null(pw)) # C-c
     {
