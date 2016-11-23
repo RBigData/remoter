@@ -6,7 +6,7 @@
 \usage{
 server(port = 55555, password = NULL, maxretry = 5,
   secure = has.sodium(), log = TRUE, verbose = FALSE, showmsg = FALSE,
-  userpng = TRUE)
+  userpng = TRUE, sync = TRUE)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
@@ -30,6 +30,11 @@ the 'sodium' package is available.}
 \item{showmsg}{Logical; if TRUE, messages from the client are logged.}
 
 \item{userpng}{Logical; if TRUE, rpng is set as the default device for displaying.}
+
+\item{sync}{Logical; if TRUE, the client will have \code{str()}'d versions of server
+objects recreated in the global environment.  This is useful in IDE's like
+RStudio, but it carries a performance penalty.  For terminal useres, this is
+not recommended.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

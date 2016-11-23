@@ -9,5 +9,6 @@ utils::globalVariables(c(
   "sendport", "recvport", "timer", ".rDevices", 
   "need_auto_rhelp_on", "need_auto_rpng_off",
   "isbatch", "ret_addition",
-  "client_called_exit", "client_called_shutdown"
+  "client_called_exit", "client_called_shutdown",
+  "sync", "objs_nm", "objs", "remote_objs", "clientpw"
 ))

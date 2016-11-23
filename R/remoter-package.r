@@ -12,7 +12,7 @@
 #' @importFrom pbdZMQ zmq
 #' @importFrom assertthat assert_that is.flag is.string is.count
 #' @importFrom stats runif
-#' @importFrom utils capture.output globalVariables packageVersion help
+#' @importFrom utils capture.output globalVariables packageVersion help str
 #' @importFrom tools file_path_as_absolute Rd2txt
 #' @importFrom getPass getPass
 #' @importFrom grDevices dev.cur dev.list dev.next dev.prev dev.off dev.set
