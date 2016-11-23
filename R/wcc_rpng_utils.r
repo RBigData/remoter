@@ -127,5 +127,3 @@ is.gg.ggplot <- function(x)
 {
   all(class(x) == c("gg", "ggplot"))
 }
-
-

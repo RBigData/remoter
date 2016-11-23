@@ -54,16 +54,16 @@ reset_state <- function()
   
   # C/S state
   .pbdenv$status <- list(
-    ret               = invisible(),
-    ret_addition      = invisible(),
-    visible           = FALSE,
-    lasterror         = NULL,
-    shouldwarn        = FALSE,
-    num_warnings      = 0,
-    warnings          = NULL,
-    remoter_prompt_active = FALSE,
-    should_exit       = FALSE,
-    continuation      = FALSE,
+    ret                = invisible(),
+    ret_addition       = invisible(),
+    visible            = FALSE,
+    lasterror          = NULL,
+    shouldwarn         = FALSE,
+    num_warnings       = 0,
+    warnings           = NULL,
+    prompt_active      = FALSE,
+    should_exit        = FALSE,
+    continuation       = FALSE,
     need_auto_rpng_off = FALSE,
     need_auto_rhelp_on = FALSE
   )

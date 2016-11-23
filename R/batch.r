@@ -140,7 +140,7 @@ remoter_repl_batch <- function(src, env=globalenv())
       break
   }
   
-  set.status(remoter_prompt_active, FALSE)
+  set.status(prompt_active, FALSE)
   set.status(should_exit, FALSE)
   
   return(invisible())
