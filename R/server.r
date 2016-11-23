@@ -35,12 +35,17 @@
 #' Logical; if TRUE, messages from the client are logged.
 #' @param userpng
 #' Logical; if TRUE, rpng is set as the default device for displaying.
+#' @param sync
+#' Logical; if TRUE, the client will have \code{str()}'d versions of server
+#' objects recreated in the global environment.  This is useful in IDE's like
+#' RStudio, but it carries a performance penalty.  For terminal useres, this is
+#' not recommended.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE)
+server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
   validate_port(port, warn=TRUE)
   assert_that(is.null(password) || is.string(password))
@@ -50,6 +55,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   assert_that(is.flag(verbose))
   assert_that(is.flag(showmsg))
   assert_that(is.flag(userpng))
+  assert_that(is.flag(sync))
   
   if (!log && verbose)
   {
@@ -69,6 +75,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(showmsg, showmsg)
   set(port, port)
   set(secure, secure)
+  set(sync, sync)
   if (secure)
     set(password, pwhash(password))
   else
@@ -148,12 +155,18 @@ remoter_eval_filter_server <- function(msg)
 
 remoter_server_check_objs <- function(env, force=FALSE)
 {
-  objs_new <- ls(envir=env)
-  if (force || !identical(getval(objs), objs_new))
+  if (!getval(sync))
+    return(invisible())
+  
+  objs_nm_new <- ls(envir=env)
+  if (force || !identical(getval(objs_nm), objs_nm_new))
   {
-    set(objs, objs_new)
-    set.status(remote_objs, objs_new)
+    set(objs_nm, objs_nm_new)
+    for (nm in objs_nm_new)
+      assign(paste0(nm, "_REMOTE"), capture.output(str(get(nm, envir=env))), envir=getval(objs))
   }
+  
+  set.status(remote_objs, getval(objs))
 }
 
 

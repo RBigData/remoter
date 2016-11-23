@@ -54,7 +54,10 @@ reset_state <- function()
   
   
   # Track assignments
-  set(objs, character(0))
+  # set(objs, character(0))
+  set(sync, FALSE)
+  set(objs_nm, new.env())
+  set(objs, new.env())
   
   
   # C/S state

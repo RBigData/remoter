@@ -197,8 +197,8 @@ remoter_client_sendrecv <- function(input, env)
   remote_objs <- get.status(remote_objs)
   if (!is.null(remote_objs))
   {
-    for (nm in remote_objs)
-      assign(paste0(nm, "_REMOTE"), NULL, envir=env)
+    for (nm in ls(envir=remote_objs))
+      assign(nm, get(nm, envir=remote_objs), envir=env)
   }
   
   
