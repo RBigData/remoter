@@ -157,7 +157,7 @@ remoter_sanitize <- function(inputs)
 
 
 
-remoter_client_send <- function(input)
+remoter_client_sendrecv <- function(input, env)
 {
   remoter_send(data=input)
   
@@ -191,15 +191,25 @@ remoter_client_send <- function(input)
   
   ### Update status by the server's results.
   set(status, remoter_receive())
-
+  
+  
+  ### Update client's local env as necessary
+  remote_objs <- get.status(remote_objs)
+  if (!is.null(remote_objs))
+  {
+    for (nm in remote_objs)
+      assign(paste0(nm, "_REMOTE"), NULL, envir=env)
+  }
+  
+  
   ### Because rpng.off() needs a call at the client to display image.
   if (get.status(need_auto_rpng_off))
     auto_rpng_off_local(get.status(ret))
-
+  
   ### Because rhelp() needs a call at the client to cast help message.
   if (get.status(need_auto_rhelp_on))
     auto_rhelp_on_local(get.status(ret))
-
+  
   ### Must come last! If client only wants to quit, server doesn't know 
   ### about it, and resets the status on receive.socket()
   if (all(grepl(x=input, pattern="^(\\s+)?exit\\(", perl=TRUE)))
@@ -249,6 +259,17 @@ timerprint <- function(timer, timing)
 
 
 
+remoter_client_objcleanup <- function(env)
+{
+  names <- ls(envir=env)
+  names <- names[grep("_REMOTE", names)]
+  rm(list=names, envir=env)
+  
+  invisible()
+}
+
+
+
 remoter_repl_client <- function(env=globalenv())
 {
   if (!interactive())
@@ -259,6 +280,9 @@ remoter_repl_client <- function(env=globalenv())
   
   timer <- getval(timer)
   EVALFUN <- timerfun(timer)
+  
+  # a bit of a hack, but we pass a dumb message to the server to sync environments
+  remoter_client_sendrecv(input="remoter_env_sync", env=env)
   
   while (TRUE)
   {
@@ -273,7 +297,7 @@ remoter_repl_client <- function(env=globalenv())
         break
 
       timing <- EVALFUN({
-        remoter_client_send(input=input)
+        remoter_client_sendrecv(input=input, env=env)
       })
       
       if (get.status(continuation)) next
@@ -283,11 +307,17 @@ remoter_repl_client <- function(env=globalenv())
       timerprint(timer, timing)
       
       if (get.status(should_exit))
+      {
+        remoter_client_objcleanup(env)
         return(invisible())
+      }
       
       break
     }
   }
+  
+  
+  remoter_client_objcleanup(env)
   
   return(invisible())
 }

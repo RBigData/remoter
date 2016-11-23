@@ -146,6 +146,18 @@ remoter_eval_filter_server <- function(msg)
 
 
 
+remoter_server_check_objs <- function(env, force=FALSE)
+{
+  objs_new <- ls(envir=env)
+  if (force || !identical(getval(objs), objs_new))
+  {
+    set(objs, objs_new)
+    set.status(remote_objs, objs_new)
+  }
+}
+
+
+
 remoter_server_eval <- function(env)
 {
   set.status(shouldwarn, FALSE)
@@ -153,6 +165,8 @@ remoter_server_eval <- function(env)
   set.status(lasterror, NULL)
   set.status(need_auto_rpng_off, FALSE)
   set.status(need_auto_rhelp_on, FALSE)
+  set.status(remote_objs, NULL)
+  
   
   msg <- remoter_receive()
   
@@ -162,12 +176,23 @@ remoter_server_eval <- function(env)
   if (length(msg)==1 && msg == magicmsg_first_connection)
   {
     test <- remoter_check_password_remote()
-    if (!test) return(invisible())
+    if (!test) 
+      return(invisible())
+    
     remoter_check_version_remote()
     return(invisible())
   }
   
   msg <- remoter_eval_filter_server(msg=msg)
+  
+  ### Sync environment if necessary
+  if (msg == "remoter_env_sync")
+  {
+    remoter_server_check_objs(env, force=TRUE)
+    remoter_send(getval(status))
+    return(invisible())
+  }
+  
   
   ### Divert/sink `R message` (warning, error, stop) to stdout
   additionmsg <-
@@ -210,14 +235,14 @@ remoter_server_eval <- function(env)
       ret$value <- rpng.off()
       ret$visible <- FALSE
     }
-
+    
     ### The output is an image from dev.off().
     if (get.status(need_auto_rpng_off))
     {
       set.status(ret, ret$value)
       set.status(visible, ret$visible)
     }
-
+    
     ### The output is an Rd from help().
     if (get.status(need_auto_rhelp_on))
     {
@@ -225,7 +250,7 @@ remoter_server_eval <- function(env)
       set.status(visible, FALSE)
     }
   }
-
+  
   ### Take care the `R output` from cat/print/message
   if (length(additionmsg) == 0)
     set.status(ret_addition, NULL)
@@ -236,7 +261,11 @@ remoter_server_eval <- function(env)
     if (getval(verbose))
       cat(additionmsg, sep = "\n")
   }
-
+  
+  
+  remoter_server_check_objs(env)
+  
+  
   remoter_send(getval(status))
 }
 

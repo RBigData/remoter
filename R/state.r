@@ -52,6 +52,11 @@ reset_state <- function()
   # .pbdenv$keys$public <- NULL
   .pbdenv$keys$theirs <- NULL
   
+  
+  # Track assignments
+  set(objs, character(0))
+  
+  
   # C/S state
   .pbdenv$status <- list(
     ret                = invisible(),
@@ -65,7 +70,8 @@ reset_state <- function()
     should_exit        = FALSE,
     continuation       = FALSE,
     need_auto_rpng_off = FALSE,
-    need_auto_rhelp_on = FALSE
+    need_auto_rhelp_on = FALSE,
+    remote_objs        = NULL
   )
   
   invisible()
