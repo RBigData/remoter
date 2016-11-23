@@ -7,3 +7,5 @@
 src/*.o
 src/*.so
 
+
+inst/doc/*
