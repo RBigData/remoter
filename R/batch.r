@@ -111,7 +111,7 @@ remoter_repl_batch <- function(src, env=globalenv())
       input <- c(input, src[line])
       
       timing <- EVALFUN({
-        remoter_client_sendrecv(input=input)
+        remoter_client_sendrecv(input=input, env=env)
       })
       
       if (get.status(continuation))

@@ -276,7 +276,8 @@ remoter_repl_client <- function(env=globalenv())
     stop("You can only use the client interactively. Use bacth() to execute in batch.")
   
   test <- remoter_init_client()
-  if (!test) return(FALSE)
+  if (!test)
+    return(FALSE)
   
   timer <- getval(timer)
   EVALFUN <- timerfun(timer)
