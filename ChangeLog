@@ -19,6 +19,7 @@ Release 0.4-0 (//):
   * Divert R message (warning, error, stop) to client.
   * Add wiping out password when server is down.
   * Add environment syncing.
+  * Switch to LaTeX vignettes.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

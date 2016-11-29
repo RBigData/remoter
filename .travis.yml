@@ -5,16 +5,16 @@ warnings_are_errors: true
 env: 
   global:
     - CRAN: https://cran.rstudio.com
+    - _R_CHECK_FORCE_SUGGESTS_=FALSE
 
 before_install:
-  - sudo add-apt-repository ppa:chris-lea/libsodium -y
+  # - sudo add-apt-repository ppa:chris-lea/libsodium -y
   - sudo apt-get update -q
-  - sudo apt-get install -qq libzmq3-dev libsodium-dev
+  - sudo apt-get install -qq libzmq3-dev #libsodium-dev
 
 r_packages:
   - assertthat
   - pbdZMQ
-  - sodium
+  # - sodium
 
 r_check_args: --no-build-vignettes --no-manual
-

@@ -1,0 +1,214 @@
+%\VignetteIndexEntry{remote-machines}
+\documentclass[]{article}
+
+\usepackage{parskip}
+\setlength{\parskip}{.3cm}
+
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\usepackage[margin=.75in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{xspace}
+
+\definecolor{gray}{rgb}{.6,.6,.6}
+\definecolor{dkgray}{rgb}{.3,.3,.3}
+\definecolor{grayish}{rgb}{.9, .9, .9}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\hypersetup{
+    pdfnewwindow=true,
+    colorlinks=true,
+    linkcolor=blue,
+    linkbordercolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue
+}
+
+\lstdefinelanguage{rr}{
+  language=R,
+  basicstyle=\ttfamily\color{black},
+  backgroundcolor=\color{grayish},
+  frame=single,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  numbers=left,%none,
+  numberstyle=\tiny\color{dkgray},
+  stepnumber=1,
+  numbersep=8pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  rulecolor=\color{gray},
+  tabsize=4,
+  captionpos=t,
+}
+
+
+
+\title{Using remoter with Remote Machines}
+\author{Drew Schmidt}
+
+\begin{document}
+\maketitle
+
+
+
+\section{Working with Remote Machines}\label{working-with-remote-machines}
+
+Before we begin, a quick word about addresses and ports.
+
+An address should not include any protocols, like \texttt{tcp://} or
+\texttt{http://}. The address should also not contain any ports (denoted
+by a \texttt{:}), as this value goes in a separate argument.
+
+A port is a non-negative integer. The minimum value for a valid port is
+1024 (values 1-1023 are privileged), and the maximum value is 65535.
+That said, you are strongly encouraged to use port values between 49152
+and 65535. See \texttt{?pbdZMQ::random\_port} for details.
+
+Of course, all the usual issues apply. The server should be able to
+accept communications on the desired port. One way to handle this is by
+opening the desired port. Opening ports is very standard stuff, but
+dependent on the system you are using, so consult relevant documentation
+if you aren't sure what to do. Another way is by tunneling over ssh,
+which we mention at the conclusion of this section.
+
+\subsection{Creating a Remote Server}\label{creating-a-remote-server}
+
+Before beginning, you need to spawn your server. To do this, you can:
+
+\begin{enumerate}
+\item
+  ssh to your remote (you only need to do this once!)
+\item
+  Start a \textbf{tmux} or \textbf{screen} session
+\item
+  Start R and run \texttt{remoter::server()} (see \texttt{?server} for
+  additional options). Or even better, run
+  \texttt{Rscript\ -e\ remoter::server()} so the server dies if
+  something goes wrong.
+\item
+  Detach your tmux/screen session and log out.
+\end{enumerate}
+
+Alternatively, you can run the R session in the background by a fork via
+something like:
+
+\begin{lstlisting}[language=rr]
+Rscript -e "remoter::server()" &
+\end{lstlisting}
+
+Though I personally recommend using something like \textbf{tmux} or
+\textbf{screen} instead.
+
+\subsection{Connecting to a Server}\label{connecting-to-a-server}
+
+Connect as with a local server, but specifying the correct remote
+address:
+
+\begin{lstlisting}[language=rr]
+remoter::client("my.remote.address")
+\end{lstlisting}
+
+So for example, say you have set up a server (as described above) on EC2
+with address \texttt{"ec2-1-2-3-4.compute-1.amazonaws.com"}, listening
+on port \texttt{56789}. Then you would run:
+
+\begin{lstlisting}[language=rr]
+remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
+\end{lstlisting}
+
+That's it. Everything else should work just as when you were running the
+server locally.
+
+\subsection{tunneling Over ssh}\label{tunneling-over-ssh}
+
+If you can't or don't want to open up a port on a remote system, you can
+always tunnel over ssh (assuming of course you actually have legitimate
+access to the machine\ldots{}).
+
+Say you have user account \texttt{user} on remote with address
+\texttt{my.remote.machine}. Suppose your remote machine is running a
+\textbf{remoter} server, listening on port 55555. Then you can run:
+
+\begin{lstlisting}[language=rr]
+ssh user@my.remote.machine -L 55556:localhost:55555 -N
+\end{lstlisting}
+
+To be totally unambiguous:
+
+\begin{itemize}
+\item
+  server port (running on remote): 55555
+\item
+  client port (running on your laptop): 55556
+\end{itemize}
+
+This will allow you to connect to the remote machine as follows:
+
+\begin{lstlisting}[language=rr]
+remoter::client("localhost", port=55556)
+\end{lstlisting}
+
+You can also spawn the server in the ssh tunnel call. For example, you
+might run:
+
+\begin{lstlisting}[language=rr]
+ssh user@my.remote.machine -L 55556:localhost:55555 'Rscript -e "remoter::server(port=55555)"'
+\end{lstlisting}
+
+This will automatically launch a \textbf{remoter} server listening on
+port 55555, tunneled over \texttt{localhost:55566}. If you are working
+on a managed system, like a cluster or supercomputer, you might need to
+run something like \texttt{module\ load\ R} first:
+
+\begin{lstlisting}[language=rr]
+ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e "remoter::server(port=55555)"'
+\end{lstlisting}
+
+\subsection{Working with Relays}\label{working-with-relays}
+
+As of \textbf{remoter} version 0.3-1, you can now set up ``relays''.
+These serve as ``middlemen'' between the client and server, and are
+particularly useful for resources like clusters and supercomputers where
+the login and compute nodes are separate. Internally, the relay is a
+server that does nothing but pass messages between the client and
+server.
+
+The diagram below shows the basic setup for using a relay:
+
+A diagram showing the relationship between client, relay, and server.
+Image composed of icons from the OSA Icon Library
+
+To spawn a relay, you can do:
+
+\begin{lstlisting}[language=rr]
+remoter::relay(addr=my.server.addr, sendport=my.server.port)
+\end{lstlisting}
+
+As the name suggests in the above example, \texttt{my.server.addr} and
+\texttt{sendport} represent the address and port of the server (what you
+would use for \texttt{addr} in \texttt{remoter::client()} if you could
+connect directly). Then the client will connect to the relay, not the
+server (that's the whole point!) something like:
+
+\begin{lstlisting}[language=rr]
+remoter::client(addr=my.relay.addr, port=my.relay.port)
+\end{lstlisting}
+
+Here \texttt{my.relay.addr} is the address of the relay, and
+\texttt{my.relay.port} should math the argument \texttt{recvport} used
+when creating the relay (default is
+\texttt{r\ as.integer(formals(remoter::relay){[}{[}"recvport"{]}{]})}).
+
+
+
+\end{document}

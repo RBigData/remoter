@@ -1,7 +1,0 @@
-#!/bin/sh
-
-rm -f *.html *.pdf
-Rscript -e "rmarkdown::render('remoter.Rmd')"
-mv -f *.html ../inst/doc/
-cp -f *.Rmd ../inst/doc/
-

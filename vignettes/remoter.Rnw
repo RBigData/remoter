@@ -1,0 +1,367 @@
+%\VignetteIndexEntry{remoter-guide}
+\documentclass[]{article}
+
+\usepackage{parskip}
+\setlength{\parskip}{.3cm}
+
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\usepackage[margin=.75in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{xspace}
+
+\definecolor{gray}{rgb}{.6,.6,.6}
+\definecolor{dkgray}{rgb}{.3,.3,.3}
+\definecolor{grayish}{rgb}{.9, .9, .9}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\hypersetup{
+    pdfnewwindow=true,
+    colorlinks=true,
+    linkcolor=blue,
+    linkbordercolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue
+}
+
+\lstdefinelanguage{rr}{
+  language=R,
+  basicstyle=\ttfamily\color{black},
+  backgroundcolor=\color{grayish},
+  frame=single,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  numbers=left,%none,
+  numberstyle=\tiny\color{dkgray},
+  stepnumber=1,
+  numbersep=8pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  rulecolor=\color{gray},
+  tabsize=4,
+  captionpos=t,
+}
+
+
+
+\title{Guide to the remoter Package}
+\author{Drew Schmidt}
+
+\begin{document}
+\maketitle
+
+
+
+
+\section{Introduction}\label{introduction}
+
+The \textbf{remoter} package \cite{remoter} allows you to control
+a remote R session from a local one. The local R session can be in a
+terminal, GUI, or IDE such as RStudio. The remote R session should be
+run in the background as, well, a server.
+
+The package uses \textbf{ZeroMQ} \cite{zeromq} by way of the R
+package \textbf{pbdZMQ} \cite{Chen2015pbdZMQpackage} to handle
+communication. Our use of pbdZMQ is specialized to client/server
+communications, but the package is very general. For more details about
+\textbf{pbdZMQ} see the \textbf{pbdZMQ} package vignette
+\cite{Chen2015pbdZMQvignette}.
+
+The work for remoter was born out of the \textbf{pbdCS} package
+\cite{pbdCS}, which is part of the Programming with Big Data in R
+(pbdR) project\cite{pbdR2012}. pbdR is a series of R packages
+that enable the usage of the R language on large distributed machines,
+like clusters and supercomputers. See
+\href{http://r-pbd.org}{r-pbd.org/}) for details.
+
+\subsection{Installation}\label{installation}
+
+You can install the stable version from CRAN using the usual
+\texttt{install.packages()}:
+
+\begin{lstlisting}[language=rr]
+install.packages("remoter")
+\end{lstlisting}
+
+The development version is maintained on GitHub, and can easily be
+installed by any of the packages that offer installations from GitHub:
+
+\begin{lstlisting}[language=rr]
+### Pick your preference
+devtools::install_github("RBigData/remoter")
+ghit::install_github("RBigData/remoter")
+remotes::install_github("RBigData/remoter")
+\end{lstlisting}
+
+
+
+\subsection{Package Functions}\label{package-functions}
+
+The package contains numerous functions. Some should be called from
+regular R, and others only from inside a running client.
+
+The functions to call only from regular R (outside the client):
+
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Function & Description\tabularnewline
+\midrule
+\endhead
+\texttt{server()} & Create a server\tabularnewline
+\texttt{client()} & Interactively connect to a server\tabularnewline
+\texttt{batch()} & Send batch commands to\tabularnewline
+\texttt{relay()} & Launch an intermediary to relay commands between
+client/server\tabularnewline
+\bottomrule
+\end{longtable}
+
+Several of the functions to call only from inside the running client
+are:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Function & Description\tabularnewline
+\midrule
+\endhead
+\texttt{c2s()} & Transport an object from the client to the
+server.\tabularnewline
+\texttt{s2c()} & Transport an object from the server to the
+client.\tabularnewline
+\texttt{exit()} & Disconnect the client from the server.\tabularnewline
+\texttt{shutdown()} & Disconnect from and shut down the
+server.\tabularnewline
+\texttt{showlog()} & View the server log.\tabularnewline
+\texttt{evalc()}, \texttt{lsc()}, \texttt{rmc()} & Client versions of
+\texttt{eval()}, \texttt{ls()}, and \texttt{rm()}\tabularnewline
+\bottomrule
+\end{longtable}
+
+We will discuss many of these functions throughout the remainder of this
+vignette.
+
+\section{Clients and Servers: Just the
+Basics}\label{clients-and-servers-just-the-basics}
+
+If you simply want to understand how \textbf{remoter} works, we do not
+need to involve remote computers right out the gate. Instead, we will
+create a local server and connect to it from another local R session.
+
+So the first thing to do is to start up 2 separate R sessions. One will
+be the \emph{server}, receiving commands, and the other will be the
+\emph{client}, sending them.
+
+\subsection{The Server}\label{the-server}
+
+In the R process designated to be the server, we will use the
+\texttt{server()} command to, well, start the server. Running this with
+no additional arguments will create a server. Optionally, one can
+specify a password via the \texttt{password} argument. Another useful
+feature is setting \texttt{showmsg=TRUE}, which will show in the server
+R process what messages are coming in. For now, let's run it with
+\texttt{showmsg=TRUE}:
+
+\begin{lstlisting}[language=rr]
+remoter::server(showmsg=TRUE)
+\end{lstlisting}
+
+That's it! That R session is now listening for commands. We can shut the
+server down in a few ways. Probably the best (particularly when dealing
+with remote machines) is from the client itself. More on this later. The
+other way is to kill the hosting R process. Finally, you can terminate
+the server with \texttt{ctrl+c}, but the other methods are preferred.
+
+\subsection{The Client}\label{the-client}
+
+Once the server is set up, we can connect to it with the
+\texttt{client()} command. Since we are connecting to a local server,
+the address we want to connect to is \texttt{"localhost"} (the default)
+or \texttt{"127.0.0.1"}. We will have to make sure that the
+\texttt{port} argument matches the listening port of our server, or
+we'll never connect. Finally, we can set the way the R prompt looks
+while the client is running by the \texttt{prompt} argument. You can set
+it to whatever you like, but disambiguating between your regular, local
+R session and the \textbf{remoter} client is very useful. Things can get
+confusing in a hurry if you aren't careful.
+
+So to connect, in our R session designated to be the client (the only
+one left), we would enter:
+
+\begin{lstlisting}[language=rr]
+remoter::client()
+\end{lstlisting}
+
+And you should be good to go. You can now enter R commands in the client
+and have them executed on the server. The following section will go into
+more detail about specifics on using the client/server setup.
+
+\section{Using remoter}\label{using-remoter}
+
+Before proceeding, make sure you understand how to set up a client and a
+server. See the previous section for details.
+
+\subsection{Philosophy}\label{philosophy}
+
+By default, all code entered to the client is executed on the remote
+server. There are several utility functions to help execute code on the
+local R session (see section below). But you should assume that anything
+entered into the client session, \emph{unless you explicitly specify to
+the contrary}, is executed only on the server.
+
+\subsection{Utility Functions}\label{utility-functions}
+
+There are a few utility functions available that have to do with
+handling execution of things locally or moving data between client and
+server.
+
+By default, all commands entered inside of the client are executed on
+the server. If you need to do some things in the local R session, you
+can kill the client and just reconnect when you're ready. Alternatively,
+you can use the \texttt{lsc()}, \texttt{rmc()}, and \texttt{evalc()}
+functions. These are client versions of \texttt{ls()}, \texttt{rm()},
+and \texttt{eval()}.
+
+For moving data between client and server, there are the \texttt{s2c()}
+and \texttt{c2s()} commands which transfer from server to client and
+from client to server, respectively. These functions transfer data that
+resides in the memory of the client/server. To transfer a file in chunks
+(without reading all of it into memory), see
+\texttt{?pbdZMQ::zmq.sendfile} or \texttt{?pbdZMQ::zmq.recvfile}.
+
+\subsection{Shutting Things Down}\label{shutting-things-down}
+
+To terminate the client, enter the command \texttt{exit()}. By default,
+this will terminate the local client only, and leave the server running.
+If you wish to also shut down the server with the client, you can run
+\texttt{exit(client.only=FALSE)}. For hopefully obvious reasons, you can
+not terminate the server and leave the client running.
+
+From the client side, running \texttt{exit()} will not shut down the
+interactive R session that was hosting the client. You can also
+disconnect the client from the server without shutting down the server
+by killing the client R session or executing \texttt{Ctrl-c} in the
+client.
+
+\subsection{Security}\label{security}
+
+Security in \textbf{remoter} comes in two forms currently:
+
+\begin{enumerate}
+\item
+  password credentialing
+\item
+  public key encryption
+\end{enumerate}
+
+The password is declared when the server is spawned as a launch option
+in \texttt{remoter::server()}. Without the use of encryption, it will be
+transmitted from client to server unsecurely.
+
+Encryption is optional, and disabled by default. This is because
+encryption is handled by the \textbf{sodium} package
+\cite{sodium}, which uses the \textbf{libsodium}
+\cite{libsodium} library, which can be difficult to build on some
+platforms.
+
+If you have the \textbf{sodium} package installed \emph{on both the
+client and the server}, start the server with the option
+\texttt{secure=TRUE}, and your client will automatically connect
+securely. If the server was launched (by necessity or optionally) with
+\texttt{secure=FALSE}, then the client can not connect securely, even if
+the client machine has the \textbf{sodium} package installed.
+
+If ever in any doubt, use the \texttt{is.secure()} command from the
+client to see if communications are encrypted.
+
+\section{Problems, Bugs, and Other
+Maladies}\label{problems-bugs-and-other-maladies}
+
+The package should basically be useable, but there are some issues you
+might want to be aware of.
+
+\textbf{Problem}: I lost my internet connection and the client is no
+longer sending messages.
+
+\textbf{Solution}: Just \texttt{Ctrl+c} the client and re-run the
+\texttt{remoter::client()} call and you should be good to go. The server
+should still be running. You can therefore also have multiple clients
+connect to the same server, and they will share the same data (though
+they will not see each other's commands). I actually consider this a
+feature, but I'm not married to it and I could probably be convinced to
+change it.
+
+\textbf{Problem}: The up/down arrow keys don't work right in the R
+terminal when using the client.
+
+\textbf{Explanation}: That's because the client is just some R code
+sitting on top of the R REPL. This shouldn't be a problem if you're
+using an IDE like RStudio or the like, where you pass commands from an
+editor window to the R session. But as far as I am aware, this can not
+be fixed.
+
+\textbf{Problem}: There's no security!
+
+\textbf{Explanation}: Currently there is a password system that works by
+simple string comparison, and communication can be encrypted via the
+\textbf{sodium} package. You must have \textbf{sodium} installed on both
+the client and server machine, and start the server with the option
+\texttt{secure=TRUE} to use this, however. Additionally, it is possible
+I messed the public key part up, so if you believe that ot be the case,
+I'd really like to know about it. We are also considering adding
+CurveZMQ support directly to pbdZMQ in the future.
+
+\textbf{Problem}: Something else is wrong!
+
+\textbf{Explanation}: Please be so kind as to
+\href{https://github.com/wrathematics/remoter/issues}{file an issue}
+describing the problem. Be as descriptive as possible.
+
+
+
+
+
+\section{Legal}
+
+\copyright 2015-2016 Drew Schmidt.
+
+Permission is granted to make and distribute verbatim copies of this vignette 
+and its source provided the copyright notice and this permission notice are 
+preserved on all copies.
+
+Work for the \textbf{remoter} package is supported in part by the project 
+*Harnessing Scalable Libraries for Statistical Computing on Modern Architectures 
+and Bringing Statistics to Large Scale Computing* funded by the National 
+Science Foundation Division of Mathematical Sciences under Grant No. 1418195.
+
+Any opinions, findings, and conclusions or recommendations expressed in  this 
+material are those of the authors and do not necessarily reflect the  views of 
+the National Science Foundation.  The findings and conclusions in this article 
+have not been formally disseminated by the U.S. Department of Health \& Human 
+Services nor by the U.S. Department of Energy, and should not be construed to 
+represent any determination or policy of University, Agency, Administration and 
+National Laboratory.
+
+This manual may be incorrect or out-of-date.  The authors assume no 
+responsibility for errors or omissions, or for damages resulting from the use of 
+the information contained herein.
+
+The \textbf{remoter} logo comes from the image
+``\href{https://commons.wikimedia.org/wiki/File:Tr\%C3\%A5dtelefon-illustration.png\#/media/File:Tr\%C3\%A5dtelefon-illustration.png}{Tradtelefon-illustration}''. 
+Licensed under Public Domain via Commons.
+
+
+
+\bibliography{remoter.bib}
+\bibliographystyle{IEEEtran}
+
+
+\end{document}

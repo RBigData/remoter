@@ -22,12 +22,9 @@ Imports:
     graphics,
     png (>= 0.1-7)
 Suggests: 
-    knitr, 
-    rmarkdown, 
     sodium (>= 0.2)
 Enhances:
     rmote
-VignetteBuilder: knitr
 NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
