@@ -6,7 +6,8 @@ cleanVignette(){
 
 buildVignette(){
   pdflatex $1
-  bibtex $1
+  bibname=`echo "$1" | sed -e 's/\..*//'`
+  bibtex $bibname
   #makeindex $1
   #pdflatex $1
   pdflatex $1
