@@ -9,3 +9,10 @@ src/*.so
 
 
 inst/doc/*
+
+*.aux
+*.bbl
+*.blg
+*.out
+*.toc
+

@@ -1,67 +1,28 @@
-%\VignetteIndexEntry{remote-machines}
+%\VignetteIndexEntry{Using remoter with Remote Machines}
 \documentclass[]{article}
 
-\usepackage{parskip}
-\setlength{\parskip}{.3cm}
 
-\usepackage{longtable}
-\usepackage{booktabs}
+\input{./include/settings}
 
-\usepackage[margin=.75in]{geometry}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{hyperref}
-\usepackage{xcolor}
-\usepackage{xspace}
 
-\definecolor{gray}{rgb}{.6,.6,.6}
-\definecolor{dkgray}{rgb}{.3,.3,.3}
-\definecolor{grayish}{rgb}{.9, .9, .9}
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-
-\hypersetup{
-    pdfnewwindow=true,
-    colorlinks=true,
-    linkcolor=blue,
-    linkbordercolor=blue,
-    citecolor=blue,
-    filecolor=magenta,
-    urlcolor=blue
-}
-
-\lstdefinelanguage{rr}{
-  language=R,
-  basicstyle=\ttfamily\color{black},
-  backgroundcolor=\color{grayish},
-  frame=single,
-  breaklines=true,
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  numbers=left,%none,
-  numberstyle=\tiny\color{dkgray},
-  stepnumber=1,
-  numbersep=8pt,
-  showspaces=false,
-  showstringspaces=false,
-  showtabs=false,
-  rulecolor=\color{gray},
-  tabsize=4,
-  captionpos=t,
+\mytitle{Using remoter with Remote Machines}
+\mysubtitle{}
+\myversion{0.4-0}
+\myauthor{
+\centering
+Drew Schmidt \\
+University of Tennessee
 }
 
 
-
-\title{Using remoter with Remote Machines}
-\author{Drew Schmidt}
 
 \begin{document}
-\maketitle
+\makefirstfew
 
 
 
-\section{Working with Remote Machines}\label{working-with-remote-machines}
+\section{Introduction}
+\label{intro}
 
 Before we begin, a quick word about addresses and ports.
 
@@ -81,7 +42,9 @@ dependent on the system you are using, so consult relevant documentation
 if you aren't sure what to do. Another way is by tunneling over ssh,
 which we mention at the conclusion of this section.
 
-\subsection{Creating a Remote Server}\label{creating-a-remote-server}
+
+
+\section{Creating a Remote Server}
 
 Before beginning, you need to spawn your server. To do this, you can:
 
@@ -109,7 +72,9 @@ Rscript -e "remoter::server()" &
 Though I personally recommend using something like \textbf{tmux} or
 \textbf{screen} instead.
 
-\subsection{Connecting to a Server}\label{connecting-to-a-server}
+
+
+\section{Connecting to a Remote Server}
 
 Connect as with a local server, but specifying the correct remote
 address:
@@ -129,7 +94,9 @@ remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
 That's it. Everything else should work just as when you were running the
 server locally.
 
-\subsection{tunneling Over ssh}\label{tunneling-over-ssh}
+
+
+\section{Tunneling Over ssh}
 
 If you can't or don't want to open up a port on a remote system, you can
 always tunnel over ssh (assuming of course you actually have legitimate
@@ -174,7 +141,9 @@ run something like \texttt{module\ load\ R} first:
 ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e "remoter::server(port=55555)"'
 \end{lstlisting}
 
-\subsection{Working with Relays}\label{working-with-relays}
+
+
+\section{Working with Relays}
 
 As of \textbf{remoter} version 0.3-1, you can now set up ``relays''.
 These serve as ``middlemen'' between the client and server, and are

@@ -1,0 +1,188 @@
+%-------------------------------------------------------------------------------
+% basic settings
+%-------------------------------------------------------------------------------
+
+\usepackage{longtable}
+\usepackage{booktabs}
+
+\usepackage{parskip}
+\setlength{\parskip}{.3cm}
+
+\makeatletter
+\newcommand\code{\bgroup\@makeother\_\@makeother\~\@makeother\$\@codex}
+\def\@codex#1{{\normalfont\ttfamily\hyphenchar\font=-1 #1}\egroup}
+\makeatother
+%%\let\code=\texttt
+\let\proglang=\textsf
+
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{xspace}
+
+\definecolor{gray}{rgb}{.6,.6,.6}
+\definecolor{dkgray}{rgb}{.3,.3,.3}
+\definecolor{grayish}{rgb}{.9, .9, .9}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\hypersetup{
+    pdfnewwindow=true,
+    colorlinks=true,
+    linkcolor=blue,
+    linkbordercolor=blue,
+    citecolor=blue,
+    filecolor=magenta,
+    urlcolor=blue
+}
+
+\lstdefinelanguage{rr}{
+  language=R,
+  basicstyle=\ttfamily\color{black},
+  backgroundcolor=\color{grayish},
+  frame=single,
+  breaklines=true,
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  numbers=left,%none,
+  numberstyle=\tiny\color{dkgray},
+  stepnumber=1,
+  numbersep=8pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  rulecolor=\color{gray},
+  tabsize=4,
+  captionpos=t,
+}
+
+
+
+%-------------------------------------------------------------------------------
+% title settings
+%-------------------------------------------------------------------------------
+
+\newcommand*{\plogo}{\includegraphics[scale=.5]{./include/uch_small}} 
+
+\makeatletter
+\newcommand\mytitle[1]{\renewcommand\@mytitle{#1}}
+\newcommand\@mytitle{}
+\makeatother
+
+\makeatletter
+\newcommand\mysubtitle[1]{\renewcommand\@mysubtitle{#1}}
+\newcommand\@mysubtitle{}
+\makeatother
+
+\makeatletter
+\newcommand\myversion[1]{\renewcommand\@myversion{#1}}
+\newcommand\@myversion{}
+\makeatother
+
+
+\newcommand{\myauthor}[1]{\author{#1}}
+
+
+%-------------------------------------------------------------------------------
+%	TITLE PAGE
+%-------------------------------------------------------------------------------
+
+\makeatletter
+\newcommand*{\titleGP}{\begingroup 
+\centering
+\vspace*{\baselineskip} 
+
+\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} 
+\rule{\textwidth}{0.4pt}\\[\baselineskip]
+
+{\Huge \scshape\@mytitle \\[0.2\baselineskip] }
+
+\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} 
+\rule{\textwidth}{1.6pt}\\[\baselineskip] 
+
+\scshape % Small caps
+\@mysubtitle \ \\[\baselineskip] % Tagline(s) or further 
+\today\par % Location and year
+
+\vspace*{2\baselineskip} % Whitespace between location/year and editors
+
+{\large \@author \par}
+
+\vfill % Whitespace between editor names and publisher logo
+
+\plogo \\[0.3\baselineskip] % Publisher logo
+{Version \@myversion} \\[0.3\baselineskip] % Year published
+% {\large THE PUBLISHER}\par % Publisher
+
+\endgroup}
+\makeatother
+
+
+
+%-------------------------------------------------------------------------------
+% first few
+%-------------------------------------------------------------------------------
+
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+
+\newcommand{\prebodyheadfoot}{
+  \fancyhf{} % clear all header and footer fields
+  \fancyfoot{}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+  
+  % redefinition of the plain style:
+  \fancypagestyle{plain}{%
+  \fancyhf{} % clear all header and footer fields
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}}
+}
+
+\newcommand{\bodyheadfoot}{
+  \fancyhf{} % clear all header and footer fields
+% \fancyhead[L]{\slshape \rightmark}
+  \fancyhead[L]{\slshape \leftmark}
+  \fancyhead[R]{ \thepage\ of\ \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{1pt}
+  \renewcommand{\footrulewidth}{0pt}
+  
+  % redefinition of the plain style:
+  \fancypagestyle{plain}{%
+  \fancyhf{} % clear all header and footer fields
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}}
+}
+
+
+
+\newcommand{\makefirstfew}{%
+\prebodyheadfoot
+\restoregeometry
+
+  
+\titleGP
+\newpage
+
+\input{./include/00-acknowledgement}
+\newpage
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+
+\bodyheadfoot
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{fancy}
+}
