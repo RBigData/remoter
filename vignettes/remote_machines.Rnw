@@ -180,4 +180,8 @@ when creating the relay (default is
 
 
 
+\addcontentsline{toc}{section}{References}
+\bibliography{./include/remoter}
+\bibliographystyle{plain}
+
 \end{document}

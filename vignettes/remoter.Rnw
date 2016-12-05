@@ -304,9 +304,9 @@ describing the problem. Be as descriptive as possible.
 
 
 
-
-\bibliography{remoter.bib}
-\bibliographystyle{IEEEtran}
+\addcontentsline{toc}{section}{References}
+\bibliography{./include/remoter}
+\bibliographystyle{plain}
 
 
 \end{document}
