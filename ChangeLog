@@ -1,75 +1,76 @@
 Release 0.4-0 (//):
-  * Fix warning precedence for small port values.
-  * Fix client timer printing.
-  * Add rDevices functions.
-  * Add rpng() and its utility functions.
-  * Add rhelp(), custom `?`,  and its utility functions.
-  * Add hotkey.
-  * Add shutdown().
-  * Fix Windows encoding problem.
-  * Kill client when 3 consecutive C-c's detected.
-  * Fix eternal warning print bug.
-  * Fix warning reset bug with options(warn = 1).
-  * Add batch().
-  * Fix s2c() newname bug that would drop the client.
-  * Fix log restarts on client connect.
-  * Add kill().
-  * Add rmote support to enhances.
-  * Fix device default for rmote base graphic plot.
-  * Divert R message (warning, error, stop) to client.
-  * Add wiping out password when server is down.
-  * Add environment syncing.
-  * Switch to LaTeX vignettes.
+  * Fixed warning precedence for small port values.
+  * Fixed client timer printing.
+  * Added rDevices functions.
+  * Added rpng() and its utility functions.
+  * Added rhelp(), custom `?`,  and its utility functions.
+  * Added hotkey.
+  * Added shutdown().
+  * Fixed Windows encoding problem.
+  * Added option to kill client when 3 consecutive C-c's detected.
+  * Fixed eternal warning print bug.
+  * Fixed warning reset bug with options(warn = 1).
+  * Added batch().
+  * Fixed s2c() newname bug that would drop the client.
+  * Fixed log restarts on client connect.
+  * Added kill().
+  * Added rmote support to enhances.
+  * Fixed device default for rmote base graphic plot.
+  * Diverted R message (warning, error, stop) to client.
+  * Added wiping out password when server is down.
+  * Added environment syncing.
+  * Switched to LaTeX vignettes.
+  * Added remote machines vignette.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.
-  * Improve timer behavior.
-  * Fix s2c() bug.
-  * Fix bug that affected attaching some package namespaces (WCC).
-  * Always attach remoter namespace within the server.
+  * Improved timer behavior.
+  * Fixed s2c() bug.
+  * Fixed bug that affected attaching some package namespaces (WCC).
+  * Fixed remoter namespace attach bug within the server.
 
 Release 0.3-1 (4/17/2016):
-  * Add "timer" option to client.
-  * Add "middleman" functionality via relay().
-  * Add blurb about relays to the vignette.
-  * Move password method with masking to getPass package.
-  * Integrate getPass() into client authentication.
-  * Internals: explicitly namespace pbdZMQ functions.
+  * Added "timer" option to client.
+  * Added "middleman" functionality via relay().
+  * Added blurb about relays to the vignette.
+  * Moved password method with masking to getPass package.
+  * Integrated getPass() into client authentication.
+  * Explicitly namespaced internal use of pbdZMQ functions.
 
 Release 0.3-0 (2/17/2016):
-  * Dump log output to file.
-  * Add showlog().
-  * Add "q.server" argument to exit() (WCC).
+  * Dumped log output to file.
+  * Added showlog().
+  * Added "q.server" argument to exit() (WCC).
   * Complete refactoring of internals.
   * Better state management/abstraction.
   * Better clarity in client/server REPL's.
   * Significant improvements to error checking in s2c() and c2s().
 
 Release 0.2-1 (2/10/2016):
-  * Make encryption/secure servers/sodium optional.
-  * Add note about ssh tunneling to vignette.
-  * Significantly enhance logger.
-  * Fix C-c client bug.
+  * Made encryption/secure servers/sodium optional.
+  * Added note about ssh tunneling to vignette.
+  * Significantly enhanced logger.
+  * Fixed C-c client bug.
 
 Release 0.2-0 (2/3/2016):
-  * Encrypt communications via sodium.
+  * Added encrypted communications via sodium.
   * Large rewrite of internal state system.
   * Vignette rewrite.
-  * Add basic logger for server.
-  * Disallow privileged ports.
+  * Added basic logger for server.
+  * Disallowed privileged ports.
   * Better documentation and help.
 
 Release 0.1-2 (2/1/2016):
-  * Change param "remote_addr" to "addr" in client().
+  * Changed param "remote_addr" to "addr" in client().
   * Minor improvements to the repl.
   * Better error checking and handling for addresses.
 
 Release 0.1-1 (1/30/2016):
-  * Add some remote checks, address validation in client.
+  * Added some remote checks, address validation in client.
   * Changed behavior of exit(); added "client.only" option.
-  * Rearrange internals.
-  * Add vignette.
-  * Use pbdZMQ 0.2-1.
+  * Rearranged internals.
+  * Added vignette.
+  * Switched to pbdZMQ 0.2-1.
 
 Release 0.1-0 (10/16/2015):
   * Added s2c() and c2s().
