@@ -10,8 +10,8 @@
 \myversion{0.4-0}
 \myauthor{
 \centering
-Drew Schmidt \\
-University of Tennessee
+Drew Schmidt \\ 
+\texttt{wrathematics@gmail.com} 
 }
 
 
