@@ -22,7 +22,8 @@ Imports:
     graphics,
     png (>= 0.1-7)
 Suggests: 
-    sodium (>= 0.2)
+    sodium (>= 0.2),
+    pbdRPC
 Enhances:
     rmote
 NeedsCompilation: no
