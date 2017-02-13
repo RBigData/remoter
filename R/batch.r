@@ -41,7 +41,7 @@
 #' @export
 batch <- function(addr="localhost", port=55555, password=NULL, file, script, timer=FALSE)
 {
-  assert_that(is.flag(timer))
+  check.is.flag(timer)
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port, warn=FALSE)
@@ -50,13 +50,13 @@ batch <- function(addr="localhost", port=55555, password=NULL, file, script, tim
     stop("At least one of the arguments 'script' or 'file' should be provided")
   else if (missing(file))
   {
-    assert_that(is.string(script))
+    check.is.string(script)
     src <- unlist(strsplit(script, split="\n"))
   }
   else if (missing(script))
   {
-    assert_that(is.string(file))
-    assert_that(file.exists(file))
+    check.is.string(file)
+    check(file.exists(file))
     src <- readLines(file)
   }
   else

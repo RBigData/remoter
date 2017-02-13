@@ -25,8 +25,8 @@ relay <- function(addr, recvport=55556, sendport=55555, verbose=FALSE)
   addr <- scrub_addr(addr)
   validate_port(recvport, warn=FALSE)
   validate_port(sendport, warn=FALSE)
-  assert_that(recvport != sendport)
-  assert_that(is.flag(verbose))
+  check(recvport != sendport)
+  check.is.flag(verbose)
   
   reset_state()
   

@@ -48,14 +48,14 @@
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
   validate_port(port, warn=TRUE)
-  assert_that(is.null(password) || is.string(password))
-  assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.flag(secure))
-  assert_that(is.flag(log))
-  assert_that(is.flag(verbose))
-  assert_that(is.flag(showmsg))
-  assert_that(is.flag(userpng))
-  assert_that(is.flag(sync))
+  check(is.null(password) || is.string(password))
+  check.is.posint(maxretry)
+  check.is.flag(secure)
+  check.is.flag(log)
+  check.is.flag(verbose)
+  check.is.flag(showmsg)
+  check.is.flag(userpng)
+  check.is.flag(sync)
   
   if (!log && verbose)
   {

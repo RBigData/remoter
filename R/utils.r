@@ -36,7 +36,7 @@ test_connection <- function(addr, port, ntries=10, sleeptime=1)
 
 validate_address <- function(addr)
 {
-  assert_that(is.string(addr))
+  check.is.string(addr)
   
   if (grepl(addr, pattern="^.*://"))
     stop("Remote address should not include a protocol.")
@@ -60,9 +60,8 @@ scrub_addr <- function(addr)
 
 validate_port <- function(port, warn=FALSE)
 {
-  assert_that(is.count(port))
-  assert_that(port > 1023)
-  assert_that(port < 65536)
+  check.is.posint(port)
+  check(port > 1023 && port < 65536)
   
   if (port < 49152 && warn)
     cat("WARNING: You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
@@ -97,7 +96,7 @@ compare_versions <- function(client, server)
 
 assert_nostop <- function(..., env = parent.frame())
 {
-  test <- tryCatch(assert_that(env=env, ...), error=identity)
+  test <- tryCatch(check(...), error=identity)
   if (!is.logical(test))
   {
     if (iam("local") || getval(debug))
