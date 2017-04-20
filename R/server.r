@@ -119,7 +119,7 @@ remoter_warning <- function(warn)
 remoter_error <- function(err)
 {
   msg <- err$message
-  set.status(continuation, grepl(msg, pattern="unexpected end of input"))
+  set.status(continuation, grepl(msg, pattern="(unexpected end of input|unexpected INCOMPLETE_STRING)"))
   
   if (!get.status(continuation))
   {
@@ -199,7 +199,7 @@ remoter_server_eval <- function(env)
   msg <- remoter_eval_filter_server(msg=msg)
   
   ### Sync environment if necessary
-  if (msg == "remoter_env_sync")
+  if (length(msg) == 1 && msg == "remoter_env_sync")
   {
     remoter_server_check_objs(env, force=TRUE)
     remoter_send(getval(status))
