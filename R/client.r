@@ -37,8 +37,8 @@
 #' @export
 client <- function(addr="localhost", port=55555, password=NULL, prompt="remoter", timer=FALSE)
 {
-  assert_that(is.flag(timer))
-  assert_that(is.string(prompt))
+  check.is.flag(timer)
+  check.is.string(prompt)
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port, warn=FALSE)

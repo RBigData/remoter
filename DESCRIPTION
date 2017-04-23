@@ -16,7 +16,6 @@ Imports:
     stats, 
     utils, 
     tools, 
-    assertthat (>= 0.1),
     getPass (>= 0.1-0),
     grDevices,
     graphics,

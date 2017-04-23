@@ -39,7 +39,7 @@ NULL
 #' @export
 exit <- function(client.only=TRUE, q.server=TRUE)
 {
-  if (!assert_nostop(is.flag(client.only))) 
+  if (!assert_nostop(is.flag(client.only)))
     return(invisible(FALSE))
   if (!assert_nostop(is.flag(q.server)))
     return(invisible(FALSE))

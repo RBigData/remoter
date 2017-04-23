@@ -21,6 +21,8 @@ Release 0.4-0 (//):
   * Added environment syncing.
   * Switched to LaTeX vignettes.
   * Added remote machines vignette.
+  * Dropped assertthat for reactor.
+  * Fixed multiline string input bug.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

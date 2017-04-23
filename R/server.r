@@ -48,14 +48,14 @@
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
   validate_port(port, warn=TRUE)
-  assert_that(is.null(password) || is.string(password))
-  assert_that(is.infinite(maxretry) || is.count(maxretry))
-  assert_that(is.flag(secure))
-  assert_that(is.flag(log))
-  assert_that(is.flag(verbose))
-  assert_that(is.flag(showmsg))
-  assert_that(is.flag(userpng))
-  assert_that(is.flag(sync))
+  check(is.null(password) || is.string(password))
+  check.is.posint(maxretry)
+  check.is.flag(secure)
+  check.is.flag(log)
+  check.is.flag(verbose)
+  check.is.flag(showmsg)
+  check.is.flag(userpng)
+  check.is.flag(sync)
   
   if (!log && verbose)
   {
@@ -119,7 +119,7 @@ remoter_warning <- function(warn)
 remoter_error <- function(err)
 {
   msg <- err$message
-  set.status(continuation, grepl(msg, pattern="unexpected end of input"))
+  set.status(continuation, grepl(msg, pattern="(unexpected end of input|unexpected INCOMPLETE_STRING)"))
   
   if (!get.status(continuation))
   {
@@ -199,7 +199,7 @@ remoter_server_eval <- function(env)
   msg <- remoter_eval_filter_server(msg=msg)
   
   ### Sync environment if necessary
-  if (msg == "remoter_env_sync")
+  if (length(msg) == 1 && msg == "remoter_env_sync")
   {
     remoter_server_check_objs(env, force=TRUE)
     remoter_send(getval(status))
