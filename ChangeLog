@@ -23,6 +23,7 @@ Release 0.4-0 (//):
   * Added remote machines vignette.
   * Dropped assertthat for reactor.
   * Fixed multiline string input bug.
+  * Use argon2 for password hashing.
 
 Release 0.3-2 (4/28/2016):
   * Minor internal cleanup.

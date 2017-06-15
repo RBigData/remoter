@@ -18,19 +18,21 @@ Imports:
     stats, 
     utils, 
     tools, 
-    getPass (>= 0.1-0),
     grDevices,
     graphics,
-    png (>= 0.1-7)
+    png (>= 0.1-7),
+    getPass (>= 0.1-0),
+    argon2 (>= 0.1-0)
 Suggests: 
     sodium (>= 0.2),
-    pbdRPC
+    pbdRPC (>= 0.1-0)
 Enhances:
     rmote
 NeedsCompilation: no
 ByteCompile: yes
-Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
-    email="wrathematics@gmail.com"),
+Authors@R: c(
+    person("Drew", "Schmidt", role=c("aut", "cre"),
+      email="wrathematics@gmail.com"),
     person("Wei-Chen", "Chen", role="aut"),
     person("R Core team", role = "ctb", comment = "some functions are
             modified from the R source code"))
