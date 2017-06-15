@@ -13,4 +13,3 @@ Returns \code{TRUE} if the sodium package is available, and
 \description{
 Report if the sodium package is availabe for use.
 }
-

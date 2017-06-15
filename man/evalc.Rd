@@ -21,4 +21,3 @@ local operations, then re-run your \code{client()} command.
 \details{
 Evaluate expressions on the client.
 }
-

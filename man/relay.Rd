@@ -25,4 +25,3 @@ Launcher for the remoter relay.
 The relay is an intermediary or "middleman" between the client
 and server meant for machines with split login/compute nodes.
 }
-

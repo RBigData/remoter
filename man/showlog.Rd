@@ -9,4 +9,3 @@ showlog()
 \description{
 Show the server log on the client.
 }
-

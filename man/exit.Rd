@@ -2,8 +2,9 @@
 % Please edit documentation in R/exit.r
 \name{exit}
 \alias{exit}
-\alias{kill}
+\alias{exit}
 \alias{shutdown}
+\alias{kill}
 \title{exit}
 \usage{
 exit(client.only = TRUE, q.server = TRUE)
@@ -44,4 +45,3 @@ for running \code{batch()} with \code{script="shutdown()"}.
 \seealso{
 \code{\link{server}} and \code{\link{batch}}
 }
-

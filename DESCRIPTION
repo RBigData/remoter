@@ -35,4 +35,4 @@ Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

@@ -25,4 +25,3 @@ local operations, then re-run your \code{client()} command.
 \details{
 Remove objects on the client.
 }
-

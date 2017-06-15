@@ -15,5 +15,7 @@ Drew Schmidt and Wei-Chen Chen
 \references{
 Project URL: \url{https://github.com/RBigData/remoter}
 }
+\author{
+Drew Schmidt and Wei-Chen Chen
+}
 \keyword{package}
-

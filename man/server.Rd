@@ -53,4 +53,3 @@ available, then you will not be able to start a secure server.
 If the server is secure, then a client can only connect if
 the client has the 'sodium' package available.
 }
-
