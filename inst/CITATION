@@ -9,8 +9,7 @@ citEntry(
   year = year,
   note = note,
   url = "https://cran.r-project.org/package=remoter",
-  textVersion = NULL,
-  key = "remoterpackage"
+  textVersion = NULL
 )
 
 citEntry(
@@ -20,6 +19,15 @@ citEntry(
   year = "2016",
   note = "{R} Vignette",
   url = "https://cran.r-project.org/package=remoter",
-  textVersion = NULL,
-  key = "remotervignette"
+  textVersion = NULL
+)
+
+citEntry(
+  entry = "Manual",
+  title = "Using {remoter} with Remote Machines",
+  author = personList(as.person("Drew Schmidt")),
+  year = "2016",
+  note = "{R} Vignette",
+  url = "https://cran.r-project.org/package=remoter",
+  textVersion = NULL
 )
