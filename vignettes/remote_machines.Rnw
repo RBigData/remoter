@@ -33,14 +33,15 @@ by a \texttt{:}), as this value goes in a separate argument.
 A port is a non-negative integer. The minimum value for a valid port is
 1024 (values 1-1023 are privileged), and the maximum value is 65535.
 That said, you are strongly encouraged to use port values between 49152
-and 65535. See \texttt{?pbdZMQ::random\_port} for details.
+and 65535. The documentation for \textbf{pbdZMQ}~\cite{Chen2015pbdZMQpackage}
+discusses this in detail.  Specifically, see \texttt{?pbdZMQ::random\_port}.
 
 Of course, all the usual issues apply. The server should be able to
 accept communications on the desired port. One way to handle this is by
 opening the desired port. Opening ports is very standard stuff, but
 dependent on the system you are using, so consult relevant documentation
 if you aren't sure what to do. Another way is by tunneling over ssh,
-which we mention at the conclusion of this section.
+which we discuss in a later section.
 
 
 
@@ -76,6 +77,8 @@ Though I personally recommend using something like \textbf{tmux} or
 
 \section{Connecting to a Remote Server}
 
+Because \textbf{remoter} is just and R package 
+
 Connect as with a local server, but specifying the correct remote
 address:
 
@@ -102,6 +105,12 @@ If you can't or don't want to open up a port on a remote system, you can
 always tunnel over ssh (assuming of course you actually have legitimate
 access to the machine\ldots{}).
 
+The \textbf{pbdRPC} package~\cite{Chen2017pbdRPCpackage} has offers some basic
+tunneling functionality.  At the time of writing, it is somewhat new and
+experimental.  But the reader is encouraged to check the package's
+vignette~\cite{Chen2017pbdRPCvignette} for more details.
+
+Even without \textbf{pbdRPC}, creating a tunnel is not terribly difficult.
 Say you have user account \texttt{user} on remote with address
 \texttt{my.remote.machine}. Suppose your remote machine is running a
 \textbf{remoter} server, listening on port 55555. Then you can run:
@@ -145,17 +154,25 @@ ssh user@my.remote.machine -L 55556:localhost:55555 'module load R && Rscript -e
 
 \section{Working with Relays}
 
-As of \textbf{remoter} version 0.3-1, you can now set up ``relays''.
+When an intermediary between the client/server is necessary, it is generally
+preferable to work with ssh tunnels whenever possible.  However, some use cases
+may require or suggest a different strategy.  To that end, as of
+\textbf{remoter} version 0.3-1, we now offer a different kind of spawnable
+instalce: ``relays''.
 These serve as ``middlemen'' between the client and server, and are
 particularly useful for resources like clusters and supercomputers where
 the login and compute nodes are separate. Internally, the relay is a
 server that does nothing but pass messages between the client and
-server.
+server. Figure~\ref{fig:relays} shows the basic conceptual idea about how
+relays work.
 
-The diagram below shows the basic setup for using a relay:
+\begin{figure}[ht]
+  \centering
+  \includegraphics{pics/remoter_relay}
+  \caption{Remoter relays and their relationship to the client and server. The
+    diagram is composed of icons from the OSA Icon Library}\label{fig:relays}
+\end{figure}
 
-A diagram showing the relationship between client, relay, and server.
-Image composed of icons from the OSA Icon Library
 
 To spawn a relay, you can do:
 
