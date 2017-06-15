@@ -57,8 +57,18 @@ You can install the stable version from CRAN using the usual
 install.packages("remoter")
 \end{lstlisting}
 
-The development version is maintained on GitHub, and can easily be
-installed by any of the packages that offer installations from GitHub:
+In order to be able to create and connect to secure servers, you need to also
+install the **sodium** package.  The use of **sodium** is optional because it is
+a non-trivial systems dependency, but it is highly recommended.  You can install
+it manually with a call to \texttt{install.packages("sodium")} or by installing
+\textbf{remoter} via:
+
+\begin{lstlisting}[language=rr]
+install.packages("remoter", dependencies=TRUE)
+\end{lstlisting}
+
+The development version is maintained on GitHub, and can easily be installed by
+any of the packages that offer installations from GitHub:
 
 \begin{lstlisting}[language=rr]
 ### Pick your preference
@@ -66,6 +76,9 @@ devtools::install_github("RBigData/remoter")
 ghit::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 \end{lstlisting}
+
+To simplify installations on cloud systems, we also have a
+\href{https://github.com/RBigData/pbdr-remoter}{Docker container} available.
 
 
 
