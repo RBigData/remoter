@@ -1,5 +1,4 @@
 *~
-*.pdf
 *.html
 *.swp
 
@@ -15,4 +14,4 @@ inst/doc/*
 *.blg
 *.out
 *.toc
-
+*.backup

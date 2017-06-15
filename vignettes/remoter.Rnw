@@ -17,6 +17,15 @@ Drew Schmidt \\
 
 
 \begin{document}
+
+\begin{figure}[ht]
+\vspace{-.5in}
+  \begin{minipage}[c]{8.5in}
+  \hspace{-1.0in}
+  \includegraphics[width=8in,height=10in]{./cover/remoter.pdf}
+  \end{minipage}
+\end{figure}
+
 \makefirstfew
 
 
@@ -24,10 +33,10 @@ Drew Schmidt \\
 
 \section{Introduction}\label{introduction}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \centering
-    \includegraphics[width=0.38\textwidth]{pics/remoter}
-\end{wrapfigure}
+% \begin{wrapfigure}{r}{0.4\textwidth}
+%   \centering
+%     \includegraphics[width=0.38\textwidth]{pics/remoter}
+% \end{wrapfigure}
 
 The \textbf{remoter} package \cite{remoter} allows you to control
 a remote R session from a local one. The local R session can be in a

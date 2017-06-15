@@ -17,6 +17,15 @@ Drew Schmidt \\
 
 
 \begin{document}
+
+\begin{figure}[ht]
+\vspace{-.5in}
+  \begin{minipage}[c]{8.5in}
+  \hspace{-1.0in}
+  \includegraphics[width=8in,height=10in]{./cover/remote_machines.pdf}
+  \end{minipage}
+\end{figure}
+
 \makefirstfew
 
 

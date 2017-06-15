@@ -19,6 +19,9 @@ buildVignette(){
   Rscript -e "tools::compactPDF('$1', gs_quality='ebook')"
 }
 
+cd cover
+./build_cover.sh
+cd ..
 
 cleanVignette
 buildVignette remoter.Rnw
