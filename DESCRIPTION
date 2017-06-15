@@ -26,8 +26,6 @@ Imports:
 Suggests: 
     sodium (>= 0.2),
     pbdRPC (>= 0.1-0)
-Enhances:
-    rmote
 NeedsCompilation: no
 ByteCompile: yes
 Authors@R: c(
