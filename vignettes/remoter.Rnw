@@ -67,14 +67,17 @@ install.packages("remoter")
 \end{lstlisting}
 
 In order to be able to create and connect to secure servers, you need to also
-install the **sodium** package.  The use of **sodium** is optional because it is
-a non-trivial systems dependency, but it is highly recommended.  You can install
-it manually with a call to \texttt{install.packages("sodium")} or by installing
-\textbf{remoter} via:
+install the \textbf{sodium} package.  The use of \textbf{sodium} is optional
+because it is a non-trivial systems dependency, but it is highly recommended. 
+You can install it manually with a call to \texttt{install.packages("sodium")}
+or by installing \textbf{remoter} via:
 
 \begin{lstlisting}[language=rr]
 install.packages("remoter", dependencies=TRUE)
 \end{lstlisting}
+
+For more information about the security features of \textbf{remoter}, see
+Section \ref{problems} below.
 
 The development version is maintained on GitHub, and can easily be installed by
 any of the packages that offer installations from GitHub:
@@ -274,15 +277,15 @@ If ever in any doubt, use the \texttt{is.secure()} command from the
 client to see if communications are encrypted.
 
 
-
-\section{Comparisons to the futures Package}
-
-TODO
+% 
+% \section{Comparisons to the futures Package}
+% 
+% TODO
 
 
 
 \section{Problems, Bugs, and Other Maladies}
-\label{problems-bugs-and-other-maladies}
+\label{problems}
 
 The package should basically be useable, but there are some issues you
 might want to be aware of.
@@ -309,14 +312,28 @@ be fixed.
 
 \textbf{Problem}: There's no security!
 
-\textbf{Explanation}: Currently there is a password system that works by
-simple string comparison, and communication can be encrypted via the
-\textbf{sodium} package. You must have \textbf{sodium} installed on both
+\textbf{Explanation}: Communications are optionally encrypted, if the
+\textbf{sodium} package is available.  The reason it is optional is that
+\textbf{libsodium} is actually a fairly weighty systems dependency.  This is a
+big problem for managed machines like clusters and supercomputers.  
+You must have \textbf{sodium} installed on both
 the client and server machine, and start the server with the option
-\texttt{secure=TRUE} to use this, however. Additionally, it is possible
-I messed the public key part up, so if you believe that ot be the case,
-I'd really like to know about it. We are also considering adding
-CurveZMQ support directly to pbdZMQ in the future.
+\texttt{secure=TRUE} to use this, however.
+
+There is also a password system.  Passwords are read in from the user/client
+(and optionally at server creation) with the \textbf{getPass}
+package~\cite{getPassPackage}.  This will read with masking (i.e., without
+printing the password as it is typed).  See the \textbf{getPass} package
+vignette~\cite{getPassVignette} for more details.
+
+Passwords are always hashed, whether or not the \textbf{sodium} package is
+available, as the hashing is done with the \textbf{argon2}
+package~\cite{argon2}.  This is a reasonably new algorithm, and is believed to
+be very secure.
+
+All that said, I am not a security person, so it is entirely possible that I
+have messed something up.  Just know that I'm trying my best, and that if you
+believe something to be in error, I'd really like to know about it.
 
 \textbf{Problem}: Something else is wrong!
 
