@@ -13,7 +13,6 @@
 #' \code{exit(FALSE, TRUE)}.  The \code{kill()} function is shorthand
 #' for running \code{batch()} with \code{script="shutdown()"}.
 #' 
-#' 
 #' @param client.only
 #' Logical; if \code{TRUE}, then the client disconnects from
 #' the server.  Otherwise, the server is shut down together 

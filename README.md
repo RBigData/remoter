@@ -48,10 +48,19 @@ For setting up a local server, you can do:
 remoter::server()
 ```
 
-And connect to it via:
+And connect to it interactively via:
 
 ```r
 remoter::client()
+```
+
+There is also the option to pipe commands to the server in batch using the `batch()` function:
+
+```r
+### Passing an R script file
+remoter::batch(file="my_rscript_file.r")
+### Passing in a script manually
+remoter::batch(script="1+1")
 ```
 
 For more details, including working with remote machines, see the package vignette.
