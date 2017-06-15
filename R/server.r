@@ -45,7 +45,8 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
+server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
+  log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
   validate_port(port, warn=TRUE)
   check(is.null(password) || is.string(password))

@@ -35,7 +35,8 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, password=NULL, prompt="remoter", timer=FALSE)
+client <- function(addr="localhost", port=55555, password=NULL,
+  prompt="remoter", timer=FALSE)
 {
   check.is.flag(timer)
   check.is.string(prompt)
