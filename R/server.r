@@ -48,6 +48,9 @@
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
+  if (length(port) == 1 && port == 0)
+    port <- pbdZMQ::random_open_port()
+  
   validate_port(port, warn=TRUE)
   check(is.null(password) || is.string(password))
   check.is.posint(maxretry)
@@ -59,10 +62,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   check.is.flag(sync)
   
   if (!log && verbose)
-  {
-    warning("logging must be enabled for verbose logging! enabling logging...")
     log <- TRUE
-  }
   
   if (!has.sodium() && secure)
     stop("secure servers can only be launched if the 'sodium' package is installed")
