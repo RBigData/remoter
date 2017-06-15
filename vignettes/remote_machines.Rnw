@@ -33,6 +33,11 @@ Drew Schmidt \\
 \section{Introduction}
 \label{intro}
 
+This guide is for those who understand the basics of using \textbf{remoter},
+and wish to learn how to interact with a remotely hosted server.  For the
+basics, please first see the \textit{Guide to the remoter
+Package}~\cite{remoterguide} guide.
+
 Before we begin, a quick word about addresses and ports.
 
 An address should not include any protocols, like \texttt{tcp://} or
