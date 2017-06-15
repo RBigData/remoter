@@ -56,40 +56,57 @@ which we discuss in a later section.
 
 \section{Creating a Remote Server}
 
-Before beginning, you need to spawn your server. To do this, you can:
+Before beginning, you need to spawn your server.  This is something you only
+need to do once, and you need to do it in such a way that it is allowed to run
+persistently, even after you log off.
+
+The easiest setup is if your server is available via ssh, and probably running
+headless (without a monitor/GUI desktop environment).  This is what your typical
+linux cloud instance looks like.  In this case,
+we suggest you use a tool like tmux or screen.  This way, you can re-attach your
+server session and easily read the logs live, which is very useful for
+debugging.  However, this is not strictly necessary.
+
+If you are using something like tmux or screen, then your workflow would look
+something like:
 
 \begin{enumerate}
-\item
-  ssh to your remote (you only need to do this once!)
-\item
-  Start a \textbf{tmux} or \textbf{screen} session
-\item
-  Start R and run \texttt{remoter::server()} (see \texttt{?server} for
-  additional options). Or even better, run
-  \texttt{Rscript\ -e\ remoter::server()} so the server dies if
-  something goes wrong.
-\item
-  Detach your tmux/screen session and log out.
+  \item ssh to your remote (you only need to do this once!)
+  \item Start a \textbf{tmux} or \textbf{screen} session
+  \item Start R and run \texttt{remoter::server()} (see \texttt{?server} for
+    additional options). Or even better, run
+    \texttt{Rscript\ -e\ remoter::server()} so the server dies if
+    something goes wrong.
+  \item Detach your tmux/screen session and log out.
 \end{enumerate}
 
-Alternatively, you can run the R session in the background by a fork via
+Alternatively, if you wish to avoid tmux/screen, you still need to ssh to your
+machine.  Then you can run the R session in the background by a fork via
 something like:
 
 \begin{lstlisting}[language=rr]
 Rscript -e "remoter::server()" &
 \end{lstlisting}
 
-Though I personally recommend using something like \textbf{tmux} or
-\textbf{screen} instead.
+and disconnect.  If for some reason the server becomes unreachable via
+\textbf{remoter}, you will have to manually connect again via ssh to kill the
+rogue process with the \texttt{kill} command.
+
+If you are running a full desktop environment, which is typical with Windows
+servers, you should be able to launch an R process (say RGui) and start the
+server there via \texttt{remoter::server()}.  Admittedly, we have no experience
+with this configuration, so if you have experience here, we would love to hear
+from you.
 
 
 
 \section{Connecting to a Remote Server}
 
-Because \textbf{remoter} is just and R package 
-
-Connect as with a local server, but specifying the correct remote
-address:
+Because \textbf{remoter} is just and R package to connect to the remote, you
+need only fire up your favorite R interface.  This can be the terminal, RStudio,
+RGui (Windows), R.app (Mac), or even Emacs.  Whatever your choice, connect as
+with a local server, but specifying the correct remote address (and possibly
+port):
 
 \begin{lstlisting}[language=rr]
 remoter::client("my.remote.address")
@@ -103,8 +120,10 @@ on port \texttt{56789}. Then you would run:
 remoter::client("ec2-1-2-3-4.compute-1.amazonaws.com", port=56789)
 \end{lstlisting}
 
-That's it. Everything else should work just as when you were running the
-server locally.
+That's it! Everything else should work just as when you were running the
+server locally.  The only hiccup is opening up that port.  If that is not
+possible for you for whatever reason, then you may need to set up an ssh tunnel,
+which we describe in the following section.
 
 
 
@@ -131,10 +150,8 @@ ssh user@my.remote.machine -L 55556:localhost:55555 -N
 To be totally unambiguous:
 
 \begin{itemize}
-\item
-  server port (running on remote): 55555
-\item
-  client port (running on your laptop): 55556
+  \item server port (running on remote): 55555
+  \item client port (running on your laptop): 55556
 \end{itemize}
 
 This will allow you to connect to the remote machine as follows:
