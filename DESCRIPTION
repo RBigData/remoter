@@ -21,6 +21,7 @@ Imports:
     grDevices,
     graphics,
     png (>= 0.1-7),
+    getip (>= 0.1-0),
     getPass (>= 0.1-0),
     argon2 (>= 0.1-0)
 Suggests: 

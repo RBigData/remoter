@@ -16,7 +16,8 @@
 #' @param port
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
-#' must agree.
+#' must agree.  If the value is 0, then a random open port will be
+#' selected.
 #' @param password
 #' A password the client must enter before the user can process
 #' commands on the server.  If the value is \code{NULL}, then no
@@ -69,6 +70,9 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   
   reset_state()
   
+  if (port == 0)
+    port <- pbdZMQ::random_open_port()
+  
   set(whoami, "remote")
   set(logfile, logfile_init())
   set(serverlog, log)
@@ -84,14 +88,19 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   if (userpng)
     options(device = remoter::rpng)
   
-  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
-  invisible(gc())
-  
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
   
   options(warn = 1)
   
+  
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
+  ips <- getips()
+  logprint(paste("                           Internal IP:\t", ips$ip_in), timestamp=FALSE)
+  logprint(paste("                           External IP:\t", ips$ip_ex), timestamp=FALSE)
+  logprint(paste("                           Port:\t", port), timestamp=FALSE)
+  
+  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
+  invisible(gc())
   
   remoter_repl_server()
   remoter_exit_server()
@@ -275,7 +284,6 @@ remoter_server_eval <- function(env)
   
   
   remoter_server_check_objs(env)
-  
   
   remoter_send(getval(status))
 }
