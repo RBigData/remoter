@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{remoter-guide}
+%\VignetteIndexEntry{Guide to the remoter Package}
 \documentclass[]{article}
 
 \usepackage{wrapfig}
