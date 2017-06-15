@@ -6,7 +6,7 @@ fixVersion(){
 }
 
 cleanVignette(){
-  rm -f *.aux *.bbl *.blg *.log *.out *.toc *.dvi
+  rm -f *.aux *.bbl *.blg *.log *.out *.toc *.dvi *.backup
 }
 
 buildVignette(){
