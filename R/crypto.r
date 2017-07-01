@@ -49,7 +49,7 @@ generate_keypair <- function()
 pwhash <- function(password)
 {
   if (!is.null(password))
-    sodium::password_store(password)
+    argon2::pw_hash(password)
   else
     NULL
 }
@@ -58,8 +58,5 @@ pwhash <- function(password)
 
 pwcheck <- function(pw)
 {
-  if (getval(secure))
-    sodium::password_verify(getval(password), pw)
-  else
-    identical(getval(password), pw)
+  argon2::pw_check(getval(password), pw)
 }

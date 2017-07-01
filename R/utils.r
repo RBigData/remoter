@@ -63,10 +63,10 @@ validate_port <- function(port, warn=FALSE)
   check.is.posint(port)
   check(port > 1023 && port < 65536)
   
-  if (port < 49152 && warn)
+  if (port != 0 && port < 49152 && warn)
     cat("WARNING: You are strongly encouraged to use port values between 49152 and 65536. See '?pbdZMQ::random_port' for details.")
   
-  TRUE
+  invisible(TRUE)
 }
 
 

@@ -26,4 +26,3 @@ local operations, then re-run your \code{client()} command.
 \details{
 View objects on the client.
 }
-

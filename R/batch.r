@@ -39,7 +39,8 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-batch <- function(addr="localhost", port=55555, password=NULL, file, script, timer=FALSE)
+batch <- function(addr="localhost", port=55555, password=NULL, file, script,
+  timer=FALSE)
 {
   check.is.flag(timer)
   validate_address(addr)

@@ -1,11 +1,16 @@
-logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="")
+logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE)
 {
   if (identical(msg, magicmsg_first_connection))
     return(invisible())
   
   if ((getval(serverlog) && !checkverbose && !checkshowmsg) || (getval(verbose) && checkverbose) || (getval(showmsg) && checkshowmsg))
   {
-    logmsg <- paste0(preprint, "[", Sys.time(), "]: ", level, ifelse(level=="", "", ": "), msg, "\n")
+    if (timestamp)
+      ts <- paste0("[", Sys.time(), "]: ")
+    else
+      ts <- ""
+    
+    logmsg <- paste0(preprint, ts, level, ifelse(level=="", "", ": "), msg, "\n")
     # cat(logmsg)
     getPass:::print_stderr(logmsg)
     logprint_file(logmsg)

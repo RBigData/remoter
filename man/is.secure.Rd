@@ -16,4 +16,3 @@ R prompt), then \code{NA} is returned.
 Report if communications with the connected server are
 encrypted.
 }
-

@@ -7,7 +7,9 @@ Description: A set of utilities for controlling a remote R session
     for more details) and connect to it from your local R session,
     including 'RStudio'.  Network communication is handled
     by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The 
-    client/server framework is a custom 'REPL'.
+    client/server framework is a custom 'REPL' and runs entirely in
+    your R session without the need for installing a custom environment
+    on your system.
 License: BSD 2-clause License + file LICENSE
 Depends: 
     R (>= 3.2.0), 
@@ -16,23 +18,23 @@ Imports:
     stats, 
     utils, 
     tools, 
-    getPass (>= 0.1-0),
     grDevices,
     graphics,
-    png (>= 0.1-7)
+    png (>= 0.1-7),
+    getPass (>= 0.1-0),
+    argon2 (>= 0.2-0)
 Suggests: 
     sodium (>= 0.2),
-    pbdRPC
-Enhances:
-    rmote
+    pbdRPC (>= 0.1-0)
 NeedsCompilation: no
 ByteCompile: yes
-Authors@R: c(person("Drew", "Schmidt", role=c("aut", "cre"),
-    email="wrathematics@gmail.com"),
+Authors@R: c(
+    person("Drew", "Schmidt", role=c("aut", "cre"),
+      email="wrathematics@gmail.com"),
     person("Wei-Chen", "Chen", role="aut"),
     person("R Core team", role = "ctb", comment = "some functions are
             modified from the R source code"))
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

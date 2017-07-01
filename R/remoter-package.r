@@ -1,8 +1,13 @@
 #' remoter
 #'
-#' A package for running R commands on a remote R session.  With 
-#' remoter, you can use RStudio running on your laptop to execute
-#' commands on an R session running on, for example, Amazon's EC2.
+#' A set of utilities for controlling a remote R session
+#' from a local one.  Simply set up a server (see package vignette
+#' for more details) and connect to it from your local R session,
+#' including 'RStudio'.  Network communication is handled
+#' by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The 
+#' client/server framework is a custom 'REPL' and runs entirely in
+#' your R session without the need for installing a custom environment
+#' on your system.
 #' 
 #' @references Project URL: \url{https://github.com/RBigData/remoter}
 #' @author Drew Schmidt and Wei-Chen Chen
@@ -10,6 +15,7 @@
 #' @name remoter-package
 #' 
 #' @importFrom pbdZMQ zmq
+#' @importFrom argon2 pw_hash pw_check
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion help str
 #' @importFrom tools file_path_as_absolute Rd2txt

@@ -16,7 +16,8 @@
 #' @param port
 #' The port (number) that will be used for communication between 
 #' the client and server.  The port value for the client and server
-#' must agree.
+#' must agree.  If the value is 0, then a random open port will be
+#' selected.
 #' @param password
 #' A password the client must enter before the user can process
 #' commands on the server.  If the value is \code{NULL}, then no
@@ -45,8 +46,12 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
+server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
+  log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
 {
+  if (length(port) == 1 && port == 0)
+    port <- pbdZMQ::random_open_port()
+  
   validate_port(port, warn=TRUE)
   check(is.null(password) || is.string(password))
   check.is.posint(maxretry)
@@ -58,15 +63,15 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   check.is.flag(sync)
   
   if (!log && verbose)
-  {
-    warning("logging must be enabled for verbose logging! enabling logging...")
     log <- TRUE
-  }
   
   if (!has.sodium() && secure)
     stop("secure servers can only be launched if the 'sodium' package is installed")
   
   reset_state()
+  
+  if (port == 0)
+    port <- pbdZMQ::random_open_port()
   
   set(whoami, "remote")
   set(logfile, logfile_init())
@@ -76,30 +81,49 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(), l
   set(port, port)
   set(secure, secure)
   set(sync, sync)
-  if (secure)
-    set(password, pwhash(password))
-  else
-    set(password, password)
+  set(password, pwhash(password))
   
   ### Backup default device
   options(device.default = getOption("device"))
   if (userpng)
     options(device = remoter::rpng)
   
-  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
-  invisible(gc())
-  
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
   
   options(warn = 1)
   
+  
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
+  ### TODO
+  # ips <- remoter_getips()
+  # logprint(paste("                           Internal IP: ", ips$ip_in), timestamp=FALSE)
+  # logprint(paste("                           External IP: ", ips$ip_ex), timestamp=FALSE)
+  logprint(paste("                           Port:        ", port), timestamp=FALSE)
+  
+  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
+  invisible(gc())
   
   remoter_repl_server()
   remoter_exit_server()
   
   invisible(TRUE)
 }
+
+
+
+### TODO
+# remoter_getips <- function()
+# {
+#   ip_in <- tryCatch(getip::getip("internal"), error=identity)
+#   if (inherits(tryCatch(ip_in, error=identity), "error"))
+#     ip_in  <- "ERROR: couldn't determine internal IP"
+#   
+#   ip_ex <- tryCatch(getip::getip("external"), error=identity)
+#   if (inherits(tryCatch(ip_ex, error=identity), "error"))
+#     ip_ex  <- "ERROR: couldn't determine external IP"
+#   
+#   return(list(ip_in=ip_in, ip_ex=ip_ex))
+# }
 
 
 
@@ -277,7 +301,6 @@ remoter_server_eval <- function(env)
   
   
   remoter_server_check_objs(env)
-  
   
   remoter_send(getval(status))
 }

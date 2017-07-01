@@ -35,7 +35,8 @@
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
-client <- function(addr="localhost", port=55555, password=NULL, prompt="remoter", timer=FALSE)
+client <- function(addr="localhost", port=55555, password=NULL,
+  prompt="remoter", timer=FALSE)
 {
   check.is.flag(timer)
   check.is.string(prompt)
@@ -192,7 +193,6 @@ remoter_client_sendrecv <- function(input, env)
   ### Update status by the server's results.
   set(status, remoter_receive())
   
-  
   ### Update client's local env as necessary
   remote_objs <- get.status(remote_objs)
   if (!is.null(remote_objs))
@@ -200,7 +200,6 @@ remoter_client_sendrecv <- function(input, env)
     for (nm in ls(envir=remote_objs))
       assign(nm, get(nm, envir=remote_objs), envir=env)
   }
-  
   
   ### Because rpng.off() needs a call at the client to display image.
   if (get.status(need_auto_rpng_off))

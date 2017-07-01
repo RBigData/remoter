@@ -1,4 +1,4 @@
-%\VignetteIndexEntry{remoter-guide}
+%\VignetteIndexEntry{Guide to the remoter Package}
 \documentclass[]{article}
 
 \usepackage{wrapfig}
@@ -17,6 +17,15 @@ Drew Schmidt \\
 
 
 \begin{document}
+
+\begin{figure}[ht]
+\vspace{-.5in}
+  \begin{minipage}[c]{8.5in}
+  \hspace{-1.0in}
+  \includegraphics[width=8in,height=10in]{./cover/remoter.pdf}
+  \end{minipage}
+\end{figure}
+
 \makefirstfew
 
 
@@ -24,10 +33,10 @@ Drew Schmidt \\
 
 \section{Introduction}\label{introduction}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
-  \centering
-    \includegraphics[width=0.38\textwidth]{pics/remoter}
-\end{wrapfigure}
+% \begin{wrapfigure}{r}{0.4\textwidth}
+%   \centering
+%     \includegraphics[width=0.38\textwidth]{pics/remoter}
+% \end{wrapfigure}
 
 The \textbf{remoter} package \cite{remoter} allows you to control
 a remote R session from a local one. The local R session can be in a
@@ -57,8 +66,21 @@ You can install the stable version from CRAN using the usual
 install.packages("remoter")
 \end{lstlisting}
 
-The development version is maintained on GitHub, and can easily be
-installed by any of the packages that offer installations from GitHub:
+In order to be able to create and connect to secure servers, you need to also
+install the \textbf{sodium} package.  The use of \textbf{sodium} is optional
+because it is a non-trivial systems dependency, but it is highly recommended. 
+You can install it manually with a call to \texttt{install.packages("sodium")}
+or by installing \textbf{remoter} via:
+
+\begin{lstlisting}[language=rr]
+install.packages("remoter", dependencies=TRUE)
+\end{lstlisting}
+
+For more information about the security features of \textbf{remoter}, see
+Section \ref{problems} below.
+
+The development version is maintained on GitHub, and can easily be installed by
+any of the packages that offer installations from GitHub:
 
 \begin{lstlisting}[language=rr]
 ### Pick your preference
@@ -66,6 +88,9 @@ devtools::install_github("RBigData/remoter")
 ghit::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 \end{lstlisting}
+
+To simplify installations on cloud systems, we also have a
+\href{https://github.com/RBigData/pbdr-remoter}{Docker container} available.
 
 
 
@@ -173,7 +198,7 @@ more detail about specifics on using the client/server setup.
 
 
 
-\section{Using remoter}\label{using-remoter}
+\section{Using remoter Interactively}\label{using-remoter}
 
 Before proceeding, make sure you understand how to set up a client and a
 server. See the previous section for details.
@@ -220,15 +245,58 @@ disconnect the client from the server without shutting down the server
 by killing the client R session or executing \texttt{Ctrl-c} in the
 client.
 
-\subsection{Security}\label{security}
+
+
+\section{Using remoter in Batch}
+
+Not every workflow works best interactively.  This is why we also offer the
+\texttt{batch()} function.  This allows you to pipe a script (either in a
+separate file, or typed out in the R session --- examples below) to a
+\textbf{remoter} server without having to interactively control things.
+
+Perhaps the simplest example is using the \texttt{script=} argument of
+\texttt{batch()}.
+
+\begin{lstlisting}[language=rr]
+remoter::batch(script="1+1")
+\end{lstlisting}
+
+Then, assuming a \textbf{remoter} session is running on the local
+machine\footnote{for using \texttt{batch()} with remote servers, the same
+caveats and rules apply as for \texttt{client()} --- see the \textit{Using
+remoter with Remote Machines}~\cite{remotemachineguide} guide for details}
+the scintillating result of "2" will be returned.
+
+You can also easily pipe off longer scripts stored in separate files.  Say you
+have a script "myscript.r" like so:
+
+\begin{lstlisting}[language=rr, title=myscript.r]
+x <- 1
+y <- 2
+x + y
+\end{lstlisting}
+
+Then you can send it for evaluation to the \textbf{remoter} server by running:
+
+\begin{lstlisting}[language=rr]
+remoter::batch(file="myscript.r")
+\end{lstlisting}
+
+We conclude with a note of caution.  If you have a "master script" that calls
+\texttt{source()} (or similar) on other scripts in different files, this will
+not work without modification.  You should change your \texttt{source()} calls
+to the appropriate \texttt{batch()} call.  In fact, you may think of
+\texttt{batch()} as \texttt{source()} for remote servers.
+
+
+
+\section{Security}\label{security}
 
 Security in \textbf{remoter} comes in two forms currently:
 
 \begin{enumerate}
-\item
-  password credentialing
-\item
-  public key encryption
+\item password credentialing
+\item public key encryption
 \end{enumerate}
 
 The password is declared when the server is spawned as a launch option
@@ -252,15 +320,15 @@ If ever in any doubt, use the \texttt{is.secure()} command from the
 client to see if communications are encrypted.
 
 
-
-\section{Comparisons to the futures Package}
-
-TODO
+% 
+% \section{Comparisons to the futures Package}
+% 
+% TODO
 
 
 
 \section{Problems, Bugs, and Other Maladies}
-\label{problems-bugs-and-other-maladies}
+\label{problems}
 
 The package should basically be useable, but there are some issues you
 might want to be aware of.
@@ -287,14 +355,28 @@ be fixed.
 
 \textbf{Problem}: There's no security!
 
-\textbf{Explanation}: Currently there is a password system that works by
-simple string comparison, and communication can be encrypted via the
-\textbf{sodium} package. You must have \textbf{sodium} installed on both
+\textbf{Explanation}: Communications are optionally encrypted, if the
+\textbf{sodium} package is available.  The reason it is optional is that
+\textbf{libsodium} is actually a fairly weighty systems dependency.  This is a
+big problem for managed machines like clusters and supercomputers.  
+You must have \textbf{sodium} installed on both
 the client and server machine, and start the server with the option
-\texttt{secure=TRUE} to use this, however. Additionally, it is possible
-I messed the public key part up, so if you believe that ot be the case,
-I'd really like to know about it. We are also considering adding
-CurveZMQ support directly to pbdZMQ in the future.
+\texttt{secure=TRUE} to use this, however.
+
+There is also a password system.  Passwords are read in from the user/client
+(and optionally at server creation) with the \textbf{getPass}
+package~\cite{getPassPackage}.  This will read with masking (i.e., without
+printing the password as it is typed).  See the \textbf{getPass} package
+vignette~\cite{getPassVignette} for more details.
+
+Passwords are always hashed, whether or not the \textbf{sodium} package is
+available, as the hashing is done with the \textbf{argon2}
+package~\cite{argon2}.  This is a reasonably new algorithm, and is believed to
+be very secure.
+
+All that said, I am not a security person, so it is entirely possible that I
+have messed something up.  Just know that I'm trying my best, and that if you
+believe something to be in error, I'd really like to know about it.
 
 \textbf{Problem}: Something else is wrong!
 

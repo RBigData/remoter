@@ -6,7 +6,7 @@ fixVersion(){
 }
 
 cleanVignette(){
-  rm -f *.aux *.bbl *.blg *.log *.out *.toc *.dvi
+  rm -f *.aux *.bbl *.blg *.log *.out *.toc *.dvi *.backup
 }
 
 buildVignette(){
@@ -19,6 +19,9 @@ buildVignette(){
   Rscript -e "tools::compactPDF('$1', gs_quality='ebook')"
 }
 
+cd cover
+./build_cover.sh
+cd ..
 
 cleanVignette
 buildVignette remoter.Rnw

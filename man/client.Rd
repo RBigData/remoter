@@ -42,4 +42,3 @@ to client) are handled in this way.
 
 To shut down the server and the client, see \code{exit()}.
 }
-

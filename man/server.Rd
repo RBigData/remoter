@@ -11,7 +11,8 @@ server(port = 55555, password = NULL, maxretry = 5,
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
 the client and server.  The port value for the client and server
-must agree.}
+must agree.  If the value is 0, then a random open port will be
+selected.}
 
 \item{password}{A password the client must enter before the user can process
 commands on the server.  If the value is \code{NULL}, then no
@@ -53,4 +54,3 @@ available, then you will not be able to start a secure server.
 If the server is secure, then a client can only connect if
 the client has the 'sodium' package available.
 }
-
