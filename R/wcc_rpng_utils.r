@@ -66,8 +66,7 @@ rpng.off <- function(which = grDevices::dev.cur())
     return(ret)
   }
 
-  if (iam("remote") && inwhileloop("server") &&
-      !isrmoteon() && !isrmotegraphics())
+  if (iam("remote") && inwhileloop("server"))
   {
     ### Overwrite native R functions.
     set.status(need_auto_rpng_off, TRUE)
