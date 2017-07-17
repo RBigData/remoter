@@ -74,10 +74,7 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
 
   if (iam("remote") && inwhileloop("server"))
   {
-    if(!isrmoteon())
-      help_type <- "text"
-    else
-      help_type <- "html"
+    help_type <- "text"
   }
   else
     help_type <- getOption("help_type")
@@ -95,28 +92,20 @@ rhelp <- function(topic, package = NULL, lib.loc = NULL,
   ### Return Rd when server is on
   if (iam("remote") && inwhileloop("server"))
   {
-    if(!isrmoteon())
-    {
-      ### Ask client to show
-      if (class(ret) != "try-error")
-        set.status(need_auto_rhelp_on, TRUE)
+    ### Ask client to show
+    if (class(ret) != "try-error")
+      set.status(need_auto_rhelp_on, TRUE)
 
-      ### Deal with "help_files_with_topic" or "packageInfo"
-      if (class(ret) == "help_files_with_topic")
-        Rd <- print.rhelp_files_with_topic(ret)
-      else if (class(ret) == "packageInfo")
-        Rd <- print.rpackageInfo(ret)
-      else
-        Rd <- ret
-
-      ### Visible return is necessary because of retmoter_server_eval().
-      return(Rd)
-    }
+    ### Deal with "help_files_with_topic" or "packageInfo"
+    if (class(ret) == "help_files_with_topic")
+      Rd <- print.rhelp_files_with_topic(ret)
+    else if (class(ret) == "packageInfo")
+      Rd <- print.rpackageInfo(ret)
     else
-    {
-      print(ret)
-      return(invisible(ret))
-    }
+      Rd <- ret
+
+    ### Visible return is necessary because of retmoter_server_eval().
+    return(Rd)
   }
   else
     return(ret)
@@ -145,7 +134,7 @@ help <- rhelp
   ret <- eval(parse(text = txt))
 
   ### Return Rd when server is on
-  if (iam("remote") && inwhileloop("server") && !isrmoteon())
+  if (iam("remote") && inwhileloop("server"))
   {
     ### Ask client to show
     if (class(ret) != "try-error")
