@@ -12,7 +12,7 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
     
     logmsg <- paste0(preprint, ts, level, ifelse(level=="", "", ": "), msg, "\n")
     # cat(logmsg)
-    getPass:::print_stderr(logmsg)
+    message(logmsg, appendLF=FALSE)
     logprint_file(logmsg)
   }
   

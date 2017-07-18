@@ -14,7 +14,6 @@
 #' 
 #' @name remoter-package
 #' 
-#' @importFrom pbdZMQ zmq
 #' @importFrom argon2 pw_hash pw_check
 #' @importFrom stats runif
 #' @importFrom utils capture.output globalVariables packageVersion help str

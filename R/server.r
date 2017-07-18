@@ -39,7 +39,7 @@
 #' @param sync
 #' Logical; if TRUE, the client will have \code{str()}'d versions of server
 #' objects recreated in the global environment.  This is useful in IDE's like
-#' RStudio, but it carries a performance penalty.  For terminal useres, this is
+#' RStudio, but it carries a performance penalty.  For terminal users, this is
 #' not recommended.
 #' 
 #' @return
