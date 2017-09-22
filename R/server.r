@@ -98,6 +98,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   # ips <- remoter_getips()
   # logprint(paste("                           Internal IP: ", ips$ip_in), timestamp=FALSE)
   # logprint(paste("                           External IP: ", ips$ip_ex), timestamp=FALSE)
+  logprint(paste("                           Hostname:    ", get_hostname()), timestamp=FALSE)
   logprint(paste("                           Port:        ", port), timestamp=FALSE)
   
   rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
