@@ -1,9 +1,10 @@
 # remoter
 
 * **Version:** 0.4-0
-* **URL**: https://github.com/RBigData/remoter
 * **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
 * **Author:** Drew Schmidt and Wei-Chen Chen
+* **Project home**: https://github.com/RBigData/remoter
+* **Bug reports**: https://github.com/RBigData/remoter/issues
 
 
 Control a remote R session from your local R session.  The package uses [**pbdZMQ**](https://github.com/snoweye/pbdZMQ) to handle the communication and networking.  Encryption is supported if the **sodium** package is (optionally) installed.  Details below.

@@ -1,7 +1,6 @@
 library(remoter)
 
-# TODO is this acceptable on CRAN?
-system("Rscript -e 'remoter::server()'", wait=FALSE)
+system("${R_HOME}/bin${R_ARCH_BIN}/Rscript -e 'remoter::server()'", wait=FALSE)
 
 script <- "
 1+1

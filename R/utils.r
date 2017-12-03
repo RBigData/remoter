@@ -131,3 +131,10 @@ isRStudio <- function()
 {
   tolower(.Platform$GUI) == "rstudio"
 }
+
+
+
+get_hostname = function()
+{
+  Sys.info()[["nodename"]]
+}
