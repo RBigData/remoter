@@ -70,10 +70,16 @@ rpng.off <- function(which = grDevices::dev.cur())
   {
     ### Overwrite native R functions.
     set.status(need_auto_rpng_off, TRUE)
-    grDevices::dev.off(which = which)
+    ret <- grDevices::dev.off(which = which)
+
+    ### Empty filename or not exist (e.g. pdf(...) or other files are called).
     filename <- .GlobalEnv$.rDevices[[which]]
-    .GlobalEnv$.rDevices[[which]] <- ''
-    ret <- png::readPNG(filename)
+    if(filename != '' && !is.null(filename))
+    {
+      .GlobalEnv$.rDevices[[which]] <- ''
+      ret <- png::readPNG(filename)
+    }
+
     return(invisible(ret))
   }
 
@@ -115,8 +121,12 @@ auto_rpng_off_local <- function(img)
   }
   else
   {
-    eval(parse(text = "assign('.rpng.img', img, envir = .GlobalEnv)"))
-    cat("Check 'local' .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
+    ### No needs for pdf(...) or when other files are called.
+    if(!is.null(img))
+    {
+      eval(parse(text = "assign('.rpng.img', img, envir = .GlobalEnv)"))
+      cat("Check 'local' .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
+    }
   }
 }
 
