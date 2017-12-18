@@ -32,18 +32,26 @@ statistics after every command, be used?}
 Returns \code{TRUE} invisibly on successful exit.
 }
 \description{
-Run a script on a remote server in batch.  Similar to R's own
+Run a local script on a remote server in batch.  Similar to R's own
 \code{source()} function.
+}
+\details{
+Note that \code{batch()} can not be run from inside an active connection.
+Its purpose is to bypass the need to start a connection via \code{client()}
 }
 \examples{
 \dontrun{
-# Run a script in an R file
+library(remoter)
+### NOTE first run a server via remoter::server() )in a separate R session.
+### For simplicity, assume they are on the same machine.
+
+# Run a script in an R file on the local/client machine
 file <- "/path/to/an/R/script.r"
 batch(file=file)
 
 # Run a script stored in a character vector
 script <- "1+1"
-batch(script=script)
+batch(script="1+1")
 }
 
 }
