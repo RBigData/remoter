@@ -24,6 +24,7 @@ Release 0.4-0:
   * Use argon2 for password hashing.
   * Overhauled vignettes.
   * Display port and internal/external ip's on server creation via getip.
+  * Fix some NULL and image file calls when dev.off() and auto_off are needed.
 
 Release 0.3-2:
   * Minor internal cleanup.

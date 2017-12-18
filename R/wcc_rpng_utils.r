@@ -66,7 +66,12 @@ rpng.off <- function(which = grDevices::dev.cur())
     return(ret)
   }
 
-  if (iam("remote") && inwhileloop("server"))
+  ### The ggplot below does NOT need auto_rpng_off but need a dev.off() later.
+  ### remoter> g <- ggplot(da, aes(x, y)) + geom_point()
+  ### remoter> pdf()
+  ### remoter> g
+  ### remoter>dev.off()
+  if (iam("remote") && inwhileloop("server") && is.rpng.open())
   {
     ### Overwrite native R functions.
     set.status(need_auto_rpng_off, TRUE)
@@ -77,7 +82,9 @@ rpng.off <- function(which = grDevices::dev.cur())
     return(invisible(ret))
   }
 
-  ### Call native R functions.
+  ### For normal cases, such as interactive and file devices, one may call
+  ### dev.off() to turn off the display, so to keep consistent I need to
+  ### call/return the native R function because dev.off() is hijack.
   ret <- grDevices::dev.off(which = which)
   return(ret)
 }
@@ -126,3 +133,10 @@ is.gg.ggplot <- function(x)
 {
   all(class(x) == c("gg", "ggplot"))
 }
+
+is.rpng.open <- function(which = grDevices::dev.cur())
+{
+   filename <- .GlobalEnv$.rDevices[[which]]
+   return(!is.null(filename) && filename != '')
+}
+
