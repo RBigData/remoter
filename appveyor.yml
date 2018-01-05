@@ -20,8 +20,9 @@ environment:
     R_ARCH: x64
 
 build_script:
-  - travis-tool.sh install_deps
+  - Rscript -e "install.packages('dev.tools')"
   - Rscript -e "devtools::install_github('snoweye/pbdZMQ')"
+  - travis-tool.sh install_deps
   - R CMD build --no-build-vignettes --no-manual --no-resave-data .
   - R CMD INSTALL remoter*.tar.gz
   - R CMD check --as-cran remoter*.tar.gz
