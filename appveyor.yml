@@ -20,7 +20,7 @@ environment:
     R_ARCH: x64
 
 build_script:
-  - Rscript -e "install.packages('dev.tools',repos='http://cran.r-project.org')"
+  - Rscript -e "install.packages('devtools',repos='http://cran.r-project.org')"
   - Rscript -e "devtools::install_github('snoweye/pbdZMQ')"
   - travis-tool.sh install_deps
   - R CMD build --no-build-vignettes --no-manual --no-resave-data .
