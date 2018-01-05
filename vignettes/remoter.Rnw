@@ -1,7 +1,6 @@
 %\VignetteIndexEntry{Guide to the remoter Package}
 \documentclass[]{article}
 
-\usepackage{wrapfig}
 \input{./include/settings}
 
 
