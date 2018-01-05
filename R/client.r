@@ -59,7 +59,7 @@ client <- function(addr="localhost", port=55555, password=NULL,
 
   ### Both axes are proportionally scaled to fit the new window size
   if (isWindows())
-    windows.options(rescale = "fit")
+    grDevices::windows.options(rescale = "fit")
   
   remoter_repl_client()
   

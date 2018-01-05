@@ -20,7 +20,7 @@
 #' @importFrom tools file_path_as_absolute Rd2txt
 #' @importFrom getPass getPass
 #' @importFrom grDevices dev.cur dev.list dev.next dev.prev dev.off dev.set
-#'             dev.new dev.size png as.raster windows.options
+#'             dev.new dev.size png as.raster
 #' @importFrom graphics plot.new par plot rasterImage
 #' @importFrom png readPNG
 #' 
