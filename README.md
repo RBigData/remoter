@@ -36,7 +36,7 @@ ghit::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 ```
 
-To simplify installations on cloud systems, we also have a [Docker container](https://github.com/RBigData/pbdr-remoter) available.
+To simplify installations on cloud systems, we also have a [Docker container](https://github.com/RBigData/docker/tree/master/pbdr-remoter) available.
 
 
 
