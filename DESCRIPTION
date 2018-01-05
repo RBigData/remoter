@@ -2,6 +2,7 @@ Package: remoter
 Type: Package
 Title: Remote R: Control a Remote R Session from a Local One
 Version: 0.4-0
+<<<<<<< HEAD
 Description: A set of utilities for client/server computing with R, controlling
     a remote R session (the server) from a local one (the client).  Simply set
     up a server (see package vignette for more details) and connect to it from
@@ -10,11 +11,25 @@ Description: A set of utilities for client/server computing with R, controlling
     need for installing a custom environment on your system.  Network
     communication is handled by the 'ZeroMQ' library by way of the 'pbdZMQ'
     package.
+=======
+Description: A set of utilities for controlling a remote R session
+    from a local one.  Simply set up a server (see package vignette
+    for more details) and connect to it from your local R session,
+    including 'RStudio'.  Network communication is handled
+    by the 'ZeroMQ' library by way of the 'pbdZMQ' package.  The
+    client/server framework is a custom 'REPL' and runs entirely in
+    your R session without the need for installing a custom environment
+    on your system.
+>>>>>>> f342ce20ea2eec9d007ea6d2da00d51e16d01a6b
 License: BSD 2-clause License + file LICENSE
 Depends:
     R (>= 3.2.0)
 Imports:
+<<<<<<< HEAD
     pbdZMQ (>= 0.3-0),
+=======
+    pbdZMQ (>= 0.2-6),
+>>>>>>> f342ce20ea2eec9d007ea6d2da00d51e16d01a6b
     getPass (>= 0.1-0),
     argon2 (>= 0.2-0),
     stats,

@@ -83,11 +83,12 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   set(sync, sync)
   set(password, pwhash(password))
   
-  ### Backup default device
+  ### Backup default device and set the rpng as a defult opening device.
   options(device.default = getOption("device"))
   if (userpng)
     options(device = remoter::rpng)
   
+
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
   
   options(warn = 1)
@@ -267,14 +268,17 @@ remoter_server_eval <- function(env)
     else
       set.status(ret, utils::capture.output(ret$value))
 
-    ### The output is an image from a S3 method via print.ggplot().
-    if (ret$visible && is.gg.ggplot(ret$value))
+    ### The output of this if is an image from a S3 method via print.ggplot().
+    if (ret$visible && is.gg.ggplot(ret$value) && is.rpng.open())
     {
+      ### The g below opens anrpng which needs auto_rpng_off_local.
+      ### remoter> g <- ggplot(da, aes(x, y)) + geom_point()
+      ### remoter> g
       ret$value <- rpng.off()
       ret$visible <- FALSE
     }
     
-    ### The output is an image from dev.off().
+    ### The output of this if is an image from dev.off().
     if (get.status(need_auto_rpng_off))
     {
       set.status(ret, ret$value)
