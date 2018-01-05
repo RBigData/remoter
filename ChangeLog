@@ -1,4 +1,4 @@
-Release 0.4-0 (//):
+Release 0.4-0:
   * Fixed warning precedence for small port values.
   * Fixed client timer printing.
   * Added rDevices functions.
@@ -25,14 +25,14 @@ Release 0.4-0 (//):
   * Overhauled vignettes.
   * Display port and internal/external ip's on server creation via getip.
 
-Release 0.3-2 (4/28/2016):
+Release 0.3-2:
   * Minor internal cleanup.
   * Improved timer behavior.
   * Fixed s2c() bug.
   * Fixed bug that affected attaching some package namespaces (WCC).
   * Fixed remoter namespace attach bug within the server.
 
-Release 0.3-1 (4/17/2016):
+Release 0.3-1:
   * Added "timer" option to client.
   * Added "middleman" functionality via relay().
   * Added blurb about relays to the vignette.
@@ -40,7 +40,7 @@ Release 0.3-1 (4/17/2016):
   * Integrated getPass() into client authentication.
   * Explicitly namespaced internal use of pbdZMQ functions.
 
-Release 0.3-0 (2/17/2016):
+Release 0.3-0:
   * Dumped log output to file.
   * Added showlog().
   * Added "q.server" argument to exit() (WCC).
@@ -49,13 +49,13 @@ Release 0.3-0 (2/17/2016):
   * Better clarity in client/server REPL's.
   * Significant improvements to error checking in s2c() and c2s().
 
-Release 0.2-1 (2/10/2016):
+Release 0.2-1:
   * Made encryption/secure servers/sodium optional.
   * Added note about ssh tunneling to vignette.
   * Significantly enhanced logger.
   * Fixed C-c client bug.
 
-Release 0.2-0 (2/3/2016):
+Release 0.2-0:
   * Added encrypted communications via sodium.
   * Large rewrite of internal state system.
   * Vignette rewrite.
@@ -63,19 +63,19 @@ Release 0.2-0 (2/3/2016):
   * Disallowed privileged ports.
   * Better documentation and help.
 
-Release 0.1-2 (2/1/2016):
+Release 0.1-2:
   * Changed param "remote_addr" to "addr" in client().
   * Minor improvements to the repl.
   * Better error checking and handling for addresses.
 
-Release 0.1-1 (1/30/2016):
+Release 0.1-1:
   * Added some remote checks, address validation in client.
   * Changed behavior of exit(); added "client.only" option.
   * Rearranged internals.
   * Added vignette.
   * Switched to pbdZMQ 0.2-1.
 
-Release 0.1-0 (10/16/2015):
+Release 0.1-0:
   * Added s2c() and c2s().
   * Added lsc(), rmc(), and evalc().
   * Imported functionality from pbdCS.
