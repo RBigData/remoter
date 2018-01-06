@@ -85,6 +85,15 @@ remoter> rpng.new(g1)
 remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
 remoter> rpng.new(b)
 
+remoter> da <- data.frame(x = rnorm(100), y = rnorm(100))
+remoter> g2 <- ggplot(da, aes(x, y)) + geom_point()
+remoter> g2
+
+remoter> pdf()
+remoter> g2
+remoter> print(g2 + geom_line())
+remoter> dev.off()
+
 remoter> q()
 >
 }
