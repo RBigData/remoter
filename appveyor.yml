@@ -21,8 +21,8 @@ environment:
 
 build_script:
   - Rscript -e "install.packages('devtools',repos='http://cran.r-project.org')"
-  - Rscript -e "devtools::install_github('snoweye/pbdZMQ')"
+  # - Rscript -e "devtools::install_github('snoweye/pbdZMQ')"
   - travis-tool.sh install_deps
   - R CMD build --no-build-vignettes --no-manual --no-resave-data .
   - R CMD INSTALL remoter*.tar.gz
-  - R CMD check --as-cran remoter*.tar.gz
+  - R CMD check --as-cran --no-manual --ignore-vignettes remoter*.tar.gz
