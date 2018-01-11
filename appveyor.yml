@@ -1,0 +1,28 @@
+# DO NOT CHANGE the "init" and "install" sections below
+
+# Download script file from GitHub
+init:
+  ps: |
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Import-Module '..\appveyor-tool.ps1'
+install:
+  ps: Bootstrap
+
+environment:
+  global:
+    WARNINGS_ARE_ERRORS:
+    RTOOLS_VERSION: 34 
+    USE_RTOOLS: true
+
+  matrix:
+  - R_VERSION: release
+    R_ARCH: x64
+
+build_script:
+  - Rscript -e "install.packages('devtools',repos='http://cran.r-project.org')"
+  # - Rscript -e "devtools::install_github('snoweye/pbdZMQ')"
+  - travis-tool.sh install_deps
+  - R CMD build --no-build-vignettes --no-manual --no-resave-data .
+  - R CMD INSTALL remoter*.tar.gz
+  - R CMD check --as-cran --no-manual --ignore-vignettes remoter*.tar.gz

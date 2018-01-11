@@ -2,6 +2,7 @@
 
 * **Version:** 0.4-0
 * **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
+* **Status:** [![Build Status](https://travis-ci.org/snoweye/remoter.png)](https://travis-ci.org/snoweye/remoter) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)](https://ci.appveyor.com/project/snoweye/remoter)
 * **Author:** Drew Schmidt and Wei-Chen Chen
 * **Project home**: https://github.com/RBigData/remoter
 * **Bug reports**: https://github.com/RBigData/remoter/issues

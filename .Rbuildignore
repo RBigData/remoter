@@ -1,6 +1,6 @@
 ^\.travis\.yml$
+^appveyor.yml$
 TODO
-
 cover/build_cover.sh
 cover/remote_machines.tex
 cover/remoter.tex
