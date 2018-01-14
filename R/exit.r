@@ -19,7 +19,7 @@
 #' with the client.
 #' @param q.server
 #' Logical; if \code{TRUE}, then the server calls \code{q("no")}
-#' after shuting down with the client.  This is useful for cases
+#' after shutting down with the client.  This is useful for cases
 #' where the server is running in an interactive R session, and you
 #' wish to shut the entire thing down.
 #' @param addr,port
@@ -55,10 +55,15 @@ exit <- function(client.only=TRUE, q.server=TRUE)
     set(client_called_exit, TRUE)
     # logprint("client disconnected with call to exit()")
   
-  if (!client.only && q.server)
+  if (!client.only)
   {
     if (iam("remote") && interactive())
-      set(kill_interactive_server, TRUE)
+    {
+      if (q.server)
+        set(kill_interactive_server, TRUE)
+      else
+        set(kill_interactive_server, FALSE)
+    }
   }
 
   return(invisible(TRUE))
