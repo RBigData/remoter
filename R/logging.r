@@ -1,3 +1,7 @@
+logfile = tools::file_path_as_absolute(system.file("log/remoterserverlog", package="remoter"))
+
+
+
 logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE)
 {
   if (identical(msg, magicmsg_first_connection))
@@ -23,12 +27,6 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
 
 logfile_init <- function()
 {
-  if (isWindows())
-    prefix <- base::getwd()
-  else
-    prefix <- tools::file_path_as_absolute("~")
-  logfile <- paste0(prefix, "/.remoterserverlog")
-  
   if (file.exists(logfile))
     file.remove(logfile)
   
@@ -39,7 +37,7 @@ logfile_init <- function()
 
 logprint_file <- function(logmsg)
 {
-  cat(logmsg, file=getval(logfile), append=TRUE)
+  cat(logmsg, file=logfile, append=TRUE)
   utils::flush.console()
   invisible()
 }
@@ -53,9 +51,13 @@ logprint_file <- function(logmsg)
 #' @export
 showlog <- function()
 {
-  file <- getval(logfile)
-  if (file.exists(file))
-    readLines(getval(logfile))
+  if (file.exists(logfile))
+    log = readLines(logfile)
   else
     stop("no log file found!")
+  
+  c(
+    paste("### logfile:", logfile),
+    log
+  )
 }
