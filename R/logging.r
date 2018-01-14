@@ -40,6 +40,7 @@ logfile_init <- function()
 logprint_file <- function(logmsg)
 {
   cat(logmsg, file=getval(logfile), append=TRUE)
+  utils::flush.console()
   invisible()
 }
 
