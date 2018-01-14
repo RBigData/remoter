@@ -1,7 +1,7 @@
 Package: remoter
 Type: Package
 Title: Remote R: Control a Remote R Session from a Local One
-Version: 0.4-0
+Version: 0.4-1
 Description: A set of utilities for client/server computing with R, controlling
     a remote R session (the server) from a local one (the client).  Simply set
     up a server (see package vignette for more details) and connect to it from
