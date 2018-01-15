@@ -28,7 +28,7 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
 logfile_init <- function()
 {
   if (file.exists(logfile))
-    file.remove(logfile)
+    cat("", file=logfile, append=FALSE)
   
   logfile
 }
