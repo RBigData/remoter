@@ -74,7 +74,6 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
     port <- pbdZMQ::random_open_port()
   
   set(whoami, "remote")
-  set(logfile, logfile_init())
   set(serverlog, log)
   set(verbose, verbose)
   set(showmsg, showmsg)

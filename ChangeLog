@@ -2,6 +2,7 @@ Release 0.4-1:
   * Rollback tests.
   * Added flush.console() to push output buffer to osx and windows console.
   * Fixed no quit server when set to FALSE.
+  * Tweaked logging.
 
 Release 0.4-0:
   * Fixed warning precedence for small port values.
