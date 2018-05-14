@@ -35,6 +35,7 @@ relay <- function(addr, recvport=55556, sendport=55555, verbose=FALSE)
   set(recvport, recvport)
   set(sendport, sendport)
   set(verbose, verbose)
+  set(logfile, logfile_init())
   
   logprint(paste("*** Launching relay ***"), preprint="\n")
   
