@@ -33,7 +33,6 @@ The development version is maintained on GitHub, and can easily be installed by 
 ```r
 ### Pick your preference
 devtools::install_github("RBigData/remoter")
-ghit::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 ```
 
