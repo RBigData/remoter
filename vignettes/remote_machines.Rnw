@@ -7,7 +7,7 @@
 
 \mytitle{Using remoter with Remote Machines}
 \mysubtitle{}
-\myversion{0.4-0}
+\myversion{0.4-1}
 \myauthor{
 \centering
 Drew Schmidt \\ 

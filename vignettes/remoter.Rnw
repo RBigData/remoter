@@ -6,7 +6,7 @@
 
 \mytitle{Guide to the remoter Package}
 \mysubtitle{}
-\myversion{0.4-0}
+\myversion{0.4-1}
 \myauthor{
 \centering
 Drew Schmidt \\ 
@@ -82,9 +82,6 @@ The development version is maintained on GitHub, and can easily be installed by
 any of the packages that offer installations from GitHub:
 
 \begin{lstlisting}[language=rr]
-### Pick your preference
-devtools::install_github("RBigData/remoter")
-ghit::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 \end{lstlisting}
 
