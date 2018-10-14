@@ -102,23 +102,36 @@ auto_rpng_off_local <- function(img)
 {
   if (is.array(img))
   {
-    ### Semi-transparency may not work in windows device
-    # if (.Platform$OS.type == "windows")
-    #   img.r <- grDevices::as.raster(img[,, 1:3])
-    # else
-    img.r <- grDevices::as.raster(img)
+    if (get.status("method_plot_rpng") == "rasterImage")
+    {
+      ### Semi-transparency may not work in windows device
+      # if (.Platform$OS.type == "windows")
+      #   img.r <- grDevices::as.raster(img[,, 1:3])
+      # else
+      img.r <- grDevices::as.raster(img)
     
-    ### This will overwrite the device if one is there, otherwise a new
-    ### device will be created.
-    graphics::plot.new()
+      ### This will overwrite the device if one is there, otherwise a new
+      ### device will be created.
+      graphics::plot.new()
 
-    ### Set a empty plot.
-    graphics::par(mar = rep(0, 4), xaxs = "i", yaxs = "i")
-    img.dim <- dim(img.r)
-    graphics::plot(NULL, NULL, type = "n", axes = FALSE,
-                   main = "", xlab = "", ylab = "",
-                   xlim = c(0, img.dim[1]), ylim = c(0, img.dim[2]))
-    graphics::rasterImage(img.r, 0, 0, img.dim[1], img.dim[2])
+      ### Set a empty plot.
+      graphics::par(mar = rep(0, 4), xaxs = "i", yaxs = "i")
+      img.dim <- dim(img.r)
+      graphics::plot(NULL, NULL, type = "n", axes = FALSE,
+                     main = "", xlab = "", ylab = "",
+                     xlim = c(0, img.dim[1]), ylim = c(0, img.dim[2]))
+      graphics::rasterImage(img.r, 0, 0, img.dim[1], img.dim[2])
+    }
+    else if (get.status("method_plot_rpng") == "browseURL")
+    {
+      tmp.fn <- tempfile(fileext = ".png")
+      png::writePNG(img, target = tmp.fn)
+      utils::browseURL(tmp.fn)
+    }
+    else
+    {
+      cat("method_plot_rpng should be either rasterImage or browseURL.\n")
+    }
   }
   else
   {
