@@ -126,7 +126,7 @@ auto_rpng_off_local <- function(img)
     {
       tmp.fn <- tempfile(fileext = ".png")
       png::writePNG(img, target = tmp.fn)
-print(paste("file://", tmp.fn, sep = ""))
+      # cat(paste("file://", tmp.fn, "\n", sep = ""))
       utils::browseURL(paste("file://", tmp.fn, sep = ""))
     }
     else
