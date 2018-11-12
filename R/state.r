@@ -74,7 +74,8 @@ reset_state <- function()
     continuation       = FALSE,
     need_auto_rpng_off = FALSE,
     need_auto_rhelp_on = FALSE,
-    remote_objs        = NULL
+    remote_objs        = NULL,
+    method_plot_rpng   = "browseURL"  # or "rasterImage"
   )
   
   invisible()
