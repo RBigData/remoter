@@ -109,6 +109,9 @@ remoter_repl_batch <- function(src, env=globalenv())
     
     while (TRUE)
     {
+      if (line > len)
+        break
+
       tmp <- src[line]
       
       if (gsub(tmp, pattern=" +", replacement="") == "")
