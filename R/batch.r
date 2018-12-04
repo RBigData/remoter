@@ -20,10 +20,10 @@
 #' interactively asked to enter the password.
 #' @param file
 #' A character string pointing to the file you wish to execute/source. Either
-#' this or \code{script} (but not both) should be procided.
+#' this or \code{script} (but not both) should be provided.
 #' @param script
 #' A character string containing the commands you wish to execute/source. Either
-#' this or \code{script} (but not both) should be procided.
+#' this or \code{file} (but not both) should be provided.
 #' @param timer
 #' Logical; should the "performance prompt", which shows timing
 #' statistics after every command, be used?
