@@ -3,6 +3,7 @@ Release 0.4-1:
   * Added flush.console() to push output buffer to osx and windows console.
   * Fixed no quit server when set to FALSE.
   * Tweaked logging.
+  * Fixed error when batch() is used on a whitespace line (thanks Panagiotis Cheilaris).
 
 Release 0.4-0:
   * Fixed warning precedence for small port values.
