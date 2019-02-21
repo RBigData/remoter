@@ -158,36 +158,41 @@ remoter_sanitize <- function(inputs)
 
 
 
+check4fun = function(input, fun)
+{
+  all(grepl(x=input, pattern=paste0("^(\\s+)?", fun, "\\("), perl=TRUE))
+}
+
 remoter_client_sendrecv <- function(input, env)
 {
   remoter_send(data=input)
   
   ### Special cases that need to be eval'd locally
-  if (all(grepl(x=input, pattern="^(\\s+)?s2c\\(", perl=TRUE)))
+  if (check4fun(input, "s2c"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?c2s\\(", perl=TRUE)))
+  else if (check4fun(input, "c2s"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?lsc\\(", perl=TRUE)))
+  else if (check4fun(input, "lsc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?rmc\\(", perl=TRUE)))
+  else if (check4fun(input, "rmc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?evalc\\(", perl=TRUE)))
+  else if (check4fun(input, "evalc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.curc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.curc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.listc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.listc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.nextc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.nextc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.prevc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.prevc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.offc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.offc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.setc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.setc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.newc\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.newc"))
     eval(parse(text=input))
-  else if (all(grepl(x=input, pattern="^(\\s+)?dev.sizec\\(", perl=TRUE)))
+  else if (check4fun(input, "dev.sizec"))
     eval(parse(text=input))
   
   ### Update status by the server's results.
