@@ -14,8 +14,9 @@ License: BSD 2-clause License + file LICENSE
 Depends:
     R (>= 3.2.0)
 Imports:
-    pbdZMQ (>= 0.3-0),
+    pbdZMQ (>= 0.3-4),
     getPass (>= 0.1-0),
+    getip (>= 0.1-0),
     argon2 (>= 0.2-0),
     stats,
     utils,
@@ -35,4 +36,4 @@ Authors@R: c(
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1

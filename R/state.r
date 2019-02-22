@@ -124,6 +124,12 @@ setkey <- function(var, val)
   invisible()
 }
 
+cleanup = function()
+{
+  gc(reset=TRUE)
+  invisible()
+}
+
 iam <- function(name)
 {
   .pbdenv$whoami == name

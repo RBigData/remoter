@@ -138,3 +138,10 @@ get_hostname = function()
 {
   Sys.info()[["nodename"]]
 }
+
+
+
+is_dir = function(file)
+{
+  file.info(file)$isdir
+}

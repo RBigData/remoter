@@ -2,7 +2,6 @@
 % Please edit documentation in R/exit.r
 \name{exit}
 \alias{exit}
-\alias{exit}
 \alias{shutdown}
 \alias{kill}
 \title{exit}
@@ -19,7 +18,7 @@ the server.  Otherwise, the server is shut down together
 with the client.}
 
 \item{q.server}{Logical; if \code{TRUE}, then the server calls \code{q("no")}
-after shuting down with the client.  This is useful for cases
+after shutting down with the client.  This is useful for cases
 where the server is running in an interactive R session, and you
 wish to shut the entire thing down.}
 

@@ -12,3 +12,9 @@ utils::globalVariables(c(
   "client_called_exit", "client_called_shutdown",
   "sync", "objs_nm", "objs", "remote_objs", "clientpw"
 ))
+
+
+
+TRANSFER_MISSING = -1L
+TRANSFER_FILE = 1L
+TRANSFER_DIR = 2L
