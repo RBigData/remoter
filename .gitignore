@@ -2,10 +2,8 @@
 *.html
 *.swp
 
-
 src/*.o
 src/*.so
-
 
 inst/doc/*
 
@@ -15,3 +13,5 @@ inst/doc/*
 *.out
 *.toc
 *.backup
+
+TODO

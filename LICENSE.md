@@ -1,4 +1,4 @@
-Copyright 2014-2017 Drew Schmidt and Wei-Chen Chen
+Copyright 2014-2019 Drew Schmidt and Wei-Chen Chen
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
