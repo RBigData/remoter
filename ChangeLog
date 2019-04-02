@@ -4,6 +4,7 @@ Release 0.4-1:
   * Fixed no quit server when set to FALSE.
   * Tweaked logging.
   * Fixed error when batch() is used on a whitespace line (thanks Panagiotis Cheilaris).
+  * Added sendfile() and recvfile().
 
 Release 0.4-0:
   * Fixed warning precedence for small port values.
