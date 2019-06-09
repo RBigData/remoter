@@ -2,7 +2,6 @@
 % Please edit documentation in R/wcc_rhelp.r
 \name{rhelp}
 \alias{rhelp}
-\alias{rhelp}
 \alias{help}
 \alias{?}
 \title{rhelp}

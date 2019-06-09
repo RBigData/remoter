@@ -13,7 +13,6 @@ Control a remote R session from your local R session.  The package uses [**pbdZM
 
 
 
-
 ## Installation
 
 You can install the stable version from CRAN using the usual `install.packages()`:
@@ -37,7 +36,6 @@ remotes::install_github("RBigData/remoter")
 ```
 
 To simplify installations on cloud systems, we also have a [Docker container](https://github.com/RBigData/docker/tree/master/pbdr-remoter) available.
-
 
 
 
@@ -65,8 +63,6 @@ remoter::batch(script="1+1")
 ```
 
 For more details, including working with remote machines, see the package vignette.
-
-
 
 
 

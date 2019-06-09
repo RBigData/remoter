@@ -4,8 +4,8 @@
 \alias{batch}
 \title{Batch Execution}
 \usage{
-batch(addr = "localhost", port = 55555, password = NULL, file, script,
-  timer = FALSE)
+batch(addr = "localhost", port = 55555, password = NULL, file,
+  script, timer = FALSE)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -20,10 +20,10 @@ incorrect, then assuming the server's \code{maxretry>1}, then you will be
 interactively asked to enter the password.}
 
 \item{file}{A character string pointing to the file you wish to execute/source. Either
-this or \code{script} (but not both) should be procided.}
+this or \code{script} (but not both) should be provided.}
 
 \item{script}{A character string containing the commands you wish to execute/source. Either
-this or \code{script} (but not both) should be procided.}
+this or \code{file} (but not both) should be provided.}
 
 \item{timer}{Logical; should the "performance prompt", which shows timing
 statistics after every command, be used?}
