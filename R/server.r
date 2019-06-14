@@ -248,7 +248,42 @@ remoter_server_eval <- function(env)
     )
     sink(file = NULL, type = "message")
   })
-  
+
+
+  ### Do the above one more time for ggplot2 ...
+  if (!is.null(ret))
+  {
+    if (ret$visible && is.gg.ggplot(ret$value) && is.rpng.open())
+    {
+      ### When g is a gg.ggplot object, simply typing `g` just returns from
+      ### the earlier call "tryCatch()" generating "additionmsg".
+      ### i.e. identity(g) is returned to the "ret$value", no `print(g)` is
+      ### executed.
+
+      ### Note that `g <- ggplot(...) + ...` may not check missing objects or
+      ### variables carefully at the time generate the object g. Really!!!
+
+      ### i.e. the delay execution until printing for the ggplot object needs
+      ### to be dealed with further below with checking. Otherwise, the
+      ### `set.status(ret, utils::capture.output(ret$value))` in later call
+      ### will break the sever because there is no error handler down there.
+
+      ### Any S3 or S4 print methods can crash similarly if designed badly.
+      ### Hopefully, ggplot2 is the only package.
+      additionmsg <-
+      capture.output({
+        sink(file = stdout(), type = "message")
+        ret <-
+        withCallingHandlers(
+          tryCatch({
+              withVisible(eval(print(ret$value), envir=env))
+            }, interrupt=identity, error=remoter_error
+          ), warning=remoter_warning
+        )
+        sink(file = NULL, type = "message")
+      })
+    }
+  }
   
   ### Handle log printing for exit()/shutdown(): NOTE must happen outside of eval since we capture all output now
   if (getval(client_called_shutdown) == TRUE)
@@ -273,7 +308,7 @@ remoter_server_eval <- function(env)
     ### The output of this if is an image from a S3 method via print.ggplot().
     if (ret$visible && is.gg.ggplot(ret$value) && is.rpng.open())
     {
-      ### The g below opens anrpng which needs auto_rpng_off_local.
+      ### The g below opens an rpng which needs auto_rpng_off_local.
       ### remoter> g <- ggplot(da, aes(x, y)) + geom_point()
       ### remoter> g
       ret$value <- rpng.off()
