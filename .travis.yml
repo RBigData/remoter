@@ -17,7 +17,7 @@ r_packages:
   - pbdZMQ
   # - sodium
 
-r_check_args: --no-build-vignettes --no-manual
+# r_check_args: --no-build-vignettes --no-manual
 
 notifications:
   email:
