@@ -15,8 +15,11 @@ before_install:
 
 r_packages:
   - assertthat
-  - pbdZMQ
+  # - pbdZMQ
   - sodium
+
+r_github_packages
+  - snoweye/pbdZMQ
 
 r_check_args: --no-build-vignettes --no-manual
 
