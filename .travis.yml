@@ -15,9 +15,9 @@ before_install:
 r_packages:
   - assertthat
   - pbdZMQ
-  # - sodium
+  - sodium
 
-# r_check_args: --no-build-vignettes --no-manual
+r_check_args: --no-build-vignettes --no-manual
 
 notifications:
   email:
