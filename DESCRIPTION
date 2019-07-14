@@ -28,7 +28,7 @@ Suggests:
     pbdRPC (>= 0.1-0)
 NeedsCompilation: no
 ByteCompile: yes
-StagedInstall: TRUE
+StagedInstall: FALSE
 Authors@R: c(
     person("Drew", "Schmidt", role=c("aut", "cre"), email="wrathematics@gmail.com"),
     person("Wei-Chen", "Chen", role="aut"),
