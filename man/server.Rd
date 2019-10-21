@@ -6,7 +6,8 @@
 \usage{
 server(port = 55555, password = NULL, maxretry = 5,
   secure = has.sodium(), log = TRUE, verbose = FALSE,
-  showmsg = FALSE, userpng = TRUE, sync = TRUE)
+  showmsg = FALSE, userpng = TRUE, sync = TRUE,
+  serialversion = NULL)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 
@@ -36,6 +37,10 @@ the 'sodium' package is available.}
 objects recreated in the global environment.  This is useful in IDE's like
 RStudio, but it carries a performance penalty.  For terminal users, this is
 not recommended.}
+
+\item{serialversion}{NULL or numeric; the workspace format version to use when serializing.
+NULL specifies the current default version. The only other supported
+values are 2 and 3.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.
