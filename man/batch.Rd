@@ -5,7 +5,7 @@
 \title{Batch Execution}
 \usage{
 batch(addr = "localhost", port = 55555, password = NULL, file,
-  script, timer = FALSE)
+  script, timer = FALSE, serialversion = NULL)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}
@@ -27,6 +27,10 @@ this or \code{file} (but not both) should be provided.}
 
 \item{timer}{Logical; should the "performance prompt", which shows timing
 statistics after every command, be used?}
+
+\item{serialversion}{NULL or numeric; the workspace format version to use when serializing.
+NULL specifies the current default version. The only other supported
+values are 2 and 3.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

@@ -27,6 +27,10 @@
 #' @param timer
 #' Logical; should the "performance prompt", which shows timing
 #' statistics after every command, be used?
+#' @param serialversion
+#' NULL or numeric; the workspace format version to use when serializing.
+#' NULL specifies the current default version. The only other supported
+#' values are 2 and 3.
 #' 
 #' @examples
 #' \dontrun{
@@ -48,9 +52,10 @@
 #' 
 #' @export
 batch <- function(addr="localhost", port=55555, password=NULL, file, script,
-  timer=FALSE)
+  timer=FALSE, serialversion=NULL)
 {
   check.is.flag(timer)
+  check(is.null(serialversion) || is.inty(serialversion))
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port, warn=FALSE)
@@ -80,6 +85,7 @@ batch <- function(addr="localhost", port=55555, password=NULL, file, script,
   set(port, port)
   set(remote_addr, addr)
   set(clientpw, password)
+  set(serialversion, serialversion)
   
   set(isbatch, TRUE)
   

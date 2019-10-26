@@ -30,16 +30,21 @@
 #' @param timer
 #' Logical; should the "performance prompt", which shows timing
 #' statistics after every command, be used?
+#' @param serialversion
+#' NULL or numeric; the workspace format version to use when serializing.
+#' NULL specifies the current default version. The only other supported
+#' values are 2 and 3.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
 client <- function(addr="localhost", port=55555, password=NULL,
-  prompt="remoter", timer=FALSE)
+  prompt="remoter", timer=FALSE, serialversion=NULL)
 {
   check.is.flag(timer)
   check.is.string(prompt)
+  check(is.null(serialversion) || is.inty(serialversion))
   validate_address(addr)
   addr <- scrub_addr(addr)
   validate_port(port, warn=FALSE)
@@ -54,6 +59,7 @@ client <- function(addr="localhost", port=55555, password=NULL,
   set(port, port)
   set(remote_addr, addr)
   set(clientpw, password)
+  set(serialversion, serialversion)
   
   set(isbatch, FALSE)
 
