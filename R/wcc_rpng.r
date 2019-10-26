@@ -89,7 +89,7 @@ rpng <- function(filename = tempfile(fileext = "_r.png"),
                  bg = "white", res = 96, ...)
 {
   if (!is.character(filename))
-    cat("filename should be in character.")
+    stop("filename should be in character.")
   else
   {
     ### Use NULL to delay opening a local device automatically

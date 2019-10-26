@@ -131,13 +131,13 @@ auto_rpng_off_local <- function(img)
     }
     else
     {
-      cat("method_plot_rpng should be either rasterImage or browseURL.\n")
+      stop("method_plot_rpng should be either rasterImage or browseURL.\n")
     }
   }
   else
   {
     eval(parse(text = "assign('.rpng.img', img, envir = .GlobalEnv)"))
-    cat("Check 'local' .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
+    stop("Check 'local' .GlobalEnv$.rpng.img for the incorrect (raster) image.\n")
   }
 }
 
