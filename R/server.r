@@ -253,7 +253,7 @@ remoter_server_eval <- function(env)
   ### Do the above one more time for ggplot2 ...
   if (!is.null(ret))
   {
-    if (ret$visible && is.gg.ggplot(ret$value) && is.rpng.open())
+    if (ret$visible && is.gg.ggplot(ret$value))
     {
       ### When g is a gg.ggplot object, simply typing `g` just returns from
       ### the earlier call "tryCatch()" generating "additionmsg".

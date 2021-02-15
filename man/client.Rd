@@ -4,8 +4,13 @@
 \alias{client}
 \title{Client Launcher}
 \usage{
-client(addr = "localhost", port = 55555, password = NULL,
-  prompt = "remoter", timer = FALSE)
+client(
+  addr = "localhost",
+  port = 55555,
+  password = NULL,
+  prompt = "remoter",
+  timer = FALSE
+)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}

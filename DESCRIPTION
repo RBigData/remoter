@@ -11,21 +11,10 @@ Description: A set of utilities for client/server computing with R, controlling
     communication is handled by the 'ZeroMQ' library by way of the 'pbdZMQ'
     package.
 License: BSD 2-clause License + file LICENSE
-Depends:
-    R (>= 3.2.0)
-Imports:
-    pbdZMQ (>= 0.3-4),
-    getPass (>= 0.2-2),
-    argon2 (>= 0.2-0),
-    stats,
-    utils,
-    tools,
-    grDevices,
-    graphics,
-    png (>= 0.1-7)
-Suggests:
-    sodium (>= 0.2),
-    pbdRPC (>= 0.1-0)
+Depends: R (>= 3.2.0)
+Imports: pbdZMQ (>= 0.3-4), getPass (>= 0.2-2), argon2 (>= 0.2-0),
+        stats, utils, tools, grDevices, graphics, png (>= 0.1-7)
+Suggests: sodium (>= 0.2), pbdRPC (>= 0.1-0)
 NeedsCompilation: no
 ByteCompile: yes
 StagedInstall: FALSE
@@ -36,4 +25,4 @@ Authors@R: c(
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
