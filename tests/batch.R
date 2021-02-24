@@ -16,8 +16,10 @@ script <- "
 shutdown()
 "
 
-test <- capture.output(remoter::batch(script = script))
+if (file.access("./remoterserverlog")) {
+  test <- capture.output(remoter::batch(script = script))
+  truth <- c("", "[1] 2 ", "[1] 3 ")
+  stopifnot(all.equal(truth, test))
+  file.remove("./remoterserverlog")
+}
 
-truth <- c("", "[1] 2 ", "[1] 3 ")
-
-stopifnot(all.equal(truth, test))
