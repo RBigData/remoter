@@ -4,8 +4,14 @@
 \alias{batch}
 \title{Batch Execution}
 \usage{
-batch(addr = "localhost", port = 55555, password = NULL, file,
-  script, timer = FALSE, serialversion = NULL)
+batch(
+  addr = "localhost",
+  port = 55555,
+  password = NULL,
+  file,
+  script,
+  timer = FALSE
+)
 }
 \arguments{
 \item{addr}{The remote host/address/endpoint.}

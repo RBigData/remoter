@@ -1,5 +1,5 @@
-logfile = tools::file_path_as_absolute(system.file("log/remoterserverlog", package="remoter"))
-
+# logfile = tools::file_path_as_absolute(system.file("log/remoterserverlog", package="remoter"))
+logfile <- "./remoterserverlog"
 
 
 logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE)
@@ -29,6 +29,8 @@ logfile_init <- function()
 {
   if (file.exists(logfile))
     cat("", file=logfile, append=FALSE)
+  else
+    cat("", file=logfile, append=TRUE)
   
   logfile
 }

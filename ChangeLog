@@ -6,6 +6,7 @@ Release 0.4-1:
   * Fixed error when batch() is used on a whitespace line (thanks Panagiotis Cheilaris).
   * Added sendfile() and recvfile().
   * Fixed ggplot2 breaks server().
+  * Add more ways to check plotting with rpng and test ggplot2 errors.
 
 Release 0.4-0:
   * Fixed warning precedence for small port values.
