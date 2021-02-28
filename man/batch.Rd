@@ -10,7 +10,8 @@ batch(
   password = NULL,
   file,
   script,
-  timer = FALSE
+  timer = FALSE,
+  serialversion = NULL
 )
 }
 \arguments{

@@ -9,7 +9,8 @@ client(
   port = 55555,
   password = NULL,
   prompt = "remoter",
-  timer = FALSE
+  timer = FALSE,
+  serialversion = NULL
 )
 }
 \arguments{

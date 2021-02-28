@@ -13,7 +13,8 @@ server(
   verbose = FALSE,
   showmsg = FALSE,
   userpng = TRUE,
-  sync = TRUE
+  sync = TRUE,
+  serialversion = NULL
 )
 }
 \arguments{
