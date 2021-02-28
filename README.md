@@ -3,7 +3,6 @@
 * **Version:** 0.4-1
 * **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
 * **Status:** [![Build Status](https://travis-ci.org/snoweye/remoter.png)](https://travis-ci.org/snoweye/remoter) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)](https://ci.appveyor.com/project/snoweye/remoter)
-* **Author:** Drew Schmidt and Wei-Chen Chen
 * **Project home**: https://github.com/RBigData/remoter
 * **Bug reports**: https://github.com/RBigData/remoter/issues
 
@@ -30,8 +29,6 @@ install.packages("remoter", dependencies=TRUE)
 The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
 
 ```r
-### Pick your preference
-devtools::install_github("RBigData/remoter")
 remotes::install_github("RBigData/remoter")
 ```
 
@@ -68,6 +65,6 @@ For more details, including working with remote machines, see the package vignet
 
 ## Acknowledgements
 
-Work for the **remoter** package was supported in part by the project *Harnessing Scalable Libraries for Statistical Computing on Modern Architectures and Bringing Statistics to Large Scale Computing* funded by the National Science Foundation Division of Mathematical Sciences under Grant No. 1418195.
+Initial work for the **remoter** package was supported in part by the project *Harnessing Scalable Libraries for Statistical Computing on Modern Architectures and Bringing Statistics to Large Scale Computing* funded by the National Science Foundation Division of Mathematical Sciences under Grant No. 1418195.
 
 Any  opinions,  findings,  and  conclusions  or  recommendations expressed  in  this  material  are those  of  the  authors  and  do  not necessarily  reflect  the  views  of  the  National  Science Foundation.
