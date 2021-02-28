@@ -4,10 +4,17 @@
 \alias{server}
 \title{Server Launcher}
 \usage{
-server(port = 55555, password = NULL, maxretry = 5,
-  secure = has.sodium(), log = TRUE, verbose = FALSE,
-  showmsg = FALSE, userpng = TRUE, sync = TRUE,
-  serialversion = NULL)
+server(
+  port = 55555,
+  password = NULL,
+  maxretry = 5,
+  secure = has.sodium(),
+  log = TRUE,
+  verbose = FALSE,
+  showmsg = FALSE,
+  userpng = TRUE,
+  sync = TRUE
+)
 }
 \arguments{
 \item{port}{The port (number) that will be used for communication between 

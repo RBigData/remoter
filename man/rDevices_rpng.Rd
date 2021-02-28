@@ -7,8 +7,17 @@
 \alias{dev.off}
 \title{rpng}
 \usage{
-rpng.new(expr, filename = NULL, width = 587, height = 586,
-  units = "px", pointsize = 12, bg = "white", res = 96, ...)
+rpng.new(
+  expr,
+  filename = NULL,
+  width = 587,
+  height = 586,
+  units = "px",
+  pointsize = 12,
+  bg = "white",
+  res = 96,
+  ...
+)
 
 rpng.off(which = grDevices::dev.cur())
 
@@ -61,39 +70,63 @@ Remote R PNG Device
 > # client()
 > remoter::client("192.168.56.101")
 
+### Regular R plotting
 remoter> plot(1:5)
 remoter> rpng.off()
 
+### Manually open a remoting plotting device
 remoter> rpng()
 remoter> plot(iris$Sepal.Length, iris$Petal.Length)
 remoter> rpng.off()
 
+### Work with ggplot2-like plotting
 remoter> library(ggplot2)
 remoter> g1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length,
 remoter+              color = Species)) +
 remoter+       geom_point(aes(shape = Species))
+
+### Method 1a
 remoter> rpng()
 remoter> print(g1)
 remoter> rpng.off()
 
+### Method 1b
+remoter> rpng()
+remoter> print(g1 + geom_line())
+remoter> rpng.off()
+
+### Method 1c
 remoter> g1 + geom_smooth(method = "lm")
 
+### Testing aside
 remoter> rpng.new(plot(1:5))
 
+### Method 1d
 remoter> rpng.new(g1)
 
+### Testing again
 remoter> b <- function() plot(iris$Sepal.Length, iris$Petal.Length)
 remoter> rpng.new(b)
 
+### Work with other plotting device
 remoter> da <- data.frame(x = rnorm(100), y = rnorm(100))
 remoter> g2 <- ggplot(da, aes(x, y)) + geom_point()
-remoter> g2
 
+### Save on the server
 remoter> pdf()
 remoter> g2
 remoter> print(g2 + geom_line())
 remoter> dev.off()
 
+### Testing for errors with ggplot
+remoter> g3 <- ggplot(da, aes(x, yy)) + geom_point()
+remoter> g3
+
+remoter> rpng()
+remoter> print(g3)
+remoter> rpng.off()
+
+### Disconnect the server and keep it alive
 remoter> q()
 >
 }

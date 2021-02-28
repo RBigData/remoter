@@ -6,15 +6,23 @@
 \alias{?}
 \title{rhelp}
 \usage{
-rhelp(topic, package = NULL, lib.loc = NULL,
+rhelp(
+  topic,
+  package = NULL,
+  lib.loc = NULL,
   verbose = getOption("verbose"),
-  try.all.packages = getOption("help.try.all.packages"))
+  try.all.packages = getOption("help.try.all.packages")
+)
 
-help(topic, package = NULL, lib.loc = NULL,
+help(
+  topic,
+  package = NULL,
+  lib.loc = NULL,
   verbose = getOption("verbose"),
-  try.all.packages = getOption("help.try.all.packages"))
+  try.all.packages = getOption("help.try.all.packages")
+)
 
-"?"(e1, e2)
+`?`(e1, e2)
 }
 \arguments{
 \item{topic, e1, e2}{A topic as in \code{utils::help()}}

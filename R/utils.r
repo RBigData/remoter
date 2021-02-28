@@ -5,7 +5,7 @@ test_connection <- function(addr, port, ntries=10, sleeptime=1)
   addr <- pbdZMQ::address(addr, port)
   
   
-  for (i in ntries)
+  for (i in 1:ntries)
   {
     test <- tryCatch(
       pbdZMQ::connect.socket(socket, addr), 

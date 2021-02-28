@@ -1,7 +1,7 @@
 # remoter
 
 * **Version:** 0.4-1
-* **License:** [BSD 2-Clause](http://opensource.org/licenses/BSD-2-Clause)
+* **License:** [BSD 2-Clause](https://opensource.org/licenses/BSD-2-Clause)
 * **Status:** [![Build Status](https://travis-ci.org/snoweye/remoter.png)](https://travis-ci.org/snoweye/remoter) [![Appveyor Build status](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)](https://ci.appveyor.com/project/snoweye/remoter)
 * **Project home**: https://github.com/RBigData/remoter
 * **Bug reports**: https://github.com/RBigData/remoter/issues
@@ -32,7 +32,7 @@ The development version is maintained on GitHub, and can easily be installed by 
 remotes::install_github("RBigData/remoter")
 ```
 
-To simplify installations on cloud systems, we also have a [Docker container](https://github.com/RBigData/docker/tree/master/pbdr-remoter) available.
+To simplify installations on cloud systems, we also have a [Docker container](https://github.com/RBigData/docker) available.
 
 
 
