@@ -12,14 +12,19 @@
 
 send_unsecure <- function(data, send.more=FALSE)
 {
-  pbdZMQ::send.socket(getval(socket), data=data, send.more=send.more)
+  serialversion = getval(serialversion)
+  if (is.null(serialversion))
+    pbdZMQ::send.socket(getval(socket), data=data, send.more=send.more)
+  else
+    pbdZMQ::send.socket(getval(socket), data=data, send.more=send.more,
+                        serialversion=serialversion)
 }
 
 
 
 send_secure <- function(data, send.more=FALSE)
 {
-  serialized <- serialize(data, NULL)
+  serialized <- serialize(data, NULL, version=getval(serialversion))
   encrypted <- sodium::auth_encrypt(serialized, getkey(private), getkey(theirs))
   send_unsecure(data=encrypted, send.more=send.more)
 }

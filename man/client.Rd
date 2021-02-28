@@ -28,6 +28,10 @@ interactively asked to enter the password.}
 
 \item{timer}{Logical; should the "performance prompt", which shows timing
 statistics after every command, be used?}
+
+\item{serialversion}{NULL or numeric; the workspace format version to use when serializing.
+NULL specifies the current default version. The only other supported
+values are 2 and 3.}
 }
 \value{
 Returns \code{TRUE} invisibly on successful exit.

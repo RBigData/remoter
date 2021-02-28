@@ -41,13 +41,18 @@
 #' objects recreated in the global environment.  This is useful in IDE's like
 #' RStudio, but it carries a performance penalty.  For terminal users, this is
 #' not recommended.
+#' @param serialversion
+#' NULL or numeric; the workspace format version to use when serializing.
+#' NULL specifies the current default version. The only other supported
+#' values are 2 and 3.
 #' 
 #' @return
 #' Returns \code{TRUE} invisibly on successful exit.
 #' 
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
-  log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE)
+  log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE,
+  serialversion=NULL)
 {
   if (length(port) == 1 && port == 0)
     port <- pbdZMQ::random_open_port()
@@ -61,6 +66,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   check.is.flag(showmsg)
   check.is.flag(userpng)
   check.is.flag(sync)
+  check(is.null(serialversion) || is.inty(serialversion))
   
   if (!log && verbose)
     log <- TRUE
@@ -81,6 +87,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   set(secure, secure)
   set(sync, sync)
   set(password, pwhash(password))
+  set(serialversion, serialversion)
   
   logfile_init()
   

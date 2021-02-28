@@ -27,6 +27,7 @@ reset_state <- function()
   set(clientpw, NULL)
   set(maxattempts, 5)
   set(isbatch, FALSE)
+  set(serialversion, NULL)
   
   # logs
   set(serverlog, TRUE)
