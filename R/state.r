@@ -101,6 +101,7 @@ getval <- function(var)
 get.status <- function(var)
 {
   name <- as.character(substitute(var))
+  logprint(level="INIT", sprintf("name is %s", name), checkverbose=TRUE)
   .pbdenv$status[[name]]
 }
 
