@@ -21,6 +21,7 @@ Imports:
     graphics,
     png (>= 0.1-7),
     pbdZMQ (>= 0.3-6),
+    getip (>= 0.1-0),
     getPass (>= 0.2-2),
     argon2 (>= 0.4-0)
 Suggests:
@@ -34,4 +35,4 @@ Authors@R: c(
 URL: https://github.com/RBigData/remoter
 BugReports: https://github.com/RBigData/remoter/issues
 Maintainer: Drew Schmidt <wrathematics@gmail.com>
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2

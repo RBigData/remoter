@@ -103,15 +103,15 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   options(warn = 1)
   
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
-  ### TODO
-  # ips <- remoter_getips()
-  # logprint(paste("    Internal IP: ", ips$ip_in), timestamp=FALSE)
-  # logprint(paste("    External IP: ", ips$ip_ex), timestamp=FALSE)
+  ips <- get_ips()
+  logprint(paste("    Internal IP: ", ips$ip_in), timestamp=FALSE)
+  logprint(paste("    External IP: ", ips$ip_ex), timestamp=FALSE)
   logprint(paste("    Hostname:    ", get_hostname()), timestamp=FALSE)
   logprint(paste("    Port:        ", port), timestamp=FALSE)
   logprint(paste("    Version:     ", packageVersion("remoter")), timestamp=FALSE)
   
-  rm("port", "password", "maxretry", "showmsg", "secure", "logfile", "verbose", "userpng")
+  rm("port", "password", "maxretry", "secure", "logfile", "verbose", "showmsg",
+    "userpng", "sync", "serialversion")
   invisible(gc())
   
   remoter_repl_server()
@@ -119,22 +119,6 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   
   invisible(TRUE)
 }
-
-
-
-### TODO
-# remoter_getips <- function()
-# {
-#   ip_in <- tryCatch(getip::getip("internal"), error=identity)
-#   if (inherits(tryCatch(ip_in, error=identity), "error"))
-#     ip_in  <- "ERROR: couldn't determine internal IP"
-#   
-#   ip_ex <- tryCatch(getip::getip("external"), error=identity)
-#   if (inherits(tryCatch(ip_ex, error=identity), "error"))
-#     ip_ex  <- "ERROR: couldn't determine external IP"
-#   
-#   return(list(ip_in=ip_in, ip_ex=ip_ex))
-# }
 
 
 

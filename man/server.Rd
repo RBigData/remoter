@@ -9,7 +9,7 @@ server(
   password = NULL,
   maxretry = 5,
   secure = has.sodium(),
-  log = TRUE,
+  logfile = NULL,
   verbose = FALSE,
   showmsg = FALSE,
   userpng = TRUE,
@@ -33,7 +33,8 @@ everything down.}
 \item{secure}{Logical; enables encryption via public key cryptography of
 the 'sodium' package is available.}
 
-\item{log}{Logical; enables some basic logging in the server.}
+\item{logfile}{A file path to use for server logging. If the value is \code{NULL}, then no
+logging takes place.}
 
 \item{verbose}{Logical; enables the verbose logger.}
 
