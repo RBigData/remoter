@@ -28,8 +28,9 @@
 #' @param secure
 #' Logical; enables encryption via public key cryptography of
 #' the 'sodium' package is available.
-#' @param log
-#' Logical; enables some basic logging in the server.
+#' @param logfile
+#' A file path to use for server logging. If the value is \code{NULL}, then no
+#' logging takes place.
 #' @param verbose
 #' Logical; enables the verbose logger.
 #' @param showmsg
@@ -51,7 +52,7 @@
 #' 
 #' @export
 server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
-  log=TRUE, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE,
+  logfile=NULL, verbose=FALSE, showmsg=FALSE, userpng=TRUE, sync=TRUE,
   serialversion=NULL)
 {
   if (length(port) == 1 && port == 0)
@@ -59,28 +60,29 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   
   validate_port(port, warn=TRUE)
   check(is.null(password) || is.string(password))
+  check(is.null(logfile) || is.string(logfile))
   check.is.posint(maxretry)
   check.is.flag(secure)
-  check.is.flag(log)
   check.is.flag(verbose)
   check.is.flag(showmsg)
   check.is.flag(userpng)
   check.is.flag(sync)
   check(is.null(serialversion) || is.inty(serialversion))
   
-  if (!log && verbose)
-    log <- TRUE
-  
   if (!has.sodium() && secure)
     stop("secure servers can only be launched if the 'sodium' package is installed")
+  if (is.null(logfile) && verbose)
+    stop("option 'verbose' is enabled without a specified logfile")
   
-  reset_state()
+  serverlog = !is.null(logfile)
   
   if (port == 0)
     port <- pbdZMQ::random_open_port()
   
+  reset_state()
   set(whoami, "remote")
-  set(serverlog, log)
+  set(logfile, logfile)
+  set(serverlog, serverlog)
   set(verbose, verbose)
   set(showmsg, showmsg)
   set(port, port)
@@ -96,11 +98,9 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   if (userpng)
     options(device = remoter::rpng)
   
-
   eval(parse(text = "suppressMessages(library(remoter, quietly = TRUE))"), envir = globalenv()) 
   
   options(warn = 1)
-  
   
   logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
   ### TODO
@@ -111,7 +111,7 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   logprint(paste("    Port:        ", port), timestamp=FALSE)
   logprint(paste("    Version:     ", packageVersion("remoter")), timestamp=FALSE)
   
-  rm("port", "password", "maxretry", "showmsg", "secure", "log", "verbose", "userpng")
+  rm("port", "password", "maxretry", "showmsg", "secure", "logfile", "verbose", "userpng")
   invisible(gc())
   
   remoter_repl_server()

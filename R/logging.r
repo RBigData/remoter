@@ -1,7 +1,3 @@
-# logfile = tools::file_path_as_absolute(system.file("log/remoterserverlog", package="remoter"))
-logfile <- "./remoterserverlog"
-
-
 logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE)
 {
   if (identical(msg, magicmsg_first_connection))
@@ -27,20 +23,28 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
 
 logfile_init <- function()
 {
-  if (file.exists(logfile))
-    cat("", file=logfile, append=FALSE)
+  if (getval(serverlog))
+  {
+    logfile = getval(logfile)
+    append = !file.exists(logfile)
+    cat("", file=logfile, append=append)
+    
+    logfile
+  }
   else
-    cat("", file=logfile, append=TRUE)
-  
-  logfile
+    NULL
 }
 
 
 
 logprint_file <- function(logmsg)
 {
-  cat(logmsg, file=logfile, append=TRUE)
-  utils::flush.console()
+  if (getval(serverlog))
+  {
+    cat(logmsg, file=getval(logfile), append=TRUE)
+    utils::flush.console()
+  }
+  
   invisible()
 }
 
@@ -53,13 +57,13 @@ logprint_file <- function(logmsg)
 #' @export
 showlog <- function()
 {
-  if (file.exists(logfile))
-    log = readLines(logfile)
+  if (getval(serverlog) && file.exists(getval(logfile)))
+    log = readLines(getval(logfile))
   else
     stop("no log file found!")
   
   c(
-    paste("### logfile:", logfile),
+    paste("### logfile:", getval(logfile)),
     log
   )
 }

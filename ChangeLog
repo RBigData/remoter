@@ -1,4 +1,5 @@
 Release 0.5-0:
+  * Changed server logging behavior - replaced argument log with logfile in server().
   * Rollback tests.
   * Added flush.console() to push output buffer to osx and windows console.
   * Fixed no quit server when set to FALSE.

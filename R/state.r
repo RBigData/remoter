@@ -30,6 +30,7 @@ reset_state <- function()
   set(serialversion, NULL)
   
   # logs
+  set(logfile, NULL)
   set(serverlog, TRUE)
   set(verbose, FALSE)
   set(showmsg, FALSE)
