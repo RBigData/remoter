@@ -102,13 +102,13 @@ server <- function(port=55555, password=NULL, maxretry=5, secure=has.sodium(),
   
   options(warn = 1)
   
-  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n")
-  ips <- get_ips()
-  logprint(paste("    Internal IP: ", ips$ip_in), timestamp=FALSE)
-  logprint(paste("    External IP: ", ips$ip_ex), timestamp=FALSE)
-  logprint(paste("    Hostname:    ", get_hostname()), timestamp=FALSE)
-  logprint(paste("    Port:        ", port), timestamp=FALSE)
-  logprint(paste("    Version:     ", packageVersion("remoter")), timestamp=FALSE)
+  ips = get_ips()
+  logprint(paste("*** Launching", ifelse(getval(secure), "secure", "UNSECURE"), "server ***"), preprint="\n", forcemsg=TRUE)
+  logprint(paste("    Internal IP: ", ips$ip_in), timestamp=FALSE, forcemsg=TRUE)
+  logprint(paste("    External IP: ", ips$ip_ex), timestamp=FALSE, forcemsg=TRUE)
+  logprint(paste("    Hostname:    ", get_hostname()), timestamp=FALSE, forcemsg=TRUE)
+  logprint(paste("    Port:        ", port), timestamp=FALSE, forcemsg=TRUE)
+  logprint(paste("    Version:     ", packageVersion("remoter")), timestamp=FALSE, forcemsg=TRUE)
   
   rm("port", "password", "maxretry", "secure", "logfile", "verbose", "showmsg",
     "userpng", "sync", "serialversion")

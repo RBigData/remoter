@@ -1,9 +1,9 @@
-logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE)
+logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", level="", timestamp=TRUE, forcemsg=FALSE)
 {
   if (identical(msg, magicmsg_first_connection))
     return(invisible())
   
-  if ((getval(serverlog) && !checkverbose && !checkshowmsg) || (getval(verbose) && checkverbose) || (getval(showmsg) && checkshowmsg))
+  if (forcemsg || (getval(serverlog) && !checkverbose && !checkshowmsg) || (getval(verbose) && checkverbose) || (getval(showmsg) && checkshowmsg))
   {
     if (timestamp)
       ts <- paste0("[", Sys.time(), "]: ")
@@ -13,7 +13,9 @@ logprint <- function(msg, checkverbose=FALSE, checkshowmsg=FALSE, preprint="", l
     logmsg <- paste0(preprint, ts, level, ifelse(level=="", "", ": "), msg, "\n")
     # cat(logmsg)
     message(logmsg, appendLF=FALSE)
-    logprint_file(logmsg)
+    
+    if (!forcemsg)
+      logprint_file(logmsg)
   }
   
   invisible()
