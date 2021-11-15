@@ -6,7 +6,7 @@
 * **Bug reports**: https://github.com/RBigData/remoter/issues
 
 
-Control a remote R session from your local R session.  The package uses [**pbdZMQ**](https://github.com/snoweye/pbdZMQ) to handle the communication and networking.  Encryption is supported if the **sodium** package is (optionally) installed.  Details below.
+Control a remote R session from your local R session. The package uses [**pbdZMQ**](https://github.com/snoweye/pbdZMQ) to handle the communication and networking. Encryption is supported if the **sodium** package is (optionally) installed. Details below.
 
 
 
@@ -19,7 +19,7 @@ You can install the stable version from CRAN using the usual `install.packages()
 install.packages("remoter")
 ```
 
-In order to be able to create and connect to secure servers, you need to also install the **sodium** package.  The use of **sodium** is optional because it is a non-trivial systems dependency, but it is highly recommended.  You can install it manually with a call to `install.packages("sodium")` or by installing **remoter** via:
+In order to be able to create and connect to secure servers, you need to also install the **sodium** package. The use of **sodium** is optional because it is a non-trivial systems dependency, but it is highly recommended. You can install it manually with a call to `install.packages("sodium")` or by installing **remoter** via:
 
 ```r
 install.packages("remoter", dependencies=TRUE)
@@ -66,4 +66,4 @@ For more details, including working with remote machines, see the package vignet
 
 Initial work for the **remoter** package was supported in part by the project *Harnessing Scalable Libraries for Statistical Computing on Modern Architectures and Bringing Statistics to Large Scale Computing* funded by the National Science Foundation Division of Mathematical Sciences under Grant No. 1418195.
 
-Any  opinions,  findings,  and  conclusions  or  recommendations expressed  in  this  material  are those  of  the  authors  and  do  not necessarily  reflect  the  views  of  the  National  Science Foundation.
+Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation.
