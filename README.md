@@ -25,7 +25,7 @@ In order to be able to create and connect to secure servers, you need to also in
 install.packages("remoter", dependencies=TRUE)
 ```
 
-The development version is maintained on GitHub, and can easily be installed by any of the packages that offer installations from GitHub:
+The development version is maintained on GitHub:
 
 ```r
 remotes::install_github("RBigData/remoter")
